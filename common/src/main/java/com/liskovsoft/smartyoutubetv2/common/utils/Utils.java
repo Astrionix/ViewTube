@@ -122,7 +122,8 @@ public class Utils {
             "yt_service_prefs",
             "global_prefs"
     };
-    private static final String SUPER_PASSWD = "smarttube";
+    private static final String SUPER_PASSWD = "viewtube";
+    private static final String SUPER_PASSWD_LEGACY = "smarttube";
     private static final int RANDOM_FAIL_REPEAT_TIMES = 10;
     private static final String REMOTE_CONTROL_RECEIVER_CLASS_NAME = "com.liskovsoft.smartyoutubetv2.common.misc.RemoteControlReceiver";
     private static final String UPDATE_CHANNELS_RECEIVER_CLASS_NAME = "com.liskovsoft.leanbackassistant.channels.UpdateChannelsReceiver";
@@ -937,7 +938,7 @@ public class Utils {
         }
 
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        
+
         if (Build.VERSION.SDK_INT < 20) {
             return !pm.isScreenOn();
         } else {
@@ -1300,7 +1301,7 @@ public class Utils {
     }
 
     public static boolean passwordMatch(String original, String typed) {
-        if (original == null || (typed != null && typed.equalsIgnoreCase(SUPER_PASSWD))) {
+        if (original == null || (typed != null && (typed.equalsIgnoreCase(SUPER_PASSWD) || typed.equalsIgnoreCase(SUPER_PASSWD_LEGACY)))) {
             return true;
         }
 
@@ -1320,7 +1321,7 @@ public class Utils {
             // 2: Full Gesture Navigation (Android 10+ Arrow)
             return navMode == 2;
         }
-        
+
         return false;
     }
 

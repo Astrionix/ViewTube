@@ -58,7 +58,7 @@
             android:singleLine="true"
             android:textColor="@color/mobile_color_on_surface"
             android:textColorHint="@color/mobile_color_on_surface_secondary"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <!-- Clear the query; visible only while the field has text. -->
         <ImageButton
@@ -93,7 +93,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingHorizontal="@dimen/mobile_card_spacing"
             android:paddingBottom="@dimen/mobile_card_spacing"
             android:scrollbars="vertical"
             tools:listitem="@layout/item_video_card" />

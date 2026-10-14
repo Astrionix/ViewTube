@@ -99,6 +99,10 @@ public class AppUpdatePresenter extends BasePresenter<Void> implements AppUpdate
 
         mIsForceCheck = forceCheck;
 
+        if (mUpdateManifestUrls == null || mUpdateManifestUrls.length == 0) {
+            LoadingManager.showLoading(getContext(), false);
+            return;
+        }
         if (forceCheck) {
             LoadingManager.showLoading(getContext(), true);
             mUpdateChecker.forceCheckForUpdates(mUpdateManifestUrls);

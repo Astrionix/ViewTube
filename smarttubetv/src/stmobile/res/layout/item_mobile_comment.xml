@@ -16,9 +16,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingStart="12dp"
+    android:paddingStart="14dp"
     android:paddingTop="12dp"
-    android:paddingEnd="12dp">
+    android:paddingEnd="14dp">
 
     <ImageView
         android:id="@+id/comment_avatar"
@@ -71,8 +71,8 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/mobile_color_on_surface_secondary"
-            android:textSize="12sp"
-            android:lineHeight="16sp"
+            android:textSize="12.5sp"
+            android:lineHeight="17sp"
             tools:text="\@author • 2 days ago" />
 
         <com.newtube.mobile.ui.playback.CommentTextView
@@ -83,7 +83,7 @@
             android:breakStrategy="simple"
             android:hyphenationFrequency="none"
             android:textColor="@color/mobile_color_on_surface"
-            android:textSize="14sp"
+            android:textSize="14.5sp"
             app:lineHeight="20sp"
             tools:text="This is a great comment that might wrap across several lines of text." />
 
@@ -175,13 +175,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="6dp"
-                android:background="@drawable/bg_comment_action"
+                android:background="@drawable/bg_comment_replies_chip"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingStart="10dp"
-                android:paddingEnd="4dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="6dp"
                 android:visibility="gone"
                 tools:visibility="visible">
 
@@ -192,7 +192,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:maxLines="1"
                     android:textColor="@color/mobile_color_on_surface"
-                    android:textSize="12sp"
+                    android:textSize="12.5sp"
                     tools:text="12 replies" />
 
                 <ImageView

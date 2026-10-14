@@ -55,23 +55,14 @@ public class UnlocalizedTitleProcessor implements OnDataChange, BrowseProcessor 
         List<String> videoIds = getVideoIds(videoGroup);
         mResult = Observable.fromIterable(videoIds)
                 .flatMap(videoId -> mItemService.getUnlocalizedTitleObserve(videoId)
-                        .map(newTitle -> new Pair<>(videoId, newTitle))
-                        // NEWTUBE(#45): one video without an oEmbed title (embedding off, private:
-                        // 401 -> null -> error) used to end the whole stream, so most cards kept
-                        // YouTube's translation. Skip that video and keep the rest.
-                        .onErrorResumeNext(error -> {
-                            Log.d(TAG, "Unlocalized title: Cannot process the video %s", videoId);
-                            return Observable.empty();
-                        }))
+                        .map(newTitle -> new Pair<>(videoId, newTitle)))
                 .subscribe(title -> {
                     Video video = videoGroup.findVideoById(title.first);
                     if (video == null) {
                         return;
                     }
-                    // NEWTUBE(#45): its own field, so DeArrow's crowd title (deArrowTitle) still
-                    // wins in Video.getTitle() and this is only the fallback under it.
-                    video.unlocalizedTitle = title.second; // sometimes player titles localized while cards not
-                    if (!Helpers.equals(video.title, video.unlocalizedTitle)) {
+                    video.deArrowTitle = title.second; // sometimes player titles localized while cards not
+                    if (!Helpers.equals(video.title, video.deArrowTitle)) {
                         mOnItemReady.onItemReady(video);
                     }
                 },
@@ -86,24 +77,13 @@ public class UnlocalizedTitleProcessor implements OnDataChange, BrowseProcessor 
     }
 
     private List<String> getVideoIds(VideoGroup videoGroup) {
-        return claimVideoIds(videoGroup.getVideos());
-    }
-
-    /**
-     * Ids of the videos whose original title hasn't been fetched yet, marking them as fetched.
-     * NEWTUBE(#45): its own flag - sharing DeArrow's meant DeArrow (first in BrowseProcessorManager)
-     * claimed every video and this step never ran while any DeArrow option was on.
-     */
-    static List<String> claimVideoIds(List<Video> videos) {
         List<String> result = new ArrayList<>();
 
-        for (Video video : videos) {
-            // A channel/playlist card has no video id: a null in fromIterable() ended the whole
-            // stream, so a search that starts with a channel got no original titles at all.
-            if (video.unlocalizedTitleProcessed || video.videoId == null) {
+        for (Video video : videoGroup.getVideos()) {
+            if (video.deArrowProcessed) {
                 continue;
             }
-            video.unlocalizedTitleProcessed = true;
+            video.deArrowProcessed = true;
             result.add(video.videoId);
         }
 

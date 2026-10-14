@@ -1191,9 +1191,7 @@ public class AppDialogUtil {
         }
 
         // Handle error: Maximum playlist size exceeded (> 5000 items)
-        RxHelper.execute(editObserve, error -> MessageHelpers.showLongMessage(context, error.getMessage()),
-                // NEWTUBE(#36): pinned playlists (Watch later on the You tab) refetch on next visit.
-                () -> BrowsePresenter.instance(context).onPlaylistEdited());
+        RxHelper.execute(editObserve, error -> MessageHelpers.showLongMessage(context, error.getMessage()));
     }
 
     public static void showPlaylistOrderDialog(Context context, Video video, Runnable onClose) {

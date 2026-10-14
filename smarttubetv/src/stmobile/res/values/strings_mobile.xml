@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- NewTube branding: override SmartTube's app_name for the mobile flavor only -->
-    <string name="app_name" translatable="false">NewTube</string>
+    <!-- ViewTube branding: override SmartTube's app_name for the mobile flavor only -->
+    <string name="app_name" translatable="false">ViewTube</string>
     <string name="mobile_player_back">Back</string>
     <string name="mobile_player_minimize">Minimize</string>
     <string name="mobile_player_play">Play</string>
@@ -148,9 +148,6 @@
     <string name="mobile_search_error">Couldn\'t load results.</string>
     <!-- Fallback tab label for a channel section the API delivered without a title. -->
     <string name="mobile_channel_tab_videos">Videos</string>
-    <!-- Tab label for the channel's untitled shortcut row (cards opening its own Videos / Live /
-         Releases / Playlists tabs), so it does not read "Videos" twice. -->
-    <string name="mobile_channel_tab_more">More</string>
 
     <!-- Bottom-nav "You" tab (account + extra sections + settings) -->
     <string name="mobile_nav_you">You</string>
@@ -193,8 +190,8 @@
     <string name="mobile_signin_step1_title">Tap \u201cContinue with Google\u201d</string>
     <string name="mobile_signin_step1_caption">Google\'s sign-in page opens right here.</string>
     <string name="mobile_signin_step2_title">Choose your account and allow access</string>
-    <string name="mobile_signin_step2_caption">The page may mention a TV or another device \u2014 that\'s normal: NewTube signs in the same way a TV does, so your password never touches the app.</string>
-    <string name="mobile_signin_step3_title">Come back to NewTube</string>
+    <string name="mobile_signin_step2_caption">The page may mention a TV or another device \u2014 that\'s normal: ViewTube signs in the same way a TV does, so your password never touches the app.</string>
+    <string name="mobile_signin_step3_title">Come back to ViewTube</string>
     <string name="mobile_signin_step3_caption">Sign-in finishes by itself \u2014 nothing else to do.</string>
     <string name="mobile_signin_code_label">Google will show this code \u2014 check it matches:</string>
     <string name="mobile_signin_copy_hint">Tap the code to copy it</string>
@@ -287,7 +284,7 @@
     <!-- Cast-device row: the default mode's promise, nothing else. -->
     <string name="mobile_cast_subtitle_no_ads">Quality controls on your phone</string>
     <!-- Lounge-only row (saved screen / DIAL TV): plain statement of what will play. -->
-    <string name="mobile_cast_subtitle_youtube_app">YouTube or SmartTube on the TV</string>
+    <string name="mobile_cast_subtitle_youtube_app">YouTube or ViewTube on the TV</string>
     <!-- Chooser header for a Cast device offering both modes; tapping it goes back to the list. -->
     <string name="mobile_cast_chooser_title">Cast to %1$s</string>
     <!-- Chooser option 1 (default, listed first): Route A. Subtitle carries the one real cost. -->
@@ -299,25 +296,25 @@
     <!-- mdx shim in flight: launching the TV's YouTube app and reading its Lounge screenId. -->
     <string name="mobile_cast_connecting_youtube_app">Connecting to the YouTube app on the TV…</string>
     <!-- Route A load refusals: the session stays up, only this video can't be direct-cast. -->
-    <string name="mobile_cast_direct_live_unsupported">Live streams need YouTube or SmartTube on the TV</string>
+    <string name="mobile_cast_direct_live_unsupported">Live streams need YouTube or ViewTube on the TV</string>
     <string name="mobile_cast_direct_incompatible">This video can\'t be direct-cast (no format the TV can play)</string>
     <string name="mobile_cast_direct_load_failed">Couldn\'t prepare this video for direct cast</string>
     <string name="mobile_cast_direct_no_wifi">Direct cast needs the phone and TV on the same Wi-Fi</string>
     <string name="mobile_cast_link_code">Link with TV code</string>
-    <string name="mobile_cast_link_code_subtitle">Works with YouTube and SmartTube</string>
+    <string name="mobile_cast_link_code_subtitle">Works with YouTube and ViewTube</string>
     <string name="mobile_cast_code_hint">12-digit code</string>
     <string name="mobile_cast_code_title">Link TV</string>
     <string name="mobile_cast_code_app_label">TV app</string>
     <string name="mobile_cast_code_choose_app">Choose the app open on your TV.</string>
-    <string name="mobile_cast_code_open_smarttube">In SmartTube on your TV, open:</string>
+    <string name="mobile_cast_code_open_smarttube">In ViewTube on your TV, open:</string>
     <string name="mobile_cast_code_open_youtube">In YouTube on your TV, open:</string>
     <string name="mobile_cast_code_find">Find the code in either TV app:</string>
     <string name="mobile_cast_code_youtube" translatable="false">YouTube</string>
     <string name="mobile_cast_code_youtube_path">Settings → Link with TV code</string>
-    <string name="mobile_cast_code_smarttube" translatable="false">SmartTube</string>
+    <string name="mobile_cast_code_smarttube" translatable="false">ViewTube</string>
     <string name="mobile_cast_code_smarttube_path">Settings → Remote control</string>
     <string name="mobile_cast_code_helper">Dashes and spaces are okay</string>
-    <string name="mobile_cast_code_smarttube_benefit">Tip: with SmartTube you get quality and subtitle controls on the TV.</string>
+    <string name="mobile_cast_code_smarttube_benefit">Tip: with ViewTube you get quality and subtitle controls on the TV.</string>
     <string name="mobile_cast_code_positive">Link</string>
     <string name="mobile_cast_code_invalid">The code should have 12 digits</string>
     <string name="mobile_cast_pairing">Linking with the TV…</string>
@@ -333,20 +330,20 @@
     <string name="mobile_cast_channel_desc">Controls for the TV casting session</string>
     <!-- Volume-key routing while a session is connected: lightweight toast indicator. -->
     <string name="mobile_cast_fallback_switching">Trying YouTube on the TV…</string>
-    <string name="mobile_cast_trying_smarttube">Trying SmartTube on the TV…</string>
+    <string name="mobile_cast_trying_smarttube">Trying ViewTube on the TV…</string>
     <string name="mobile_cast_trying_direct">Trying direct cast…</string>
     <string name="mobile_cast_trying_saved">Trying the saved TV app…</string>
     <string name="mobile_cast_checking_ad_free">Checking the TV…</string>
-    <string name="mobile_cast_smarttube_title">SmartTube</string>
-    <string name="mobile_cast_smarttube_subtitle">SmartTube · your phone can leave</string>
+    <string name="mobile_cast_smarttube_title">ViewTube</string>
+    <string name="mobile_cast_smarttube_subtitle">ViewTube · your phone can leave</string>
     <string name="mobile_cast_youtube_title">YouTube</string>
     <string name="mobile_cast_youtube_subtitle">YouTube · fallback</string>
     <string name="mobile_cast_unknown_title">Saved TV app</string>
     <string name="mobile_cast_unknown_subtitle">TV app not identified · choose ⋮ to set it</string>
     <string name="mobile_cast_identify_app">Which TV app is this code from?</string>
-    <string name="mobile_cast_onboarding_title">SmartTube on your TV?</string>
-    <string name="mobile_cast_onboarding_body">Pair it once and the videos you cast open in SmartTube.</string>
-    <string name="mobile_cast_pair_smarttube">Pair SmartTube</string>
+    <string name="mobile_cast_onboarding_title">ViewTube on your TV?</string>
+    <string name="mobile_cast_onboarding_body">Pair it once and the videos you cast open in ViewTube.</string>
+    <string name="mobile_cast_pair_smarttube">Pair ViewTube</string>
     <string name="mobile_cast_receiver_no_playback">The TV app did not start playback</string>
     <string name="mobile_cast_switching_tv_app">Opening YouTube controls on the TV…</string>
     <string name="mobile_cast_choose_method">Choose casting method</string>
@@ -362,7 +359,7 @@
     <string name="mobile_cast_subtitles_sent">Subtitle selection sent to the TV</string>
     <string name="mobile_cast_subtitles_failed">Couldn\'t change subtitles on this receiver</string>
     <string name="mobile_cast_switch_subtitles_title">Use the TV app for subtitles?</string>
-    <string name="mobile_cast_switch_subtitles_message">The TV app supports subtitles and controls quality with the TV remote. We try paired SmartTube first, then YouTube.</string>
+    <string name="mobile_cast_switch_subtitles_message">The TV app supports subtitles and controls quality with the TV remote. We try paired ViewTube first, then YouTube.</string>
     <string name="mobile_cast_switch_subtitles_positive">Switch</string>
     <string name="mobile_cast_tv_volume_label">TV volume</string>
 
@@ -414,13 +411,13 @@
     <!-- NEWTUBE(update-flow): the update sheet (Settings > About > Check for updates, the You tab's
          update row) and the notices around it. -->
     <string name="mobile_update_checking">Checking for updates…</string>
-    <string name="mobile_update_up_to_date">NewTube is up to date</string>
+    <string name="mobile_update_up_to_date">ViewTube is up to date</string>
     <string name="mobile_update_version">Version %1$s</string>
     <string name="mobile_update_check_failed_title">Couldn\'t check for updates</string>
     <string name="mobile_update_check_failed_body">Check your connection and try again.</string>
     <string name="mobile_update_available_title">Update available</string>
-    <string name="mobile_update_app_version">NewTube %1$s</string>
-    <string name="mobile_update_app_version_size">NewTube %1$s · %2$s</string>
+    <string name="mobile_update_app_version">ViewTube %1$s</string>
+    <string name="mobile_update_app_version_size">ViewTube %1$s · %2$s</string>
     <string name="mobile_update_metered">You\'re on mobile data.</string>
     <string name="mobile_update_whats_new_in">What\'s new in %1$s</string>
     <string name="mobile_update_release_notes">Full release notes</string>
@@ -430,26 +427,26 @@
     <string name="mobile_update_progress">%1$s of %2$s</string>
     <string name="mobile_update_cancel">Cancel</string>
     <string name="mobile_update_download_failed_title">The download didn\'t finish</string>
-    <string name="mobile_update_download_failed_body">Try again, or get NewTube %1$s from GitHub.</string>
+    <string name="mobile_update_download_failed_body">Try again, or get ViewTube %1$s from GitHub.</string>
     <string name="mobile_update_install_failed_title">Couldn\'t open the installer</string>
     <string name="mobile_update_github">Open GitHub</string>
     <string name="mobile_update_try_again">Try again</string>
     <string name="mobile_update_ready_title">Ready to install</string>
     <string name="mobile_update_install">Install</string>
-    <string name="mobile_update_permission_title">Allow NewTube to install updates</string>
+    <string name="mobile_update_permission_title">Allow ViewTube to install updates</string>
     <string name="mobile_update_permission_body">Android asks this once. On the next screen, turn on “Allow from this source”, then come back: the update installs right away.</string>
     <string name="mobile_update_open_settings">Open settings</string>
     <string name="mobile_update_not_now">Not now</string>
     <string name="mobile_update_done">Done</string>
     <string name="mobile_update_whats_new">What\'s new</string>
-    <string name="mobile_update_updated">Updated to NewTube %1$s</string>
+    <string name="mobile_update_updated">Updated to ViewTube %1$s</string>
     <string name="mobile_update_downloaded">Update downloaded</string>
     <string name="mobile_update_row_available">Update available</string>
     <string name="mobile_update_row_downloading">Downloading update</string>
-    <string name="mobile_update_row_downloading_percent">NewTube %1$s · %2$d%%</string>
+    <string name="mobile_update_row_downloading_percent">ViewTube %1$s · %2$d%%</string>
     <string name="mobile_update_row_ready">Update ready to install</string>
     <string name="mobile_update_channel_name">App updates</string>
-    <string name="mobile_update_channel_desc">Downloading a NewTube update</string>
+    <string name="mobile_update_channel_desc">Downloading a ViewTube update</string>
     <!-- NEWTUBE(theme): Settings > User interface > Theme. -->
     <string name="mobile_theme">Theme</string>
     <string name="mobile_theme_system">System default</string>
@@ -458,14 +455,31 @@
 
     <!-- NEWTUBE(about-growth): the last two rows of Settings > About. Tap-only: no prompt, badge
          or counter. Never "ad-free" wording. -->
-    <string name="mobile_about_star">Star NewTube on GitHub</string>
+    <string name="mobile_about_star">Star ViewTube on GitHub</string>
     <string name="mobile_about_star_desc">Free and open source. A star helps others find it</string>
-    <string name="mobile_about_share">Share NewTube</string>
+    <string name="mobile_about_share">Share ViewTube</string>
     <string name="mobile_about_share_desc">Send the link to someone who\'d like it</string>
-    <string name="mobile_about_share_text">NewTube — a YouTube client for phones, built on SmartTube: %1$s</string>
-    <string name="mobile_about_repo_url" translatable="false">https://github.com/aleixrodriala/newtube</string>
-    <string name="mobile_about_site_url" translatable="false">https://newtube.org/</string>
+    <string name="mobile_about_share_text">ViewTube — a YouTube client for phones: %1$s</string>
+    <string name="mobile_about_repo_url" translatable="false"></string>
+    <string name="mobile_about_site_url" translatable="false"></string>
     <!-- Experimental SABR playback (was strings_sabr.xml) -->
     <string name="sabr_vod_option">Prefer SABR even when links work (experimental; next VOD)</string>
     <string name="sabr_vod_stopped">Experimental SABR playback stopped. Tap play to retry, or disable SABR in Settings.</string>
+
+    <!-- Appearance & Floating Navigation Bar -->
+    <string name="mobile_settings_appearance">Appearance</string>
+    <string name="mobile_settings_appearance_summary">Theme, navigation bar style and display</string>
+    <string name="mobile_settings_nav_header">Navigation</string>
+    <string name="mobile_settings_theme_header">Theme</string>
+    <string name="mobile_settings_floating_header">Floating Glass Header</string>
+    <string name="mobile_settings_floating_header_summary">Float the top header bar in a sleek liquid glass capsule</string>
+    <string name="mobile_settings_floating_bottom_nav">Floating Glass Bottom Navigation</string>
+    <string name="mobile_settings_floating_bottom_nav_summary">Float the navigation bar in a sleek liquid glass capsule</string>
+    <string name="mobile_settings_floating_nav_bar">Floating Bottom Bar</string>
+    <string name="mobile_settings_floating_nav_bar_summary">Float the navigation bar in a sleek liquid glass capsule</string>
+    <string name="mobile_settings_floating_nav_bar_note">Replaces conventional full-width bars with horizontally centered floating capsules with liquid glass styling.</string>
+    <string name="mobile_settings_floating_nav_note">Replaces conventional full-width bars with horizontally centered floating capsules with liquid glass styling.</string>
+    <string name="mobile_nav_shorts">Shorts</string>
+    <string name="mobile_nav_create">Create</string>
+    <string name="mobile_create_not_supported">Uploading and creation are not available in ViewTube</string>
 </resources>

@@ -582,7 +582,10 @@ public class MobileUpdateActivity extends MobileActivity implements AppUpdates.L
     }
 
     private void openReleasePage(String versionName) {
-        Utils.openLinkExt(this, mUpdates.getReleasePageUrl(versionName));
+        String url = mUpdates.getReleasePageUrl(versionName);
+        if (!url.isEmpty()) {
+            Utils.openLinkExt(this, url);
+        }
     }
 
     private void dismiss() {

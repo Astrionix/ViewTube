@@ -1,6 +1,7 @@
 # Translating NewTube
 
 NewTube is translated on **Weblate**: https://hosted.weblate.org/projects/newtube/
+(WEBLATE-URL-PLACEHOLDER: the link works once the project is approved).
 You translate in the browser. Weblate collects the work and opens a pull request in this repository,
 and merged translations ship in the next release.
 

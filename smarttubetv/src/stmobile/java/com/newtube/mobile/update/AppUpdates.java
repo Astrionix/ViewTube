@@ -190,8 +190,8 @@ public final class AppUpdates implements AppUpdateCheckerListener {
         // re-check could answer with another version while the user downloads the first, and the
         // shared checker would then validate the download against the wrong version.
         if ((mPhase != Phase.IDLE && mPhase != Phase.UP_TO_DATE) || !mChecker.isUpdateCheckEnabled()
-                || !isOnline()) {
-            return; // offline: the shared checker would toast "Internet connection not available!"
+                || !isOnline() || mManifestUrls == null || mManifestUrls.length == 0) {
+            return; // offline or no update URLs: skip check
         }
 
         long lastAnswerAt = mPrefs.getLong(KEY_CHECKED_AT, 0);
@@ -251,6 +251,11 @@ public final class AppUpdates implements AppUpdateCheckerListener {
 
     public void check() {
         if (mPhase == Phase.CHECKING || mPhase == Phase.DOWNLOADING) {
+            return;
+        }
+
+        if (mManifestUrls == null || mManifestUrls.length == 0) {
+            setPhase(Phase.UP_TO_DATE);
             return;
         }
 
@@ -492,7 +497,11 @@ public final class AppUpdates implements AppUpdateCheckerListener {
     }
 
     public String getReleasePageUrl(String versionName) {
-        return mContext.getString(R.string.about_source_code_url) + "/releases/tag/v" + versionName;
+        String base = mContext.getString(R.string.about_source_code_url);
+        if (base.isEmpty()) {
+            return "";
+        }
+        return base + "/releases/tag/v" + versionName;
     }
 
     public boolean isOnMeteredNetwork() {

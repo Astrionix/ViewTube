@@ -29,15 +29,21 @@ public final class AboutShareRows {
     public static List<OptionItem> create(Context context) {
         List<OptionItem> rows = new ArrayList<>();
 
-        rows.add(UiOptionItem.from(
-                context.getString(R.string.mobile_about_star),
-                context.getString(R.string.mobile_about_star_desc),
-                option -> Utils.openLinkExt(context, context.getString(R.string.mobile_about_repo_url))));
+        String repoUrl = context.getString(R.string.mobile_about_repo_url);
+        if (!repoUrl.isEmpty()) {
+            rows.add(UiOptionItem.from(
+                    context.getString(R.string.mobile_about_star),
+                    context.getString(R.string.mobile_about_star_desc),
+                    option -> Utils.openLinkExt(context, repoUrl)));
+        }
 
-        rows.add(UiOptionItem.from(
-                context.getString(R.string.mobile_about_share),
-                context.getString(R.string.mobile_about_share_desc),
-                option -> share(context)));
+        String siteUrl = context.getString(R.string.mobile_about_site_url);
+        if (!siteUrl.isEmpty()) {
+            rows.add(UiOptionItem.from(
+                    context.getString(R.string.mobile_about_share),
+                    context.getString(R.string.mobile_about_share_desc),
+                    option -> share(context)));
+        }
 
         return rows;
     }

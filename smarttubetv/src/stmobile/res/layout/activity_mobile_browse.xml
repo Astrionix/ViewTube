@@ -18,60 +18,73 @@
     <!-- NEWTUBE(you-subscreen): back arrow shown (with the section's name in the title bar) only
          while a section opened from a You row is on screen - BrowseTopBar. GONE otherwise, and a
          GONE view collapses to a point at the start, so the wordmark keeps its 16dp inset. -->
-    <ImageButton
-        android:id="@+id/mobile_title_back"
-        android:layout_width="48dp"
-        android:layout_height="@dimen/mobile_title_bar_height"
-        android:layout_marginStart="4dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/mobile_dialog_back"
-        android:padding="12dp"
-        android:src="@drawable/ic_mobile_back_arrow"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/mobile_title_bar"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mobile_header_container"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/mobile_title_bar_height"
         android:background="@color/mobile_color_background"
-        android:ellipsize="end"
-        android:gravity="center_vertical|start"
-        android:maxLines="1"
-        android:paddingStart="16dp"
-        android:text="@string/app_name"
-        android:textColor="@color/mobile_color_on_surface"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@id/mobile_cast_button"
-        app:layout_constraintStart_toEndOf="@id/mobile_title_back"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Cast picker entry on the home feed, like the official app's top bar. Tinted with the
-         accent while a session is connected (MobileBrowseActivity.updateCastIconTint). -->
-    <ImageButton
-        android:id="@+id/mobile_cast_button"
-        android:layout_width="48dp"
-        android:layout_height="@dimen/mobile_title_bar_height"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/mobile_cast_button"
-        android:padding="12dp"
-        android:src="@drawable/ic_mobile_cast"
-        app:layout_constraintEnd_toStartOf="@id/mobile_search_button"
-        app:layout_constraintTop_toTopOf="@id/mobile_title_bar" />
-
-    <ImageButton
-        android:id="@+id/mobile_search_button"
-        android:layout_width="48dp"
-        android:layout_height="@dimen/mobile_title_bar_height"
-        android:layout_marginEnd="4dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/mobile_search_button"
-        android:padding="12dp"
-        android:src="@drawable/ic_mobile_search"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/mobile_title_bar" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/mobile_title_back"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="4dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/mobile_dialog_back"
+            android:padding="12dp"
+            android:src="@drawable/ic_mobile_back_arrow"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/mobile_title_bar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:ellipsize="end"
+            android:gravity="center_vertical|start"
+            android:maxLines="1"
+            android:paddingStart="16dp"
+            android:text="@string/app_name"
+            android:textColor="@color/mobile_color_on_surface"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/mobile_cast_button"
+            app:layout_constraintStart_toEndOf="@id/mobile_title_back"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/mobile_cast_button"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/mobile_cast_button"
+            android:padding="12dp"
+            android:src="@drawable/ic_mobile_cast"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/mobile_search_button"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/mobile_search_button"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="4dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/mobile_search_button"
+            android:padding="12dp"
+            android:src="@drawable/ic_mobile_search"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Pull-to-refresh drives BrowsePresenter.refresh() - also the natural retry
          gesture when a section shows the error placeholder (the error overlay doesn't
@@ -83,14 +96,13 @@
         app:layout_constraintBottom_toTopOf="@id/mobile_bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mobile_title_bar">
+        app:layout_constraintTop_toBottomOf="@id/mobile_header_container">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mobile_content_grid"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingHorizontal="@dimen/mobile_card_spacing"
             android:paddingBottom="@dimen/mobile_card_spacing"
             android:scrollbars="vertical"
             tools:listitem="@layout/item_video_card" />
@@ -105,7 +117,7 @@
         app:layout_constraintBottom_toTopOf="@id/mobile_bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mobile_title_bar" />
+        app:layout_constraintTop_toBottomOf="@id/mobile_header_container" />
 
     <!--
          The empty/error placeholder is anchored to the title bar / bottom nav / parent
@@ -127,7 +139,7 @@
         app:layout_constraintBottom_toTopOf="@id/mobile_bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mobile_title_bar">
+        app:layout_constraintTop_toBottomOf="@id/mobile_header_container">
 
         <ImageView
             android:id="@+id/mobile_error_icon"
@@ -167,7 +179,7 @@
         app:layout_constraintBottom_toTopOf="@id/mobile_bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mobile_title_bar"
+        app:layout_constraintTop_toBottomOf="@id/mobile_header_container"
         tools:visibility="visible">
 
         <LinearLayout
@@ -273,9 +285,11 @@
         android:clickable="true"
         android:focusable="true"
         android:visibility="gone"
-        app:cardBackgroundColor="@android:color/black"
-        app:cardCornerRadius="12dp"
+        app:cardBackgroundColor="@color/mobile_glass_surface_card"
+        app:cardCornerRadius="@dimen/mobile_glass_corner_radius_card"
         app:cardElevation="8dp"
+        app:strokeColor="@color/mobile_glass_outline"
+        app:strokeWidth="@dimen/mobile_glass_border_width"
         app:layout_constraintBottom_toTopOf="@id/mobile_bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
         tools:visibility="visible">
@@ -301,6 +315,60 @@
                     android:visibility="gone" />
 
             </androidx.media3.ui.AspectRatioFrameLayout>
+
+            <!-- Top specular reflection sheen on glass rim -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="18dp"
+                android:layout_gravity="top"
+                android:background="@drawable/bg_glass_card_highlight"
+                android:importantForAccessibility="no" />
+
+            <!-- Metadata overlay vignette with readable title and channel info -->
+            <LinearLayout
+                android:id="@+id/mobile_mini_meta_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="2dp"
+                android:background="@drawable/bg_mini_meta_scrim"
+                android:orientation="vertical"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="4dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/mobile_mini_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:shadowColor="#CC000000"
+                    android:shadowDx="0"
+                    android:shadowDy="1"
+                    android:shadowRadius="3"
+                    android:textColor="@color/mobile_player_on_video"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    tools:text="Video Title" />
+
+                <TextView
+                    android:id="@+id/mobile_mini_author"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:shadowColor="#CC000000"
+                    android:shadowDx="0"
+                    android:shadowDy="1"
+                    android:shadowRadius="3"
+                    android:textColor="#B3FFFFFF"
+                    android:textSize="10sp"
+                    tools:text="Channel Name" />
+
+            </LinearLayout>
 
             <ImageButton
                 android:id="@+id/mobile_mini_play_pause"
@@ -345,7 +413,7 @@
          absorbed below. Stock M2 wrap_content (56dp row) is the closest the widget allows;
          the view pads itself by the gesture-navigation inset (paddingBottomSystemWindowInsets)
          so the bar paints through to the display edge without squeezing the row. -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <com.newtube.mobile.ui.browse.LiquidGlassBottomNavigationView
         android:id="@+id/mobile_bottom_nav"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Outline;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -24,8 +26,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import android.util.TypedValue;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -63,6 +71,7 @@ import com.newtube.mobile.casting.CastPickerLauncher;
 import com.newtube.mobile.casting.CastSessionManager;
 import com.newtube.mobile.casting.CastTarget;
 import com.newtube.mobile.casting.CastVolumeKeys;
+import com.newtube.mobile.ui.common.AppearancePrefs;
 import com.newtube.mobile.ui.common.FeedCache;
 import com.newtube.mobile.ui.common.FeedSwapWarmup;
 import com.newtube.mobile.ui.common.FrameGate;
@@ -119,6 +128,7 @@ public class MobileBrowseActivity extends MobileActivity
      * {@link #ITEM_ID_OFFSET} + any real section id, so it can never collide with one.
      */
     private static final int YOU_ITEM_ID = 2_000_000;
+    private static final int CREATE_ITEM_ID = 2_000_001;
     private static final int REQUEST_POST_NOTIFICATIONS = 1;
     /** Intent action (download notifications) that lands on the Downloads tab. */
     public static final String ACTION_OPEN_DOWNLOADS = "com.newtube.mobile.OPEN_DOWNLOADS";
@@ -167,6 +177,7 @@ public class MobileBrowseActivity extends MobileActivity
     /** True when the current grid section was opened from a You-panel row (back returns to You). */
     private boolean mSectionFromYou;
     private BrowseTopBar mTopBar;
+    private View mHeaderContainer;
     private View mErrorContainer;
     private ImageView mErrorIcon;
     private TextView mErrorMessage;
@@ -185,23 +196,11 @@ public class MobileBrowseActivity extends MobileActivity
     private TextureView mMiniTexture;
     private ImageButton mMiniPlayPause;
     private ProgressBar mMiniProgress;
+    private View mMiniMetaContainer;
+    private TextView mMiniTitle;
+    private TextView mMiniAuthor;
     /** 500ms UI ticker while the bar is visible: progress line, play/pause icon, liveness check. */
     private final Runnable mMiniPlayerTick = this::onMiniPlayerTick;
-    /**
-     * SCREEN-ON (#50): the card's screen-on hold follows the player's own events, not the 500 ms
-     * tick. onPause stops the tick but keeps the card up (frozen, audio playing) while a translucent
-     * window such as the card menu sits on top and this Activity never reaches onStop - a pause or
-     * end there must still let the screen go, and playing there must still hold it.
-     */
-    private final Player.Listener mMiniScreenOnListener = new Player.Listener() {
-        @Override
-        public void onEvents(Player player, Player.Events events) {
-            if (events.containsAny(Player.EVENT_PLAY_WHEN_READY_CHANGED, Player.EVENT_PLAYBACK_STATE_CHANGED)) {
-                setMiniKeepScreenOn(isMiniActivelyPlaying(player));
-            }
-        }
-    };
-    private Player mMiniScreenOnPlayer;
     private static final long MINI_TICK_MS = 500;
     /** NEWTUBE(motion): the longest the expanding player waits for this card to fold. */
     private static final long MINI_FOLD_WAIT_MS = 50;
@@ -266,6 +265,9 @@ public class MobileBrowseActivity extends MobileActivity
         setupSearchButton();
         setupCastButton();
 
+        AppearancePrefs.addListener(mAppearanceListener);
+        applyNavigationMode(false);
+
         mPresenter = BrowsePresenter.instance(this);
         mPresenter.setView(this);
         mPresenter.onViewInitialized();
@@ -312,6 +314,7 @@ public class MobileBrowseActivity extends MobileActivity
         mErrorAction = findViewById(R.id.mobile_error_action);
         mSearchButton = findViewById(R.id.mobile_search_button);
         mCastButton = findViewById(R.id.mobile_cast_button);
+        mHeaderContainer = findViewById(R.id.mobile_header_container);
         mTopBar = new BrowseTopBar(this, () -> getOnBackPressedDispatcher().onBackPressed());
 
         mMiniPlayerBar = findViewById(R.id.mobile_mini_player);
@@ -319,6 +322,9 @@ public class MobileBrowseActivity extends MobileActivity
         mMiniFreeze = findViewById(R.id.mobile_mini_freeze);
         mMiniPlayPause = findViewById(R.id.mobile_mini_play_pause);
         mMiniProgress = findViewById(R.id.mobile_mini_progress);
+        mMiniMetaContainer = findViewById(R.id.mobile_mini_meta_container);
+        mMiniTitle = findViewById(R.id.mobile_mini_title);
+        mMiniAuthor = findViewById(R.id.mobile_mini_author);
         setupMiniPlayerBar();
         // NEWTUBE(mini-inset): the last card can scroll clear of the docked mini-player.
         com.newtube.mobile.ui.playback.MiniPlayerListInset.attach(mMiniPlayerBar, mContentGrid);
@@ -512,6 +518,7 @@ public class MobileBrowseActivity extends MobileActivity
         mMiniPlayerBar.setTranslationX(0f);
         mMiniPlayerBar.setVisibility(View.VISIBLE);
         updateMiniPlayPauseIcon(player);
+        updateMiniMetadata();
 
         Utils.removeCallbacks(mMiniPlayerTick);
         Utils.postDelayed(mMiniPlayerTick, MINI_TICK_MS);
@@ -524,7 +531,17 @@ public class MobileBrowseActivity extends MobileActivity
 
     @Override
     public int getMiniCardBottomOffsetPx() {
-        // The card floats above the 56dp Material bottom-nav row (see activity_mobile_browse.xml).
+        if (mFloatingNavApplied) {
+            int bottomInset = 0;
+            if (mBottomNav != null) {
+                WindowInsetsCompat rootInsets = ViewCompat.getRootWindowInsets(mBottomNav);
+                if (rootInsets != null) {
+                    bottomInset = rootInsets.getInsets(
+                            WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout()).bottom;
+                }
+            }
+            return dp(56 + 14) + bottomInset;
+        }
         return Math.round(56 * getResources().getDisplayMetrics().density);
     }
 
@@ -696,8 +713,6 @@ public class MobileBrowseActivity extends MobileActivity
         stopMiniSwipe();
         mMiniPlayerBar.animate().cancel();
         mMiniPlayerBar.setVisibility(View.GONE);
-        unwatchMiniScreenOn();
-        setMiniKeepScreenOn(false); // no card, no video on this screen
         mMiniPlayerBar.setAlpha(1f);
         mMiniPlayerBar.setScaleX(1f);
         mMiniPlayerBar.setScaleY(1f);
@@ -708,7 +723,7 @@ public class MobileBrowseActivity extends MobileActivity
 
     private void setMiniButtonsAlpha(float alpha) {
         View close = findViewById(R.id.mobile_mini_close);
-        for (View view : new View[] {mMiniPlayPause, close, mMiniProgress}) {
+        for (View view : new View[] {mMiniPlayPause, close, mMiniProgress, mMiniMetaContainer}) {
             if (view != null) {
                 view.animate().cancel();
                 view.setAlpha(alpha);
@@ -718,7 +733,7 @@ public class MobileBrowseActivity extends MobileActivity
 
     private void fadeInMiniButtons() {
         View close = findViewById(R.id.mobile_mini_close);
-        for (View view : new View[] {mMiniPlayPause, close, mMiniProgress}) {
+        for (View view : new View[] {mMiniPlayPause, close, mMiniProgress, mMiniMetaContainer}) {
             if (view != null) {
                 view.animate().alpha(1f).setDuration(Motion.FADE_IN_MS)
                         .setInterpolator(Motion.STANDARD).start();
@@ -741,8 +756,30 @@ public class MobileBrowseActivity extends MobileActivity
             mMiniProgress.setProgress((int) (player.getCurrentPosition() * 1000 / duration));
         }
         updateMiniPlayPauseIcon(player);
+        updateMiniMetadata();
         MiniPlayerBridge.fitToVideo(mMiniPlayerFrame); // an autoplayed next video may have another shape
         Utils.postDelayed(mMiniPlayerTick, MINI_TICK_MS);
+    }
+
+    private void updateMiniMetadata() {
+        if (mMiniTitle == null || mMiniMetaContainer == null) {
+            return;
+        }
+        com.liskovsoft.smartyoutubetv2.common.app.models.data.Video video = MiniPlayerBridge.getVideo();
+        if (video != null && (video.getTitle() != null || video.getAuthor() != null)) {
+            mMiniTitle.setText(video.getTitle());
+            if (mMiniAuthor != null) {
+                if (video.getAuthor() != null && !video.getAuthor().isEmpty()) {
+                    mMiniAuthor.setText(video.getAuthor());
+                    mMiniAuthor.setVisibility(View.VISIBLE);
+                } else {
+                    mMiniAuthor.setVisibility(View.GONE);
+                }
+            }
+            mMiniMetaContainer.setVisibility(View.VISIBLE);
+        } else {
+            mMiniMetaContainer.setVisibility(View.GONE);
+        }
     }
 
     private void updateMiniPlayPauseIcon(ExoPlayer player) {
@@ -750,41 +787,6 @@ public class MobileBrowseActivity extends MobileActivity
                 && player.getPlaybackState() != Player.STATE_ENDED
                 && player.getPlaybackState() != Player.STATE_IDLE;
         mMiniPlayPause.setImageResource(playing ? R.drawable.ic_player_pause : R.drawable.ic_player_play);
-        // SCREEN-ON (#50): the docked card is a visible video; this window holds the screen while it
-        // plays (the stopped player Activity no longer does) and lets go when it pauses.
-        watchMiniScreenOn(player);
-        setMiniKeepScreenOn(isMiniActivelyPlaying(player));
-    }
-
-    private static boolean isMiniActivelyPlaying(Player player) {
-        return player.getPlayWhenReady()
-                && (player.getPlaybackState() == Player.STATE_READY
-                    || player.getPlaybackState() == Player.STATE_BUFFERING);
-    }
-
-    /** Listen while the card is up (see mMiniScreenOnListener); foldMiniCard() stops it. */
-    private void watchMiniScreenOn(Player player) {
-        if (mMiniScreenOnPlayer == player) {
-            return;
-        }
-        unwatchMiniScreenOn();
-        player.addListener(mMiniScreenOnListener);
-        mMiniScreenOnPlayer = player;
-    }
-
-    private void unwatchMiniScreenOn() {
-        if (mMiniScreenOnPlayer != null) {
-            mMiniScreenOnPlayer.removeListener(mMiniScreenOnListener);
-            mMiniScreenOnPlayer = null;
-        }
-    }
-
-    private void setMiniKeepScreenOn(boolean on) {
-        if (on) {
-            getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        } else {
-            getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        }
     }
 
     private void setupContentGrid() {
@@ -956,11 +958,223 @@ public class MobileBrowseActivity extends MobileActivity
     private void onNavItemChosen(int itemId) {
         if (itemId == YOU_ITEM_ID) {
             showYouPanel();
+        } else if (itemId == CREATE_ITEM_ID) {
+            MobileSnackbar.show(this, R.string.mobile_create_not_supported);
+            mSuppressNavCallback = true;
+            reassertNavHighlight(mBottomNav.getMenu(), true);
+            mSuppressNavCallback = false;
         } else {
             mSectionFromYou = false;
             hideYouPanel();
             onSectionChosen(itemId - ITEM_ID_OFFSET);
         }
+    }
+
+    private boolean mFloatingNavApplied;
+    private boolean mFloatingHeaderApplied;
+    private final AppearancePrefs.OnAppearanceChangeListener mAppearanceListener = this::onAppearanceChanged;
+
+    private void onAppearanceChanged() {
+        runOnUiThread(() -> applyNavigationMode(true));
+    }
+
+    private void applyNavigationMode(boolean animate) {
+        if (mBottomNav == null && mHeaderContainer == null) {
+            return;
+        }
+
+        boolean floatingHeader = AppearancePrefs.isFloatingHeaderEnabled(this);
+        boolean floatingBottomNav = AppearancePrefs.isFloatingBottomBarEnabled(this);
+        mFloatingHeaderApplied = floatingHeader;
+        mFloatingNavApplied = floatingBottomNav;
+
+        ViewGroup root = findViewById(R.id.mobile_browse_root);
+        if (animate && root != null && root.isAttachedToWindow()) {
+            androidx.transition.TransitionSet transition = new androidx.transition.TransitionSet();
+            transition.addTransition(new androidx.transition.ChangeBounds().setDuration(260));
+            transition.addTransition(new androidx.transition.Fade(androidx.transition.Fade.IN).setDuration(180));
+            androidx.transition.TransitionManager.beginDelayedTransition(root, transition);
+        }
+
+        // 1. FLOATING / STANDARD HEADER
+        if (mHeaderContainer != null) {
+            ConstraintLayout.LayoutParams hLp = (ConstraintLayout.LayoutParams) mHeaderContainer.getLayoutParams();
+            if (floatingHeader) {
+                // FLOATING HEADER: Horizontally centered liquid glass capsule
+                int topInset = 0;
+                WindowInsetsCompat rootInsets = ViewCompat.getRootWindowInsets(mHeaderContainer);
+                if (rootInsets != null) {
+                    Insets insets = rootInsets.getInsets(WindowInsetsCompat.Type.displayCutout());
+                    topInset = insets.top;
+                }
+                int sideMargin = dp(16);
+                int topMargin = topInset + dp(8);
+
+                hLp.width = 0;
+                hLp.height = dp(48);
+                hLp.matchConstraintMaxWidth = dp(600);
+                hLp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+                hLp.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+                hLp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+                hLp.setMargins(sideMargin, topMargin, sideMargin, 0);
+                mHeaderContainer.setLayoutParams(hLp);
+
+                mHeaderContainer.setBackgroundResource(R.drawable.bg_glass_capsule);
+                mHeaderContainer.setElevation(dp(6));
+                mHeaderContainer.setPadding(dp(6), 0, dp(6), 0);
+
+                ViewCompat.setOnApplyWindowInsetsListener(mHeaderContainer, (v, windowInsets) -> {
+                    Insets cutouts = windowInsets.getInsets(WindowInsetsCompat.Type.displayCutout());
+                    int targetTopMargin = cutouts.top + dp(8);
+                    ConstraintLayout.LayoutParams headerLp = (ConstraintLayout.LayoutParams) v.getLayoutParams();
+                    if (headerLp.topMargin != targetTopMargin) {
+                        headerLp.topMargin = targetTopMargin;
+                        v.setLayoutParams(headerLp);
+                    }
+                    return windowInsets;
+                });
+
+                if (mContentSwipe != null) {
+                    ConstraintLayout.LayoutParams swipeLp = (ConstraintLayout.LayoutParams) mContentSwipe.getLayoutParams();
+                    swipeLp.topMargin = dp(8);
+                    mContentSwipe.setLayoutParams(swipeLp);
+                }
+                if (mYouPanel != null) {
+                    ConstraintLayout.LayoutParams youLp = (ConstraintLayout.LayoutParams) mYouPanel.getLayoutParams();
+                    youLp.topMargin = dp(8);
+                    mYouPanel.setLayoutParams(youLp);
+                }
+            } else {
+                // STANDARD HEADER: Conventional full-width bar
+                hLp.width = ConstraintLayout.LayoutParams.MATCH_PARENT;
+                hLp.height = getResources().getDimensionPixelSize(R.dimen.mobile_title_bar_height);
+                hLp.matchConstraintMaxWidth = 0;
+                hLp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+                hLp.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+                hLp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+                hLp.setMargins(0, 0, 0, 0);
+                mHeaderContainer.setLayoutParams(hLp);
+
+                mHeaderContainer.setBackgroundResource(R.color.mobile_color_background);
+                mHeaderContainer.setElevation(0);
+                mHeaderContainer.setPadding(0, 0, 0, 0);
+                ViewCompat.setOnApplyWindowInsetsListener(mHeaderContainer, null);
+
+                if (mContentSwipe != null) {
+                    ConstraintLayout.LayoutParams swipeLp = (ConstraintLayout.LayoutParams) mContentSwipe.getLayoutParams();
+                    swipeLp.topMargin = 0;
+                    mContentSwipe.setLayoutParams(swipeLp);
+                }
+                if (mYouPanel != null) {
+                    ConstraintLayout.LayoutParams youLp = (ConstraintLayout.LayoutParams) mYouPanel.getLayoutParams();
+                    youLp.topMargin = 0;
+                    mYouPanel.setLayoutParams(youLp);
+                }
+            }
+        }
+
+        // 2. FLOATING / STANDARD BOTTOM NAVIGATION
+        if (mBottomNav != null) {
+            ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) mBottomNav.getLayoutParams();
+
+            if (floatingBottomNav) {
+                // FLOATING MODE: Horizontally centered liquid glass capsule
+                if (mBottomNav instanceof LiquidGlassBottomNavigationView) {
+                    ((LiquidGlassBottomNavigationView) mBottomNav).setFloatingEnabled(true);
+                }
+                int bottomInset = 0;
+                WindowInsetsCompat rootInsets = ViewCompat.getRootWindowInsets(mBottomNav);
+                if (rootInsets != null) {
+                    Insets insets = rootInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+                    bottomInset = insets.bottom;
+                }
+                int bottomMargin = bottomInset + dp(14);
+                int sideMargin = dp(14);
+
+                lp.width = 0;
+                lp.height = dp(58);
+                lp.matchConstraintMaxWidth = dp(440);
+                lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+                lp.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+                lp.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+                lp.setMargins(sideMargin, 0, sideMargin, bottomMargin);
+                mBottomNav.setLayoutParams(lp);
+
+                mBottomNav.setBackground(null);
+                mBottomNav.setItemBackground(null);
+                mBottomNav.setElevation(dp(8));
+                mBottomNav.setItemTextAppearanceActive(R.style.MobileFloatingBottomNavText);
+                mBottomNav.setItemTextAppearanceInactive(R.style.MobileFloatingBottomNavText);
+                mBottomNav.setItemIconTintList(ContextCompat.getColorStateList(this, R.color.mobile_floating_nav_item));
+                mBottomNav.setItemTextColor(ContextCompat.getColorStateList(this, R.color.mobile_floating_nav_item));
+                mBottomNav.setPadding(dp(8), 0, dp(8), 0);
+
+                ViewCompat.setOnApplyWindowInsetsListener(mBottomNav, (v, windowInsets) -> {
+                    Insets sysInsets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+                    int targetBottomMargin = sysInsets.bottom + dp(14);
+                    ConstraintLayout.LayoutParams navLp = (ConstraintLayout.LayoutParams) v.getLayoutParams();
+                    if (navLp.bottomMargin != targetBottomMargin) {
+                        navLp.bottomMargin = targetBottomMargin;
+                        v.setLayoutParams(navLp);
+                    }
+                    v.setPadding(dp(8), 0, dp(8), 0);
+                    return windowInsets;
+                });
+
+                if (mContentSwipe != null) {
+                    ConstraintLayout.LayoutParams swipeLp = (ConstraintLayout.LayoutParams) mContentSwipe.getLayoutParams();
+                    swipeLp.bottomToTop = ConstraintLayout.LayoutParams.UNSET;
+                    swipeLp.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+                    mContentSwipe.setLayoutParams(swipeLp);
+                }
+                if (mContentGrid != null) {
+                    int cardSpacing = getResources().getDimensionPixelSize(R.dimen.mobile_card_spacing);
+                    mContentGrid.setPadding(0, 0, 0, dp(58) + bottomMargin + cardSpacing);
+                }
+            } else {
+                // STANDARD MODE: Full-width conventional bottom bar
+                if (mBottomNav instanceof LiquidGlassBottomNavigationView) {
+                    ((LiquidGlassBottomNavigationView) mBottomNav).setFloatingEnabled(false);
+                }
+                lp.width = 0;
+                lp.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+                lp.matchConstraintMaxWidth = 0;
+                lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+                lp.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+                lp.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+                lp.setMargins(0, 0, 0, 0);
+                mBottomNav.setLayoutParams(lp);
+
+                mBottomNav.setBackgroundResource(R.color.mobile_color_background);
+                mBottomNav.setItemBackground(null);
+                mBottomNav.setElevation(0);
+                mBottomNav.setItemTextAppearanceActive(R.style.MobileBottomNavText);
+                mBottomNav.setItemTextAppearanceInactive(R.style.MobileBottomNavText);
+                mBottomNav.setItemIconTintList(ContextCompat.getColorStateList(this, R.color.mobile_bottom_nav_item));
+                mBottomNav.setItemTextColor(ContextCompat.getColorStateList(this, R.color.mobile_bottom_nav_item));
+
+                ViewCompat.setOnApplyWindowInsetsListener(mBottomNav, (v, windowInsets) -> {
+                    Insets sysInsets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+                    v.setPadding(0, 0, 0, sysInsets.bottom);
+                    return windowInsets;
+                });
+
+                if (mContentSwipe != null) {
+                    ConstraintLayout.LayoutParams swipeLp = (ConstraintLayout.LayoutParams) mContentSwipe.getLayoutParams();
+                    swipeLp.bottomToTop = R.id.mobile_bottom_nav;
+                    swipeLp.bottomToBottom = ConstraintLayout.LayoutParams.UNSET;
+                    mContentSwipe.setLayoutParams(swipeLp);
+                }
+                if (mContentGrid != null) {
+                    int cardSpacing = getResources().getDimensionPixelSize(R.dimen.mobile_card_spacing);
+                    mContentGrid.setPadding(0, 0, 0, cardSpacing);
+                }
+            }
+        }
+    }
+
+    private int dp(int value) {
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, getResources().getDisplayMetrics()));
     }
 
     /** A long way down, jump most of it first: the glide covers the last few rows only. */
@@ -1730,6 +1944,8 @@ public class MobileBrowseActivity extends MobileActivity
         switch (sectionId) {
             case MediaGroup.TYPE_HOME:
                 return R.drawable.ic_nav_home;
+            case MediaGroup.TYPE_SHORTS:
+                return R.drawable.ic_nav_shorts;
             case MediaGroup.TYPE_SUBSCRIPTIONS:
                 return R.drawable.ic_nav_subscriptions;
             case MediaGroup.TYPE_HISTORY:
@@ -1752,7 +1968,9 @@ public class MobileBrowseActivity extends MobileActivity
         List<BrowseSection> enabledSections = new ArrayList<>();
 
         for (BrowseSection section : mSections) {
-            if (section.isEnabled() && section.getId() != MediaGroup.TYPE_SETTINGS) {
+            if (section.isEnabled()
+                    && section.getId() != MediaGroup.TYPE_SETTINGS
+                    && section.getId() != MediaGroup.TYPE_SHORTS) {
                 enabledSections.add(section);
             }
         }
@@ -1796,6 +2014,11 @@ public class MobileBrowseActivity extends MobileActivity
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (mFloatingNavApplied != AppearancePrefs.isFloatingBottomBarEnabled(this)
+                || mFloatingHeaderApplied != AppearancePrefs.isFloatingHeaderEnabled(this)) {
+            applyNavigationMode(true);
+        }
 
         if (mPresenter != null) {
             mPresenter.onViewResumed();
@@ -1929,7 +2152,7 @@ public class MobileBrowseActivity extends MobileActivity
 
     @Override
     protected void onDestroy() {
-        unwatchMiniScreenOn(); // the shared player outlives this Activity
+        AppearancePrefs.removeListener(mAppearanceListener);
         mNavHandler.removeCallbacks(mNavRebuild);
         mNavHandler.removeCallbacks(mRunwayCheck);
         cancelFeedSwap(); // NEWTUBE(feed-swap)
@@ -1956,6 +2179,9 @@ public class MobileBrowseActivity extends MobileActivity
         super.onConfigurationChanged(newConfig);
 
         updateGridSpanCount(com.newtube.mobile.ui.common.MobileGrid.computeSpanCount(newConfig));
+        if (mFloatingNavApplied || mFloatingHeaderApplied) {
+            applyNavigationMode(false);
+        }
     }
 
     // NEWTUBE(ui-mode): a recreated Browse (any config change the manifest doesn't absorb, or

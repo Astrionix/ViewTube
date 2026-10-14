@@ -35,4 +35,18 @@
     <color name="dialog_text_color">#a1a1a6</color>
     <color name="dialog_hint_color">#33FFFFFF</color>
     <color name="dialog_proxy_hint_color">#80FFFFFF</color>
+
+    <!-- Liquid Glass design system (Phase 2): Dark theme / obsidian ice glass surfaces. -->
+    <color name="mobile_glass_surface">#D9131622</color>
+    <color name="mobile_glass_surface_card">#CC1A1D28</color>
+    <color name="mobile_glass_surface_control">#BF222634</color>
+    <color name="mobile_glass_highlight">#26FFFFFF</color>
+    <color name="mobile_glass_outline">#28FFFFFF</color>
+    <color name="mobile_glass_outline_subtle">#14FFFFFF</color>
+    <color name="mobile_glass_divider">#1FFFFFFF</color>
+    <color name="mobile_glass_shadow">#40000000</color>
+
+    <!-- Floating navigation colors -->
+    <color name="mobile_floating_nav_active">#F1F5F9</color>
+    <color name="mobile_floating_nav_inactive">#94A3B8</color>
 </resources>

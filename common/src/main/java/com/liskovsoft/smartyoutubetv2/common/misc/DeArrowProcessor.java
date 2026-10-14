@@ -55,12 +55,7 @@ public class DeArrowProcessor implements OnDataChange, BrowseProcessor {
         mResult = mItemService.getDeArrowDataObserve(videoIds)
                 .subscribe(deArrowData -> {
                     Video video = videoGroup.findVideoById(deArrowData.getVideoId());
-                    if (video == null) {
-                        return;
-                    }
                     if (mIsReplaceTitlesEnabled) {
-                        // null when DeArrow has no title: getTitle() then falls back to the
-                        // original title (if that setting fetched one) or YouTube's.
                         video.deArrowTitle = deArrowData.getTitle();
                     }
                     if (mIsReplaceThumbnailsEnabled) {
@@ -79,15 +74,10 @@ public class DeArrowProcessor implements OnDataChange, BrowseProcessor {
     }
 
     private List<String> getVideoIds(VideoGroup videoGroup) {
-        return claimVideoIds(videoGroup.getVideos());
-    }
-
-    /** Ids of the videos DeArrow hasn't looked up yet, marking them as looked up (DeArrow's flag only). */
-    static List<String> claimVideoIds(List<Video> videos) {
         List<String> result = new ArrayList<>();
 
-        for (Video video : videos) {
-            if (video.deArrowProcessed || video.videoId == null) { // channel/playlist cards have no id
+        for (Video video : videoGroup.getVideos()) {
+            if (video.deArrowProcessed) {
                 continue;
             }
             video.deArrowProcessed = true;

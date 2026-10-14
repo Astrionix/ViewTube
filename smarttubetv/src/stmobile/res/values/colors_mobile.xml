@@ -70,4 +70,18 @@
     <color name="mobile_player_on_video">#FFFFFF</color>
     <color name="mobile_player_pill">#26FFFFFF</color>
     <color name="mobile_player_cast_active">#4FC3F7</color>
+
+    <!-- Liquid Glass design system (Phase 2): Light theme surfaces, highlights and strokes. -->
+    <color name="mobile_glass_surface">#D9F5F7FB</color>
+    <color name="mobile_glass_surface_card">#CCEEF2F6</color>
+    <color name="mobile_glass_surface_control">#C2E2E8F0</color>
+    <color name="mobile_glass_highlight">#66FFFFFF</color>
+    <color name="mobile_glass_outline">#26000000</color>
+    <color name="mobile_glass_outline_subtle">#14000000</color>
+    <color name="mobile_glass_divider">#1A000000</color>
+    <color name="mobile_glass_shadow">#14000000</color>
+
+    <!-- Floating navigation colors -->
+    <color name="mobile_floating_nav_active">#0F172A</color>
+    <color name="mobile_floating_nav_inactive">#64748B</color>
 </resources>

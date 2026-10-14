@@ -189,8 +189,7 @@ public class BackupAndRestoreManager implements MotherActivity.OnPermissions {
 
         if (mSharedPrefsDir.isDirectory() && !FileHelpers.isEmpty(mSharedPrefsDir)) {
             File destination = new File(target, mSharedPrefsDir.getName());
-            FileHelpers.copy(mSharedPrefsDir, destination,
-                    file -> Helpers.endsWithAny(file.getName(), Utils.BACKUP_PREFS) && !BackupExclusions.isSignInFile(file), null);
+            FileHelpers.copy(mSharedPrefsDir, destination, file -> Helpers.endsWithAny(file.getName(), Utils.BACKUP_PREFS), null);
 
             // Don't store unique id
             FileHelpers.delete(new File(destination, HiddenPrefs.SHARED_PREFERENCES_NAME + ".xml"));
@@ -198,8 +197,7 @@ public class BackupAndRestoreManager implements MotherActivity.OnPermissions {
 
         if (mFilesDir.isDirectory() && !FileHelpers.isEmpty(mFilesDir)) {
             File destination = new File(target, mFilesDir.getName());
-            // NEWTUBE(backup): sign-in tokens stay out of the zip (shared storage)
-            FileHelpers.copy(mFilesDir, destination, file -> !BackupExclusions.isSignInFile(file), dir -> Helpers.equalsAny(dir.getName(), Utils.BACKUP_DIRS));
+            FileHelpers.copy(mFilesDir, destination, null, dir -> Helpers.equalsAny(dir.getName(), Utils.BACKUP_DIRS));
         }
     }
 
@@ -388,7 +386,7 @@ public class BackupAndRestoreManager implements MotherActivity.OnPermissions {
         File mediaDir = getExternalStorageDirectory();
         File dataDir = new File(mediaDir, "data");
         if (dataDir.exists()) {
-            File zipFile = new File(mediaDir,  "SmartTubeBackup.zip");
+            File zipFile = new File(mediaDir,  "ViewTubeBackup.zip");
             ZipHelper2.zipDirectory(dataDir, zipFile);
         }
     }

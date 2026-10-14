@@ -93,14 +93,20 @@ public class AboutSimpleSettingsPresenter extends BasePresenter<Void> {
             appendAutoUpdateSwitch(settingsPresenter);
         }
 
-        settingsPresenter.appendSingleButton(UiOptionItem.from(
-                getContext().getString(R.string.about_source_code),
-                getContext().getString(R.string.about_source_code_url).replace("https://", ""),
-                option -> Utils.openLinkExt(getContext(), getContext().getString(R.string.about_source_code_url))));
-        settingsPresenter.appendSingleButton(UiOptionItem.from(
-                getContext().getString(R.string.about_license),
-                getContext().getString(R.string.about_license_name),
-                option -> Utils.openLinkExt(getContext(), getContext().getString(R.string.about_license_url))));
+        String sourceCodeUrl = getContext().getString(R.string.about_source_code_url);
+        if (!sourceCodeUrl.isEmpty()) {
+            settingsPresenter.appendSingleButton(UiOptionItem.from(
+                    getContext().getString(R.string.about_source_code),
+                    sourceCodeUrl.replace("https://", ""),
+                    option -> Utils.openLinkExt(getContext(), sourceCodeUrl)));
+        }
+        String licenseUrl = getContext().getString(R.string.about_license_url);
+        if (!licenseUrl.isEmpty()) {
+            settingsPresenter.appendSingleButton(UiOptionItem.from(
+                    getContext().getString(R.string.about_license),
+                    getContext().getString(R.string.about_license_name),
+                    option -> Utils.openLinkExt(getContext(), licenseUrl)));
+        }
         settingsPresenter.appendSingleButton(UiOptionItem.from(
                 getContext().getString(R.string.diagnostic_log_send),
                 getContext().getString(R.string.diagnostic_log_send_desc),

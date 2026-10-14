@@ -48,7 +48,7 @@ abstract class CopyRenamedApks extends DefaultTask {
         builtArtifacts.elements.each { artifact ->
             def abi = artifact.filters.find { it.filterType.toString() == 'ABI' }?.identifier ?: 'universal'
             def version = artifact.versionName ?: 'unknown'
-            def outputFile = new File(outputDirectory, "NewTube_${version}_${nameTag.get()}${abi}.apk")
+            def outputFile = new File(outputDirectory, "ViewTube_${version}_${nameTag.get()}${abi}.apk")
             Files.copy(new File(artifact.outputFile).toPath(), outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
         }
     }
@@ -314,8 +314,8 @@ android {
             // fork-point 31.97/2387). versionCode starts at 10000 - above upstream's code so
             // existing test installs upgrade in place - and encodes the version:
             // 1.0.0 -> 10000, 1.0.1 -> 10001, 1.1.0 -> 10100, 2.0.0 -> 20000.
-            versionCode 11503
-            versionName "1.15.3"
+            versionCode 11500
+            versionName "1.15.0"
         }
     }
 }
@@ -410,14 +410,12 @@ dependencies {
     stmobileImplementation 'androidx.media3:media3-exoplayer-hls:' + media3Version
     stmobileImplementation 'androidx.media3:media3-datasource-okhttp:' + media3Version
     stmobileImplementation 'androidx.media3:media3-ui:' + media3Version
-    // Cronet leaf transport for the media path (H2/QUIC, like the legacy engine had): our copy of
-    // media3's CronetDataSource (player/cronet) on the embedded Cronet engine that :sharedutils
-    // ships (CronetManager). The media3-datasource-cronet artifact is not used: F-Droid rejects the
-    // Play Services provider it declares, which the app never loaded.
-    stmobileImplementation 'org.chromium.net:cronet-api:' + cronetApiVersion
-    // Compile-time-only annotations the copied CronetDataSource carries (media3 does the same).
-    stmobileCompileOnly 'com.google.errorprone:error_prone_annotations:2.48.0'
-    stmobileCompileOnly 'org.checkerframework:checker-qual:3.43.0'
+    // Cronet leaf transport for the media path (H2/QUIC, like the legacy engine had). The
+    // engine is the embedded org.chromium.net:cronet-embedded already shipped by :sharedutils
+    // (CronetManager); the GMS provider is useless weight here. The exclude stays on the SAME line:
+    // F-Droid's scanner reads build files line by line, and its pending rule (fdroid-suss !55) only
+    // clears this coordinate when the play-services-cronet exclude sits next to it.
+    stmobileImplementation('androidx.media3:media3-datasource-cronet:' + media3Version) { exclude group: 'com.google.android.gms', module: 'play-services-cronet' }
     stmobileImplementation dependencies.project(':doubletapplayerview-media3')
     stmobileImplementation dependencies.project(':sabr-media3')
     // NEWTUBE(update-flow): the phone's update sheet drives the updater directly (AppUpdates)
@@ -459,11 +457,19 @@ dependencies {
 
 // No production SABR engine is enabled. Generate only the schemas used by the instrumentation
 // proof; a pinned compiler keeps this reproducible without a machine-local protoc installation.
+def osName = System.getProperty("os.name").toLowerCase()
+def osArch = System.getProperty("os.arch").toLowerCase()
+def sabrProofProtocClassifier = "linux-x86_64"
+if (osName.contains("mac") || osName.contains("darwin")) {
+    sabrProofProtocClassifier = (osArch == "aarch64" || osArch == "arm64") ? "osx-aarch_64" : "osx-x86_64"
+} else if (osName.contains("win")) {
+    sabrProofProtocClassifier = "windows-x86_64"
+}
 configurations {
     sabrProofProtoc
 }
 dependencies {
-    sabrProofProtoc 'com.google.protobuf:protoc:3.22.3:linux-x86_64@exe'
+    sabrProofProtoc "com.google.protobuf:protoc:3.22.3:${sabrProofProtocClassifier}@exe"
 }
 def sabrProofProtoRoot = file('src/androidTest/proto')
 def sabrProofGeneratedJava = layout.buildDirectory.dir('generated/sabrProof/java')

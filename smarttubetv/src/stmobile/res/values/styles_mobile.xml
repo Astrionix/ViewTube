@@ -133,14 +133,14 @@
       the colour runs under the gesture bar to the display edge.
     -->
     <style name="Widget.NewTube.BottomSheet" parent="Widget.MaterialComponents.BottomSheet.Modal">
-        <item name="backgroundTint">@color/mobile_color_surface</item>
+        <item name="backgroundTint">@color/mobile_glass_surface_card</item>
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.NewTube.BottomSheet</item>
     </style>
 
     <style name="ShapeAppearance.NewTube.BottomSheet" parent="">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSizeTopLeft">16dp</item>
-        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeTopLeft">@dimen/mobile_glass_corner_radius_card</item>
+        <item name="cornerSizeTopRight">@dimen/mobile_glass_corner_radius_card</item>
         <item name="cornerSizeBottomLeft">0dp</item>
         <item name="cornerSizeBottomRight">0dp</item>
     </style>
@@ -212,7 +212,7 @@
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.NewTube.BottomSheetDialog.Player</item>
     </style>
 
-    <style name="ThemeOverlay.NewTube.BottomSheetDialog.Player">
+    <style name="ThemeOverlay.NewTube.BottomSheetDialog.Player" parent="ThemeOverlay.NewTube.BottomSheetDialog">
         <item name="android:windowLightStatusBar">false</item>
     </style>
 
@@ -343,6 +343,12 @@
          "Listas de reproducción" label from the bar). -->
     <style name="MobileBottomNavText" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:textSize">11sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <!-- Liquid Glass floating bottom-nav text: slightly more compact (10.5sp) so longer labels like "Subscriptions" fit cleanly without ellipsis truncation -->
+    <style name="MobileFloatingBottomNavText" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">10.5sp</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
@@ -483,6 +489,7 @@
     <style name="MobileSkeletonFeedLineWide">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">15dp</item>
+        <item name="android:layout_marginStart">12dp</item>
         <item name="android:layout_marginTop">12dp</item>
         <item name="android:layout_marginEnd">48dp</item>
         <item name="android:background">@drawable/bg_skeleton_block</item>
@@ -490,6 +497,7 @@
     <style name="MobileSkeletonFeedLineNarrow">
         <item name="android:layout_width">180dp</item>
         <item name="android:layout_height">12dp</item>
+        <item name="android:layout_marginStart">12dp</item>
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:background">@drawable/bg_skeleton_block</item>
     </style>

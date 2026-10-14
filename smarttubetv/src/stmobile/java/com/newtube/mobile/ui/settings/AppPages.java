@@ -23,6 +23,7 @@ import com.liskovsoft.smartyoutubetv2.common.utils.ClickbaitRemover;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 import com.liskovsoft.youtubeapi.service.internal.MediaServiceData;
 import com.newtube.mobile.CardMenuMigration;
+import com.newtube.mobile.ui.common.AppearancePrefs;
 import com.newtube.mobile.ui.common.MobileSnackbar;
 import com.newtube.mobile.ui.common.ThemeMode;
 
@@ -44,6 +45,37 @@ final class AppPages {
     }
 
     // ---------------------------------------------------------------------------------------------
+    // Appearance
+    // ---------------------------------------------------------------------------------------------
+
+    static SettingsPages.Page appearance(Context context) {
+        List<SettingsRow> rows = new ArrayList<>();
+
+        rows.add(SettingsRow.header(context.getString(R.string.mobile_settings_nav_header)));
+        rows.add(SettingsRow.toggle(
+                context.getString(R.string.mobile_settings_floating_header),
+                context.getString(R.string.mobile_settings_floating_header_summary),
+                () -> AppearancePrefs.isFloatingHeaderEnabled(context),
+                enabled -> AppearancePrefs.setFloatingHeaderEnabled(context, enabled)));
+        rows.add(SettingsRow.toggle(
+                context.getString(R.string.mobile_settings_floating_bottom_nav),
+                context.getString(R.string.mobile_settings_floating_bottom_nav_summary),
+                () -> AppearancePrefs.isFloatingBottomBarEnabled(context),
+                enabled -> AppearancePrefs.setFloatingBottomBarEnabled(context, enabled)));
+        rows.add(SettingsRow.note(context.getString(R.string.mobile_settings_floating_nav_note)));
+
+        rows.add(SettingsRow.divider());
+        rows.add(SettingsRow.header(context.getString(R.string.mobile_settings_theme_header)));
+        rows.add(SettingsRow.<Integer>choice(context.getString(R.string.mobile_theme))
+                .option(context.getString(R.string.mobile_theme_system), ThemeMode.SYSTEM)
+                .option(context.getString(R.string.mobile_theme_light), ThemeMode.LIGHT)
+                .option(context.getString(R.string.mobile_theme_dark), ThemeMode.DARK)
+                .bind(ThemeMode::get, mode -> ThemeMode.set(context, mode)));
+
+        return new SettingsPages.Page(context.getString(R.string.mobile_settings_appearance), rows);
+    }
+
+    // ---------------------------------------------------------------------------------------------
     // General
     // ---------------------------------------------------------------------------------------------
 
@@ -58,6 +90,12 @@ final class AppPages {
                 .option(context.getString(R.string.mobile_theme_light), ThemeMode.LIGHT)
                 .option(context.getString(R.string.mobile_theme_dark), ThemeMode.DARK)
                 .bind(ThemeMode::get, mode -> ThemeMode.set(context, mode)));
+
+        rows.add(SettingsRow.toggle(
+                context.getString(R.string.mobile_settings_floating_nav_bar),
+                context.getString(R.string.mobile_settings_floating_nav_bar_summary),
+                () -> AppearancePrefs.isFloatingBottomBarEnabled(context),
+                enabled -> AppearancePrefs.setFloatingBottomBarEnabled(context, enabled)));
 
         LanguageSettingsPresenter language = LanguageSettingsPresenter.instance(context);
         rows.add(SettingsRow.fromRadio(language.createLanguageCategory(),
@@ -170,9 +208,11 @@ final class AppPages {
 
         rows.add(SettingsRow.toggle(context.getString(R.string.mobile_settings_original_titles),
                 context.getString(R.string.mobile_settings_original_titles_summary),
-                // NEWTUBE(#45): no longer turns DeArrow titles off - both can be on; DeArrow's
-                // crowd title wins and the original title is the fallback (Video.getTitle()).
-                mainUIData::isUnlocalizedTitlesEnabled, mainUIData::setUnlocalizedTitlesEnabled));
+                mainUIData::isUnlocalizedTitlesEnabled, on -> {
+                    mainUIData.setUnlocalizedTitlesEnabled(on);
+                    // The two replace the same title: original wins over DeArrow's.
+                    com.liskovsoft.smartyoutubetv2.common.prefs.DeArrowData.instance(context).setReplaceTitlesEnabled(false);
+                }));
 
         // On the phone these change what the feed holds, not its layout (both work): kept as choices.
         rows.add(SettingsRow.<Boolean>choice(context.getString(R.string.mobile_settings_pinned_channels))

@@ -276,8 +276,8 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
                 mBadge.setVisibility(View.GONE);
             } else {
                 mBadge.setText(badgeText);
-                mBadge.setBackgroundColor(ContextCompat.getColor(context,
-                        video.isLive || video.isUpcoming ? R.color.mobile_color_badge_live_bg : R.color.mobile_color_badge_bg));
+                mBadge.setBackgroundResource(video.isLive || video.isUpcoming
+                        ? R.drawable.bg_video_badge_live : R.drawable.bg_video_badge);
                 mBadge.setVisibility(View.VISIBLE);
             }
         }

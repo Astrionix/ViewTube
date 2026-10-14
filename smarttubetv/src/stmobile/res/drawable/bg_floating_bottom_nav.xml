@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    iOS 26 Liquid Glass Floating Navigation Capsule:
+    - Ambient restrained base shadow
+    - Translucent Liquid Glass body with fine reflective edge
+    - Restrained specular top reflection gradient simulating light bending across the capsule curve
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Ambient dark base shadow -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/mobile_glass_corner_radius_capsule" />
+            <solid android:color="@color/mobile_glass_shadow" />
+        </shape>
+    </item>
+
+    <!-- Translucent Liquid Glass body with fine reflective border -->
+    <item
+        android:bottom="1dp"
+        android:left="0.5dp"
+        android:right="0.5dp"
+        android:top="0dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/mobile_glass_surface" />
+            <stroke
+                android:width="@dimen/mobile_glass_border_width"
+                android:color="@color/mobile_glass_outline" />
+            <corners android:radius="@dimen/mobile_glass_corner_radius_capsule" />
+        </shape>
+    </item>
+
+    <!-- Restrained specular light reflection on top glass rim -->
+    <item
+        android:bottom="36dp"
+        android:left="16dp"
+        android:right="16dp"
+        android:top="1dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="@color/mobile_glass_highlight"
+                android:endColor="@android:color/transparent"
+                android:type="linear" />
+            <corners
+                android:topLeftRadius="@dimen/mobile_glass_corner_radius_capsule"
+                android:topRightRadius="@dimen/mobile_glass_corner_radius_capsule" />
+        </shape>
+    </item>
+</layer-list>

@@ -10,9 +10,9 @@ import org.junit.Test;
 import java.util.List;
 
 public class DiagnosticRedactorTest {
-    private static final String REFRESH = "1//DUMMY_REFRESH_TOKEN_FOR_TESTS";
-    private static final String ACCESS = "ya29.DUMMY_ACCESS_TOKEN_FOR_TESTS";
-    private static final String CLIENT_SECRET = "DUMMY_CLIENT_SECRET";
+    private static final String REFRESH = "1//fakeRefresh012345";
+    private static final String ACCESS = "ya29.fakeAccess012345";
+    private static final String CLIENT_SECRET = "dummy_client_secret_test_xyz";
     private static final String USER_IP = "81.33.12.4";
 
     @Test
@@ -38,7 +38,7 @@ public class DiagnosticRedactorTest {
 
     @Test
     public void bearerHeaderAndStoredToken_areRemoved() {
-        assertFalse(DiagnosticRedactor.redact("authorization: Bearer " + ACCESS).contains("a0AfH6"));
+        assertFalse(DiagnosticRedactor.redact("authorization: Bearer " + ACCESS).contains("fakeAccess"));
         assertFalse(DiagnosticRedactor.redact(
                 "Success. Refresh token stored successfully in registry: " + REFRESH).contains(REFRESH));
     }

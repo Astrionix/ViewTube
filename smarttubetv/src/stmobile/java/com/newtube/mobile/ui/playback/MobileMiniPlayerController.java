@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.media3.common.Player;
 import androidx.media3.exoplayer.ExoPlayer;
@@ -44,22 +45,10 @@ public final class MobileMiniPlayerController {
     private final ImageButton mPlayPause;
     private final ImageButton mClose;
     private final ProgressBar mProgress;
+    private final View mMetaContainer;
+    private final TextView mTitle;
+    private final TextView mAuthor;
     private final Runnable mTick = this::onTick;
-    /**
-     * SCREEN-ON (#50): the card's screen-on hold follows the player's own events, not the 500 ms
-     * tick. The tick stops when the host pauses, but the card stays up (frozen, audio playing) while
-     * a translucent window such as the card menu sits on top and the host never reaches onStop - a
-     * pause or end there must still let the screen go, and playing there must still hold it.
-     */
-    private final Player.Listener mScreenOnListener = new Player.Listener() {
-        @Override
-        public void onEvents(Player player, Player.Events events) {
-            if (events.containsAny(Player.EVENT_PLAY_WHEN_READY_CHANGED, Player.EVENT_PLAYBACK_STATE_CHANGED)) {
-                setKeepScreenOn(isActivelyPlaying(player));
-            }
-        }
-    };
-    private Player mScreenOnPlayer;
 
     private TextureView mTexture;
     private boolean mEntryAnimating;
@@ -76,6 +65,9 @@ public final class MobileMiniPlayerController {
         mPlayPause = activity.findViewById(R.id.mobile_mini_play_pause);
         mClose = activity.findViewById(R.id.mobile_mini_close);
         mProgress = activity.findViewById(R.id.mobile_mini_progress);
+        mMetaContainer = activity.findViewById(R.id.mobile_mini_meta_container);
+        mTitle = activity.findViewById(R.id.mobile_mini_title);
+        mAuthor = activity.findViewById(R.id.mobile_mini_author);
 
         View.OnClickListener expand = v -> {
             if (mClosing || !MiniPlayerBridge.isActive()) {
@@ -224,6 +216,7 @@ public final class MobileMiniPlayerController {
         attachTexture();
         mBar.setVisibility(View.VISIBLE);
         updatePlayPause(player);
+        updateMetadata();
 
         Utils.removeCallbacks(mTick);
         Utils.postDelayed(mTick, TICK_MS);
@@ -340,13 +333,13 @@ public final class MobileMiniPlayerController {
         resetTransform();
         mBar.setAlpha(1f);
         mBar.setVisibility(View.GONE);
-        unwatchScreenOn();
-        setKeepScreenOn(false); // no card, no video on this screen
     }
 
     private void fadeInControls() {
-        for (View view : new View[] {mPlayPause, mClose, mProgress}) {
-            view.animate().alpha(1f).setDuration(Motion.FADE_IN_MS).setInterpolator(Motion.STANDARD).start();
+        for (View view : new View[] {mPlayPause, mClose, mProgress, mMetaContainer}) {
+            if (view != null) {
+                view.animate().alpha(1f).setDuration(Motion.FADE_IN_MS).setInterpolator(Motion.STANDARD).start();
+            }
         }
     }
 
@@ -430,6 +423,9 @@ public final class MobileMiniPlayerController {
                     mPlayPause.animate().alpha(1f).setDuration(90).start();
                     mClose.animate().alpha(1f).setDuration(90).start();
                     mProgress.animate().alpha(1f).setDuration(90).start();
+                    if (mMetaContainer != null) {
+                        mMetaContainer.animate().alpha(1f).setDuration(90).start();
+                    }
                     publishBounds();
                 })
                 .start();
@@ -458,6 +454,10 @@ public final class MobileMiniPlayerController {
         mPlayPause.setAlpha(alpha);
         mClose.setAlpha(alpha);
         mProgress.setAlpha(alpha);
+        if (mMetaContainer != null) {
+            mMetaContainer.animate().cancel();
+            mMetaContainer.setAlpha(alpha);
+        }
     }
 
     private void publishBounds() {
@@ -484,8 +484,30 @@ public final class MobileMiniPlayerController {
             mProgress.setProgress((int) (player.getCurrentPosition() * 1000 / duration));
         }
         updatePlayPause(player);
+        updateMetadata();
         MiniPlayerBridge.fitToVideo(mFrame); // an autoplayed next video may have another shape
         Utils.postDelayed(mTick, TICK_MS);
+    }
+
+    private void updateMetadata() {
+        if (mTitle == null || mMetaContainer == null) {
+            return;
+        }
+        com.liskovsoft.smartyoutubetv2.common.app.models.data.Video video = MiniPlayerBridge.getVideo();
+        if (video != null && (video.getTitle() != null || video.getAuthor() != null)) {
+            mTitle.setText(video.getTitle());
+            if (mAuthor != null) {
+                if (video.getAuthor() != null && !video.getAuthor().isEmpty()) {
+                    mAuthor.setText(video.getAuthor());
+                    mAuthor.setVisibility(View.VISIBLE);
+                } else {
+                    mAuthor.setVisibility(View.GONE);
+                }
+            }
+            mMetaContainer.setVisibility(View.VISIBLE);
+        } else {
+            mMetaContainer.setVisibility(View.GONE);
+        }
     }
 
     private void updatePlayPause(ExoPlayer player) {
@@ -493,44 +515,5 @@ public final class MobileMiniPlayerController {
                 && player.getPlaybackState() != Player.STATE_ENDED
                 && player.getPlaybackState() != Player.STATE_IDLE;
         mPlayPause.setImageResource(playing ? R.drawable.ic_player_pause : R.drawable.ic_player_play);
-        // SCREEN-ON (#50): the docked card is a visible video, so this host window holds the screen
-        // while it plays (the stopped player Activity no longer does), and lets go when it pauses.
-        watchScreenOn(player);
-        setKeepScreenOn(isActivelyPlaying(player));
-    }
-
-    private static boolean isActivelyPlaying(Player player) {
-        return player.getPlayWhenReady()
-                && (player.getPlaybackState() == Player.STATE_READY
-                    || player.getPlaybackState() == Player.STATE_BUFFERING);
-    }
-
-    /** Listen while the card is up (see mScreenOnListener); fold() stops it. */
-    private void watchScreenOn(Player player) {
-        if (mScreenOnPlayer == player) {
-            return;
-        }
-        unwatchScreenOn();
-        player.addListener(mScreenOnListener);
-        mScreenOnPlayer = player;
-    }
-
-    private void unwatchScreenOn() {
-        if (mScreenOnPlayer != null) {
-            mScreenOnPlayer.removeListener(mScreenOnListener);
-            mScreenOnPlayer = null;
-        }
-    }
-
-    private void setKeepScreenOn(boolean on) {
-        android.view.Window window = mActivity.getWindow();
-        if (window == null) {
-            return;
-        }
-        if (on) {
-            window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        } else {
-            window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        }
     }
 }

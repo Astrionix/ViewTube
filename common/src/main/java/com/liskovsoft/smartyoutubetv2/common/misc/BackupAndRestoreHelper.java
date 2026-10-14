@@ -24,7 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class BackupAndRestoreHelper implements OnResult {
-    public static final String BACKUP_FOLDER_NAME = "SmartTubeBackup";
+    public static final String BACKUP_FOLDER_NAME = "ViewTubeBackup";
     private static final int REQ_PICK_FILES = 1001;
     private final Context mContext;
     private Runnable mOnSuccess;
@@ -287,7 +287,7 @@ public class BackupAndRestoreHelper implements OnResult {
     private GeneralData getGeneralData() {
         return GeneralData.instance(mContext);
     }
-    
+
     private String createBackupZipNameWithTimestamp() {
         return mContext.getPackageName() + "_" + getTimeStamp() + ".zip";
     }

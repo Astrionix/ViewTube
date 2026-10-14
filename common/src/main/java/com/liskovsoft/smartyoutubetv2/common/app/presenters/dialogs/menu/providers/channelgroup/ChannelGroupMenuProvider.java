@@ -44,8 +44,7 @@ public class ChannelGroupMenuProvider extends ContextMenuProvider {
 
     @Override
     public boolean isEnabled(Video item) {
-        // NEWTUBE(#56): a playlist card has no channel to group (adding one did nothing).
-        return item != null && !item.isPlaylistCard() && (item.channelId != null || item.videoId != null);
+        return item != null && (item.channelId != null || item.videoId != null);
     }
 
     @Override

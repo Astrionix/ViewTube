@@ -1,8 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <solid android:color="@color/mobile_color_surface" />
-    <corners
-        android:topLeftRadius="16dp"
-        android:topRightRadius="16dp" />
-</shape>
+<!--
+  Liquid Glass Bottom Sheet Surface (ViewTube Design System)
+  - Ambient depth base: soft top shadow
+  - Translucent glass sheet body: theme-aware surface with fine reflective outline
+  - Specular top rim highlight: refracted light reflection along the upper curve
+  - Rounded top corners (16dp), bottom edge flush with system navigation area
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Ambient depth base -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners
+                android:topLeftRadius="@dimen/mobile_glass_corner_radius_card"
+                android:topRightRadius="@dimen/mobile_glass_corner_radius_card"
+                android:bottomLeftRadius="0dp"
+                android:bottomRightRadius="0dp" />
+            <solid android:color="@color/mobile_glass_shadow" />
+        </shape>
+    </item>
+
+    <!-- Translucent glass sheet body with reflective outline -->
+    <item
+        android:bottom="0dp"
+        android:left="0dp"
+        android:right="0dp"
+        android:top="0dp">
+        <shape android:shape="rectangle">
+            <corners
+                android:topLeftRadius="@dimen/mobile_glass_corner_radius_card"
+                android:topRightRadius="@dimen/mobile_glass_corner_radius_card"
+                android:bottomLeftRadius="0dp"
+                android:bottomRightRadius="0dp" />
+            <solid android:color="@color/mobile_glass_surface_card" />
+            <stroke
+                android:width="@dimen/mobile_glass_border_width"
+                android:color="@color/mobile_glass_outline" />
+        </shape>
+    </item>
+
+    <!-- Specular light sheen on top glass rim -->
+    <item
+        android:bottom="2dp"
+        android:left="1dp"
+        android:right="1dp"
+        android:top="1dp">
+        <shape android:shape="rectangle">
+            <corners
+                android:topLeftRadius="@dimen/mobile_glass_corner_radius_card"
+                android:topRightRadius="@dimen/mobile_glass_corner_radius_card"
+                android:bottomLeftRadius="0dp"
+                android:bottomRightRadius="0dp" />
+            <gradient
+                android:angle="270"
+                android:startColor="@color/mobile_glass_highlight"
+                android:endColor="@android:color/transparent"
+                android:type="linear" />
+        </shape>
+    </item>
+</layer-list>

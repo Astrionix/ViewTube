@@ -36,6 +36,7 @@ import java.util.List;
  */
 public final class SettingsPages {
     public static final String ROOT = "root";
+    public static final String APPEARANCE = "appearance";
     public static final String GENERAL = "general";
     public static final String FEEDS = "feeds";
     public static final String FEEDS_TABS = "feeds_tabs";
@@ -69,6 +70,8 @@ public final class SettingsPages {
     @NonNull
     static Page build(@NonNull Context context, @NonNull String id) {
         switch (id) {
+            case APPEARANCE:
+                return AppPages.appearance(context);
             case GENERAL:
                 return AppPages.general(context);
             case FEEDS:
@@ -117,6 +120,8 @@ public final class SettingsPages {
                 page -> AccountsSheet.show(page.requireActivity(), page::rebuild)));
 
         rows.add(SettingsRow.header(context.getString(R.string.mobile_settings_group_app)));
+        rows.add(SettingsRow.page(R.drawable.ic_settings_appearance, context.getString(R.string.mobile_settings_appearance),
+                context.getString(R.string.mobile_settings_appearance_summary), APPEARANCE));
         rows.add(SettingsRow.page(R.drawable.ic_settings_general, context.getString(R.string.mobile_settings_general),
                 context.getString(R.string.mobile_settings_general_summary), GENERAL)
                 .summary(() -> generalSummary(context)));
@@ -182,12 +187,18 @@ public final class SettingsPages {
         for (OptionItem item : AboutShareRows.create(context)) {
             rows.add(SettingsRow.action(item.getTitle(), item.getDescription(), page -> item.onSelect(true)));
         }
-        rows.add(SettingsRow.action(context.getString(R.string.about_source_code),
-                context.getString(R.string.about_source_code_url).replace("https://", ""),
-                page -> Utils.openLinkExt(page.requireContext(), context.getString(R.string.about_source_code_url))));
-        rows.add(SettingsRow.action(context.getString(R.string.about_license),
-                context.getString(R.string.about_license_name),
-                page -> Utils.openLinkExt(page.requireContext(), context.getString(R.string.about_license_url))));
+        String sourceCodeUrl = context.getString(R.string.about_source_code_url);
+        if (!sourceCodeUrl.isEmpty()) {
+            rows.add(SettingsRow.action(context.getString(R.string.about_source_code),
+                    sourceCodeUrl.replace("https://", ""),
+                    page -> Utils.openLinkExt(page.requireContext(), sourceCodeUrl)));
+        }
+        String licenseUrl = context.getString(R.string.about_license_url);
+        if (!licenseUrl.isEmpty()) {
+            rows.add(SettingsRow.action(context.getString(R.string.about_license),
+                    context.getString(R.string.about_license_name),
+                    page -> Utils.openLinkExt(page.requireContext(), licenseUrl)));
+        }
 
         return new Page(context.getString(R.string.about_app, context.getString(R.string.app_name)), rows);
     }

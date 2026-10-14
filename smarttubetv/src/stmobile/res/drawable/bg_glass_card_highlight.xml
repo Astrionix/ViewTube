@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Liquid Glass Card Top Highlight Reflection (ViewTube Design System)
+  Specular light sheen simulating curved refracted light on the top edge of glass cards.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners
+        android:topLeftRadius="@dimen/mobile_glass_corner_radius_card"
+        android:topRightRadius="@dimen/mobile_glass_corner_radius_card"
+        android:bottomLeftRadius="0dp"
+        android:bottomRightRadius="0dp" />
+    <gradient
+        android:angle="270"
+        android:startColor="@color/mobile_glass_highlight"
+        android:endColor="@android:color/transparent"
+        android:type="linear" />
+</shape>

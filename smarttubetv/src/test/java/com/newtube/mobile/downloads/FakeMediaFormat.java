@@ -13,7 +13,6 @@ final class FakeMediaFormat implements MediaFormat {
     private final String mClen;
     private final String mUrl;
     private String mAudioTrackId;
-    private String mLanguage;
     private boolean mDrc;
     private String mQualityLabel;
 
@@ -51,12 +50,6 @@ final class FakeMediaFormat implements MediaFormat {
         return this;
     }
 
-    /** The player-facing tag built from the URL xtags: "en (original)", "es (dubbed-auto)". */
-    FakeMediaFormat lang(String language) {
-        mLanguage = language;
-        return this;
-    }
-
     FakeMediaFormat drc() {
         mDrc = true;
         return this;
@@ -88,7 +81,7 @@ final class FakeMediaFormat implements MediaFormat {
     @Override public boolean isOtf() { return false; }
     @Override public String getOtfInitUrl() { return null; }
     @Override public String getOtfTemplateUrl() { return null; }
-    @Override public String getLanguage() { return mLanguage; }
+    @Override public String getLanguage() { return null; }
     @Override public int getTargetDurationSec() { return 0; }
     @Override public int getMaxDvrDurationSec() { return 0; }
     @Override public int getApproxDurationMs() { return 0; }

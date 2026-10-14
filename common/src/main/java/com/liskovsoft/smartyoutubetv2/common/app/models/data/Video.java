@@ -42,8 +42,7 @@ public final class Video {
     private static final float RESTORE_POSITION_PERCENTS = 10; // min value for immediately closed videos
     public int id;
     public String title;
-    public String deArrowTitle; // DeArrow's crowd-sourced title (wins over everything)
-    public String unlocalizedTitle; // NEWTUBE(#45): the uploader's title, untranslated (Original titles)
+    public String deArrowTitle;
     public CharSequence secondTitle;
     private String metadataTitle;
     private CharSequence metadataSecondTitle;
@@ -96,9 +95,6 @@ public final class Video {
     public String subscriberCount;
     public AudioLoudness loudness; // NEWTUBE(loudness): null = unknown, played at unity
     public boolean deArrowProcessed;
-    // NEWTUBE(#45): one flag per processor. They used to share deArrowProcessed, so DeArrow
-    // (which runs first) claimed every video and the Original titles step skipped them all.
-    public boolean unlocalizedTitleProcessed;
     public boolean isLiveEnd;
     public boolean isShuffled;
     public String searchQuery;
@@ -309,12 +305,11 @@ public final class Video {
     }
 
     public String getTitle() {
-        return deArrowTitle != null ? deArrowTitle : unlocalizedTitle != null ? unlocalizedTitle : title;
+        return deArrowTitle != null ? deArrowTitle : title;
     }
 
     public String getTitleFull() {
-        return deArrowTitle != null ? deArrowTitle : unlocalizedTitle != null ? unlocalizedTitle
-                : metadataTitle != null ? metadataTitle : title;
+        return deArrowTitle != null ? deArrowTitle : metadataTitle != null ? metadataTitle : title;
     }
 
     public CharSequence getSecondTitle() {
@@ -574,17 +569,6 @@ public final class Video {
      */
     public boolean isPlaylistAsChannel() {
         return videoId == null && channelId != null && itemType == MediaItem.TYPE_PLAYLIST;
-    }
-
-    /**
-     * NEWTUBE(#56): a card that stands for a whole playlist (Playlists section, search, a channel's
-     * playlists), not one video. Channel actions - subscription groups, Block the channel - have
-     * nothing to act on there. Search results deliver playlists as lockups with no type and no
-     * playlistId - only the playlist's browse id ("VL" + playlist id) in channelId.
-     */
-    public boolean isPlaylistCard() {
-        return itemType == MediaItem.TYPE_PLAYLIST || isPlaylistAsChannel()
-                || (videoId == null && channelId != null && channelId.startsWith("VL"));
     }
 
     /**
