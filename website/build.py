@@ -36,10 +36,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 SRC = ROOT / "src"
-SITE = "https://newtube.org"
+SITE = "https://viewtube.app"
 LANGS = ("en", "es")
 PAGES = ("index", "download", "trust", "faq")
-REPO = "aleixrodriala/newtube"
+REPO = "Astrionix/ViewTube"
 RELEASES_URL = "https://github.com/%s/releases/latest" % REPO
 ABIS = ("arm64-v8a", "armeabi-v7a", "universal", "x86")
 MONTHS = {
@@ -52,7 +52,7 @@ SLOT_RE = re.compile(r"\{\{\s*([a-zA-Z0-9_.]+)\s*\}\}")
 
 def github(path):
     req = urllib.request.Request("https://api.github.com/repos/%s%s" % (REPO, path),
-                                 headers={"Accept": "application/vnd.github+json", "User-Agent": "newtube-site-build"})
+                                 headers={"Accept": "application/vnd.github+json", "User-Agent": "viewtube-site-build"})
     token = os.environ.get("GITHUB_TOKEN")
     if token:
         req.add_header("Authorization", "Bearer " + token)
@@ -84,7 +84,7 @@ def release_ctx(lang, rel):
     for abi in ABIS:
         key = abi.replace("-", "_")
         ctx["apk_url_" + key], ctx["apk_size_" + key] = RELEASES_URL, ""
-        ctx["apk_name_" + key] = "NewTube_&lt;version&gt;_%s.apk" % abi
+        ctx["apk_name_" + key] = "ViewTube_&lt;version&gt;_%s.apk" % abi
     if not rel:
         return ctx
     d = datetime.strptime(rel["date"][:10], "%Y-%m-%d")
@@ -132,8 +132,8 @@ def json_ld(lang, strings):
     data = {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        "name": "NewTube",
-        "alternateName": "NewTube for Android",
+        "name": "ViewTube",
+        "alternateName": "ViewTube for Android",
         "description": strings["ld_description"],
         "inLanguage": lang,
         "applicationCategory": "MultimediaApplication",
@@ -141,14 +141,14 @@ def json_ld(lang, strings):
         "operatingSystem": "Android 7.0 or newer",
         "softwareRequirements": "Android 7.0 or newer; no Google Play Services needed",
         "url": SITE + page_path(lang, "index"),
-        "downloadUrl": "https://github.com/aleixrodriala/newtube/releases/latest",
-        "codeRepository": "https://github.com/aleixrodriala/newtube",
+        "downloadUrl": "https://github.com/Astrionix/ViewTube/releases/latest",
+        "codeRepository": "https://github.com/Astrionix/ViewTube",
         "image": SITE + "/assets/icon-512.png",
         "screenshot": [SITE + "/assets/screens/watch-720.webp", SITE + "/assets/screens/downloads-720.webp"],
         "license": "https://opensource.org/licenses/MIT",
         "isAccessibleForFree": True,
         "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
-        "author": {"@type": "Person", "name": "aleixrodriala", "url": "https://github.com/aleixrodriala"},
+        "author": {"@type": "Person", "name": "Astrionix", "url": "https://github.com/Astrionix"},
         "isBasedOn": {
             "@type": "SoftwareApplication",
             "name": "SmartTube",

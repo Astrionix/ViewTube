@@ -102,4 +102,36 @@ public final class GlassMaterial {
         }
         view.setBackgroundResource(getBackgroundRes(shape));
     }
+
+    /**
+     * Applies Emil Kowalski tactile spring press feedback to an interactive view.
+     * Compresses the view gently on pointer down and releases with a snappy spring deceleration.
+     */
+    public static void applyTouchScaleFeedback(@Nullable View view) {
+        if (view == null) {
+            return;
+        }
+        view.setOnTouchListener((v, event) -> {
+            switch (event.getActionMasked()) {
+                case android.view.MotionEvent.ACTION_DOWN:
+                    v.animate()
+                            .scaleX(0.96f)
+                            .scaleY(0.96f)
+                            .setDuration(100)
+                            .setInterpolator(Motion.STANDARD)
+                            .start();
+                    break;
+                case android.view.MotionEvent.ACTION_UP:
+                case android.view.MotionEvent.ACTION_CANCEL:
+                    v.animate()
+                            .scaleX(1.0f)
+                            .scaleY(1.0f)
+                            .setDuration(240)
+                            .setInterpolator(Motion.EMPHASIZED_DECELERATE)
+                            .start();
+                    break;
+            }
+            return false;
+        });
+    }
 }

@@ -140,6 +140,14 @@
           navigator.clipboard.writeText(target.textContent.trim()).then(function () {
             label.textContent = words.done;
             if (status) status.textContent = words.said;
+            if (navigator.vibrate) { try { navigator.vibrate(10); } catch (e) {} }
+            if (btn.animate) {
+              btn.animate([
+                { transform: 'scale(0.92)' },
+                { transform: 'scale(1.04)' },
+                { transform: 'scale(1)' }
+              ], { duration: 240, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' });
+            }
             clearTimeout(reset);
             reset = setTimeout(function () {
               label.textContent = words.copy;
