@@ -16,6 +16,7 @@ import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
@@ -26,6 +27,7 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.liskovsoft.smartyoutubetv2.tv.R;
+import com.newtube.mobile.ui.common.Motion;
 
 /**
  * Liquid Glass Floating Bottom Navigation Bar for ViewTube.
@@ -69,6 +71,11 @@ public class LiquidGlassBottomNavigationView extends BottomNavigationView {
     private float mBubbleWidth = 0f;
     private float mBubbleHeight = 0f;
     private float mBubbleStretch = 0f; // fluid elongation factor [-1.0 .. 1.0]
+
+    // Interactive Touch & Surface Tension State
+    private float mBubblePressScaleX = 1.0f;
+    private float mBubblePressScaleY = 1.0f;
+    private ValueAnimator mPressAnimator;
 
     private ValueAnimator mBubbleAnimator;
     private boolean mIsDarkTheme = true;
@@ -206,19 +213,8 @@ public class LiquidGlassBottomNavigationView extends BottomNavigationView {
                     Shader.TileMode.CLAMP
             ));
 
-            // Specular top rim sheen: soft glint fading at both ends
-            mGlassRimPaint.setShader(new LinearGradient(
-                    0, 0, w, 0,
-                    new int[]{
-                            Color.TRANSPARENT,
-                            Color.parseColor("#4DFFFFFF"),
-                            Color.parseColor("#80FFFFFF"),
-                            Color.parseColor("#4DFFFFFF"),
-                            Color.TRANSPARENT
-                    },
-                    new float[]{0f, 0.25f, 0.5f, 0.75f, 1f},
-                    Shader.TileMode.CLAMP
-            ));
+            // Specular top rim sheen: light glint tracking the bubble position
+            updateRimShader(mBubbleCurrentX > 0 ? mBubbleCurrentX : (float) w / 2f);
 
             // Bubble glow & water lens paints
             mBubbleGlowPaint.setColor(Color.parseColor("#2538BDF8"));
@@ -240,21 +236,57 @@ public class LiquidGlassBottomNavigationView extends BottomNavigationView {
                     Shader.TileMode.CLAMP
             ));
 
+            updateRimShader(mBubbleCurrentX > 0 ? mBubbleCurrentX : (float) w / 2f);
+
+            mBubbleGlowPaint.setColor(Color.parseColor("#1A0284C7"));
+            mBubbleMeniscusPaint.setColor(Color.parseColor("#80FFFFFF"));
+        }
+    }
+
+    /**
+     * Updates the specular top rim highlight shader so the bright light glint tracks
+     * the active water bubble across the glass tube curvature.
+     */
+    private void updateRimShader(float focalX) {
+        int w = mLastWidth;
+        if (w <= 0) {
+            return;
+        }
+
+        float glintRadius = dp(75f);
+        float startX = Math.max(0f, focalX - glintRadius);
+        float endX = Math.min((float) w, focalX + glintRadius);
+        if (endX <= startX) {
+            startX = 0f;
+            endX = (float) w;
+        }
+
+        if (mIsDarkTheme) {
             mGlassRimPaint.setShader(new LinearGradient(
-                    0, 0, w, 0,
+                    startX, 0, endX, 0,
                     new int[]{
                             Color.TRANSPARENT,
-                            Color.parseColor("#66FFFFFF"),
-                            Color.parseColor("#A6FFFFFF"),
-                            Color.parseColor("#66FFFFFF"),
+                            Color.parseColor("#33FFFFFF"),
+                            Color.parseColor("#99FFFFFF"),
+                            Color.parseColor("#33FFFFFF"),
                             Color.TRANSPARENT
                     },
                     new float[]{0f, 0.25f, 0.5f, 0.75f, 1f},
                     Shader.TileMode.CLAMP
             ));
-
-            mBubbleGlowPaint.setColor(Color.parseColor("#1A0284C7"));
-            mBubbleMeniscusPaint.setColor(Color.parseColor("#80FFFFFF"));
+        } else {
+            mGlassRimPaint.setShader(new LinearGradient(
+                    startX, 0, endX, 0,
+                    new int[]{
+                            Color.TRANSPARENT,
+                            Color.parseColor("#4DFFFFFF"),
+                            Color.parseColor("#CCFFFFFF"),
+                            Color.parseColor("#4DFFFFFF"),
+                            Color.TRANSPARENT
+                    },
+                    new float[]{0f, 0.25f, 0.5f, 0.75f, 1f},
+                    Shader.TileMode.CLAMP
+            ));
         }
     }
 
@@ -304,6 +336,7 @@ public class LiquidGlassBottomNavigationView extends BottomNavigationView {
             mBubbleCurrentX = targetX;
             mBubbleTargetX = targetX;
             mBubbleStretch = 0f;
+            updateRimShader(targetX);
             invalidate();
             return;
         }
@@ -325,8 +358,8 @@ public class LiquidGlassBottomNavigationView extends BottomNavigationView {
         final float direction = Math.signum(travelDistance);
 
         mBubbleAnimator = ValueAnimator.ofFloat(0f, 1f);
-        mBubbleAnimator.setDuration(320);
-        mBubbleAnimator.setInterpolator(new OvershootInterpolator(1.25f));
+        mBubbleAnimator.setDuration(300);
+        mBubbleAnimator.setInterpolator(new OvershootInterpolator(1.20f));
 
         mBubbleAnimator.addUpdateListener(anim -> {
             float fraction = anim.getAnimatedFraction();
@@ -336,6 +369,7 @@ public class LiquidGlassBottomNavigationView extends BottomNavigationView {
             float stretchCurve = (float) Math.sin(fraction * Math.PI);
             mBubbleStretch = direction * stretchCurve * 0.45f;
 
+            updateRimShader(mBubbleCurrentX);
             invalidate();
         });
 
@@ -344,11 +378,50 @@ public class LiquidGlassBottomNavigationView extends BottomNavigationView {
             public void onAnimationEnd(Animator animation) {
                 mBubbleCurrentX = targetX;
                 mBubbleStretch = 0f;
+                updateRimShader(targetX);
                 invalidate();
             }
         });
 
         mBubbleAnimator.start();
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (mFloatingEnabled) {
+            switch (ev.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                    animateBubblePress(true);
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    animateBubblePress(false);
+                    break;
+            }
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    private void animateBubblePress(boolean pressed) {
+        if (mPressAnimator != null && mPressAnimator.isRunning()) {
+            mPressAnimator.cancel();
+        }
+
+        final float targetScaleY = pressed ? 0.88f : 1.0f;
+        final float targetScaleX = pressed ? 1.08f : 1.0f;
+        final float startScaleY = mBubblePressScaleY;
+        final float startScaleX = mBubblePressScaleX;
+
+        mPressAnimator = ValueAnimator.ofFloat(0f, 1f);
+        mPressAnimator.setDuration(pressed ? 90 : 220);
+        mPressAnimator.setInterpolator(pressed ? Motion.STANDARD : Motion.EMPHASIZED_DECELERATE);
+        mPressAnimator.addUpdateListener(anim -> {
+            float f = (float) anim.getAnimatedValue();
+            mBubblePressScaleY = startScaleY + (targetScaleY - startScaleY) * f;
+            mBubblePressScaleX = startScaleX + (targetScaleX - startScaleX) * f;
+            invalidate();
+        });
+        mPressAnimator.start();
     }
 
     @Override
@@ -416,10 +489,10 @@ public class LiquidGlassBottomNavigationView extends BottomNavigationView {
             return;
         }
 
-        // Fluid displacement: horizontal stretch in travel direction, subtle vertical contraction
+        // Fluid displacement: horizontal stretch in travel direction, subtle vertical contraction + touch pressure
         float stretchPx = mBubbleStretch * dp(14f);
-        float halfW = (mBubbleWidth / 2f) + Math.abs(stretchPx);
-        float halfH = (mBubbleHeight / 2f) - Math.abs(mBubbleStretch) * dp(2f);
+        float halfW = ((mBubbleWidth / 2f) + Math.abs(stretchPx)) * mBubblePressScaleX;
+        float halfH = ((mBubbleHeight / 2f) - Math.abs(mBubbleStretch) * dp(2f)) * mBubblePressScaleY;
 
         float bLeft = mBubbleCurrentX - halfW;
         float bRight = mBubbleCurrentX + halfW;
