@@ -26,6 +26,8 @@ final class BrowseTopBar {
         mTitle = activity.findViewById(R.id.mobile_title_bar);
         mBack = activity.findViewById(R.id.mobile_title_back);
         mBack.setOnClickListener(v -> onBack.run());
+        com.newtube.mobile.ui.common.GlassMaterial.applyTouchScaleFeedback(mBack);
+        mTitle.setLetterSpacing(-0.02f);
         mWordmarkInset = mTitle.getPaddingStart();
         mBesideBackInset = activity.getResources()
                 .getDimensionPixelSize(R.dimen.mobile_dialog_title_inset_with_back);

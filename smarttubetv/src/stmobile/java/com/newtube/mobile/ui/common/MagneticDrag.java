@@ -112,6 +112,22 @@ public final class MagneticDrag {
         return mDetached;
     }
 
+    /**
+     * Apple Fluid Interface: Evaluates whether release acts based on projected momentum.
+     * Even if the finger has not crossed the static threshold, a fast flick past releaseVelocity
+     * projects across the detachment line and triggers the action.
+     *
+     * @param velocityPxPerSec release velocity of the gesture (px/s)
+     * @return true if current position or projected momentum crosses detachment
+     */
+    public boolean shouldCommit(float velocityPxPerSec) {
+        if (mDetached) {
+            return true;
+        }
+        float projectedDistance = Math.abs(mFinger + Motion.project(velocityPxPerSec));
+        return projectedDistance >= mDetachPx;
+    }
+
     /** Where the object sits (the last value handed to the target). */
     public float position() {
         return mPosition;

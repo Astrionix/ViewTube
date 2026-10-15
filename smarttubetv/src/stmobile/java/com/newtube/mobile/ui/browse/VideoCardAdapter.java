@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.newtube.mobile.ui.common.GlassMaterial;
 import com.newtube.mobile.ui.playback.PlayerTransitionBridge;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.Video;
 import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData;
@@ -199,6 +200,8 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
                     clickListener.onVideoClick(mVideo);
                 }
             });
+
+            GlassMaterial.applyTouchScaleFeedback(itemView);
         }
 
         public void bind(Video video, OnVideoLongClickListener longClickListener) {
@@ -429,6 +432,8 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
                     clickListener.onVideoClick(mVideo);
                 }
             });
+
+            GlassMaterial.applyTouchScaleFeedback(itemView);
         }
 
         void bind(Video video, OnVideoLongClickListener longClickListener) {

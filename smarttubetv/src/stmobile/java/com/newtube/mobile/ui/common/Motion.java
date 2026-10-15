@@ -21,6 +21,44 @@ public final class Motion {
     public static final Interpolator STANDARD_DECELERATE = new PathInterpolator(0f, 0f, 0f, 1f);
     public static final Interpolator STANDARD_ACCELERATE = new PathInterpolator(0.3f, 0f, 1f, 1f);
 
+    /** Apple Fluid Interface: Canonical natural deceleration curve (WWDC Designing Fluid Interfaces). */
+    public static final Interpolator APPLE_DEFAULT = new PathInterpolator(0.16f, 1f, 0.3f, 1f);
+    /** Apple Fluid Interface: Drawer and bottom sheet curve with slight momentum snap. */
+    public static final Interpolator APPLE_SHEET = new PathInterpolator(0.32f, 0.72f, 0f, 1f);
+
+    /**
+     * Apple Fluid Interface: Projects initial release velocity into distance using exponential decay.
+     * Deceleration rate is ~0.998 for standard scroll/flick inertia; 0.99 for snappier gestures.
+     *
+     * @param initialVelocity units per second (e.g. px/s)
+     * @param decelerationRate decay constant (typically 0.998f)
+     * @return projected travel distance in same units
+     */
+    public static float project(float initialVelocity, float decelerationRate) {
+        return (initialVelocity / 1000f) * decelerationRate / (1f - decelerationRate);
+    }
+
+    public static float project(float initialVelocity) {
+        return project(initialVelocity, 0.998f);
+    }
+
+    /**
+     * Apple Fluid Interface: Continuous progressive resistance at a boundary.
+     * The further past the boundary the finger pulls, the stiffer the resistance.
+     *
+     * @param overshoot distance dragged past boundary (positive or negative)
+     * @param dimension width or height of the viewport/container
+     * @param constant resistance factor (Apple standard is 0.55f)
+     * @return resisted displacement
+     */
+    public static float rubberband(float overshoot, float dimension, float constant) {
+        return (overshoot * dimension * constant) / (dimension + constant * Math.abs(overshoot));
+    }
+
+    public static float rubberband(float overshoot, float dimension) {
+        return rubberband(overshoot, dimension, 0.55f);
+    }
+
     /** Content that swaps in place (text, counts, a list replacing its skeleton). */
     public static final long FADE_IN_MS = 150;
     /** Content leaving before other content takes its place (the first half of a fade-through). */
