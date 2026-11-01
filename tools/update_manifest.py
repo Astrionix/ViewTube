@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Write newtube.json, the manifest the in-app updater reads (Settings -> About -> Check for updates).
+"""Write viewtube.json, the manifest the in-app updater reads (Settings -> About -> Check for updates).
 
 Format (SharedModules appupdatechecker2, UpdateManifest): a "package" object with the download
 links, one list per ABI ("downloadUrlList_<Build.SUPPORTED_ABIS[0]>") plus "downloadUrlList" for any

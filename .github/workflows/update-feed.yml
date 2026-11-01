@@ -42,19 +42,13 @@ jobs:
             exit 1
           fi
           newest() { jq '[to_entries[] | select(.key != "package") | .value.versionCode] | max' "$1"; }
-          gh release download "$TAG_NAME" --pattern '*tube.json' --dir feed
+          gh release download "$TAG_NAME" --pattern viewtube.json --dir feed
           target_json="feed/viewtube.json"
-          if [ ! -f "$target_json" ]; then
-            target_json="feed/newtube.json"
-          fi
           jq -e --arg v "${TAG_NAME#v}" 'has($v) and (.package.downloadUrlList | length > 0)' "$target_json"
           # Never move the feed back: an older release published (or dispatched) later would tell
           # installs newer than it that they're up to date.
-          if gh release download latest --pattern '*tube.json' --dir current; then
+          if gh release download latest --pattern viewtube.json --dir current; then
             current_json="current/viewtube.json"
-            if [ ! -f "$current_json" ]; then
-              current_json="current/newtube.json"
-            fi
             if [ -f "$current_json" ] && [ "$(newest "$target_json")" -lt "$(newest "$current_json")" ]; then
               echo "::error::$TAG_NAME is older than what the feed serves (versionCode $(newest "$current_json"))."
               exit 1
@@ -63,14 +57,14 @@ jobs:
           # --clobber deletes the old file before uploading, so a failed upload would leave old
           # installs with no manifest: retry, then put the previous one back.
           for attempt in 1 2 3; do
-            if gh release upload latest feed/*tube.json --clobber; then
+            if gh release upload latest feed/viewtube.json --clobber; then
               echo "The feed now serves $TAG_NAME."
               exit 0
             fi
             sleep 10
           done
           if [ -d current ]; then
-            gh release upload latest current/*tube.json --clobber || true
+            gh release upload latest current/viewtube.json --clobber || true
           fi
           echo "::error::Couldn't upload the feed for $TAG_NAME."
           exit 1

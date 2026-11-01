@@ -1,6 +1,6 @@
-# NewTube website
+# ViewTube website
 
-The site for NewTube, served at <https://newtube.org/> (custom domain on GitHub Pages).
+The site for ViewTube.
 `.github/workflows/pages.yml` builds this folder and copies the result to the
 [newtube-app/newtube-app.github.io](https://github.com/newtube-app/newtube-app.github.io) repo,
 which GitHub Pages serves, and turns the old address (aleixrodriala.github.io/newtube) into a

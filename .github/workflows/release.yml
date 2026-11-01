@@ -143,12 +143,11 @@ jobs:
           (cd dist && sha256sum -- *.apk > SHA256SUMS && cat SHA256SUMS)
 
       # The in-app updater's manifest, served from the release as
-      # releases/latest/download/viewtube.json (and newtube.json) once published
+      # releases/latest/download/viewtube.json once published
       - name: Write the update manifest
         if: env.TAG != ''
         run: |
           python3 tools/update_manifest.py --tag "$TAG" --dist dist --out dist/viewtube.json
-          cp dist/viewtube.json dist/newtube.json
           cat dist/viewtube.json
 
       - name: Attest the build

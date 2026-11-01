@@ -1,4 +1,4 @@
-# NewTube — Novedades
+# ViewTube — Novedades
 
 Cambios visibles para el usuario, en español. El historial completo de
 versiones anteriores está en [CHANGELOG.md](CHANGELOG.md) (en inglés).

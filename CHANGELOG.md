@@ -1,6 +1,6 @@
-# NewTube Changelog
+# ViewTube Changelog
 
-All notable user-facing changes to NewTube, the phone app built on SmartTube.
+All notable user-facing changes to ViewTube, the phone app built on SmartTube.
 
 ## 1.15.0 — 2026-10-02 — Los Morancos Edition
 
