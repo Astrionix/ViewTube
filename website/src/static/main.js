@@ -23,9 +23,9 @@
       "#faq": "/faq/",
       "#sign-in": "/faq/#sign-in",
       "#how-fast": "#speed",
-      "#smarttube": "/faq/#smarttube-on-phones",
-      "#smarttube-for-phones": "/faq/#smarttube-on-phones",
-      "#built-on-smarttube": "/faq/#smarttube-on-phones"
+      "#smarttube": "/faq/#features-overview",
+      "#smarttube-for-phones": "/faq/#features-overview",
+      "#built-on-smarttube": "/faq/#features-overview"
     };
     var to = map[location.hash];
     if (!to) return;

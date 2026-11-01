@@ -149,12 +149,6 @@ def json_ld(lang, strings):
         "isAccessibleForFree": True,
         "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
         "author": {"@type": "Person", "name": "Astrionix", "url": "https://github.com/Astrionix"},
-        "isBasedOn": {
-            "@type": "SoftwareApplication",
-            "name": "SmartTube",
-            "url": "https://github.com/yuliskov/SmartTube",
-            "author": {"@type": "Person", "name": "yuliskov", "url": "https://github.com/yuliskov"},
-        },
         "featureList": strings["ld_features"],
     }
     body = json.dumps(data, ensure_ascii=False, indent=2).replace("</", "<\\/")
