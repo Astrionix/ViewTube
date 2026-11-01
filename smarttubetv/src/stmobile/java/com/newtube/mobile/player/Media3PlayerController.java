@@ -1259,7 +1259,12 @@ public class Media3PlayerController implements Player.Listener {
         } else if (isPausePressed) {
             mEventListener.onPause();
         } else if (isPlaybackEnded) {
-            mEventListener.onPlayEnd();
+            if (com.newtube.mobile.ui.playback.SleepTimer.instance().isEndOfVideo()) {
+                com.newtube.mobile.ui.playback.SleepTimer.instance().onVideoEnded();
+                setPlayWhenReady(false);
+            } else {
+                mEventListener.onPlayEnd();
+            }
             mIsEnded = true;
         } else if (isBuffering) {
             mEventListener.onBuffering();

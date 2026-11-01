@@ -6,16 +6,42 @@
   instead of maintaining five near-identical layouts.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dialog_row_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
+    android:layout_marginStart="14dp"
+    android:layout_marginEnd="14dp"
+    android:layout_marginTop="3.5dp"
+    android:layout_marginBottom="3.5dp"
+    android:elevation="1dp"
+    android:background="@drawable/bg_settings_row_pill"
+    android:clickable="true"
+    android:focusable="true"
     android:gravity="center_vertical"
-    android:minHeight="56dp"
+    android:minHeight="54dp"
     android:orientation="horizontal"
-    android:paddingStart="16dp"
+    android:paddingStart="14dp"
     android:paddingEnd="16dp">
+
+    <FrameLayout
+        android:id="@+id/dialog_row_icon_container"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginEnd="14dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/bg_dialog_icon_container"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/dialog_row_icon"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter" />
+
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -30,7 +56,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/mobile_color_on_surface"
-            android:textSize="16sp"
+            android:textSize="15sp"
+            android:textStyle="normal"
             tools:text="Option title" />
 
         <TextView
@@ -58,6 +85,8 @@
             android:layout_height="wrap_content"
             android:clickable="false"
             android:focusable="false"
+            android:buttonTint="@color/settings_radio_button"
+            app:buttonTint="@color/settings_radio_button"
             android:visibility="gone" />
 
         <CheckBox
@@ -66,6 +95,8 @@
             android:layout_height="wrap_content"
             android:clickable="false"
             android:focusable="false"
+            android:buttonTint="@color/settings_radio_button"
+            app:buttonTint="@color/settings_radio_button"
             android:visibility="gone" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
@@ -74,6 +105,11 @@
             android:layout_height="wrap_content"
             android:clickable="false"
             android:focusable="false"
+            app:useMaterialThemeColors="false"
+            app:thumbTint="@color/settings_switch_thumb"
+            app:trackTint="@color/settings_switch_track"
+            android:thumbTint="@color/settings_switch_thumb"
+            android:trackTint="@color/settings_switch_track"
             android:visibility="gone" />
 
     </FrameLayout>

@@ -38,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.liskovsoft.mediaserviceinterfaces.data.CommentItem;
 import com.liskovsoft.smartyoutubetv2.tv.R;
+import com.newtube.mobile.ui.common.GlassMaterial;
 import com.newtube.mobile.ui.common.MetaSeparator;
 
 import java.util.ArrayList;
@@ -401,6 +402,7 @@ final class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             case TYPE_COMPOSE: {
                 ComposeVH holder = new ComposeVH(inflater.inflate(R.layout.item_mobile_comment_compose, parent, false));
                 holder.itemView.setOnClickListener(v -> mListener.onComposeClicked(mParent != null));
+                GlassMaterial.applyTouchScaleFeedback(holder.itemView);
                 return holder;
             }
             default:
@@ -573,6 +575,7 @@ final class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     mListener.onRepliesClicked(mEntry);
                 }
             });
+            GlassMaterial.applyTouchScaleFeedback(mReplies);
             // The replies page's own comment is answered from its "Add a reply…" row.
             mReply.setVisibility(isParent ? View.GONE : View.VISIBLE);
             mReply.setOnClickListener(v -> {
@@ -580,6 +583,7 @@ final class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     mListener.onReplyClicked(mEntry);
                 }
             });
+            GlassMaterial.applyTouchScaleFeedback(mReply);
             mMore.setOnClickListener(v -> {
                 if (mEntry != null) {
                     mListener.onMoreClicked(mEntry, v);

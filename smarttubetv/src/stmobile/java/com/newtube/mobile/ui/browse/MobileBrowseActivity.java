@@ -3,8 +3,10 @@ package com.newtube.mobile.ui.browse;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Outline;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.AnimationDrawable;
@@ -178,6 +180,8 @@ public class MobileBrowseActivity extends MobileActivity
     private boolean mSectionFromYou;
     private BrowseTopBar mTopBar;
     private View mHeaderContainer;
+    private View mCategoryScroll;
+    private CategoryChipBar mCategoryBar;
     private View mErrorContainer;
     private ImageView mErrorIcon;
     private TextView mErrorMessage;
@@ -315,6 +319,8 @@ public class MobileBrowseActivity extends MobileActivity
         mSearchButton = findViewById(R.id.mobile_search_button);
         mCastButton = findViewById(R.id.mobile_cast_button);
         mHeaderContainer = findViewById(R.id.mobile_header_container);
+        mCategoryScroll = findViewById(R.id.mobile_category_scroll);
+        mCategoryBar = new CategoryChipBar(this, this::onCategoryChipChosen);
         mTopBar = new BrowseTopBar(this, () -> getOnBackPressedDispatcher().onBackPressed());
 
         mMiniPlayerBar = findViewById(R.id.mobile_mini_player);
@@ -835,6 +841,7 @@ public class MobileBrowseActivity extends MobileActivity
      */
     private void setupSearchButton() {
         mSearchButton.setOnClickListener(v -> SearchPresenter.instance(this).startSearch(null));
+        com.newtube.mobile.ui.common.GlassMaterial.applyTouchScaleFeedback(mSearchButton);
     }
 
     // ---------------------------------------------------------------------------------
@@ -850,6 +857,7 @@ public class MobileBrowseActivity extends MobileActivity
         // CastPickerLauncher owns the Android 16+ ACCESS_LOCAL_NETWORK gate (shared with the
         // player); Browse has no immersive window, so the plain presenter is enough.
         mCastButton.setOnClickListener(v -> CastPickerLauncher.open(this, CastPickerLauncher::presentPlain));
+        com.newtube.mobile.ui.common.GlassMaterial.applyTouchScaleFeedback(mCastButton);
 
         mCastSessionManager = CastSessionManager.instance(this);
         mCastSessionManager.addListener(mCastListener);
@@ -946,6 +954,11 @@ public class MobileBrowseActivity extends MobileActivity
             if (mSuppressNavCallback) {
                 return;
             }
+            if (item.getItemId() == toMenuItemId(MediaGroup.TYPE_HOME) && mCategoryBar != null && mCategoryBar.getSelectedSectionId() != MediaGroup.TYPE_HOME) {
+                mCategoryBar.selectCategory(MediaGroup.TYPE_HOME);
+                onCategoryChipChosen(MediaGroup.TYPE_HOME);
+                return;
+            }
             if (item.getItemId() != YOU_ITEM_ID && mContentGrid != null
                     && mContentGrid.getVisibility() == View.VISIBLE && mContentGrid.canScrollVertically(-1)) {
                 smoothScrollGridToTop();
@@ -1034,9 +1047,14 @@ public class MobileBrowseActivity extends MobileActivity
                     return windowInsets;
                 });
 
+                if (mCategoryScroll != null) {
+                    ConstraintLayout.LayoutParams catLp = (ConstraintLayout.LayoutParams) mCategoryScroll.getLayoutParams();
+                    catLp.topMargin = dp(6);
+                    mCategoryScroll.setLayoutParams(catLp);
+                }
                 if (mContentSwipe != null) {
                     ConstraintLayout.LayoutParams swipeLp = (ConstraintLayout.LayoutParams) mContentSwipe.getLayoutParams();
-                    swipeLp.topMargin = dp(8);
+                    swipeLp.topMargin = dp(4);
                     mContentSwipe.setLayoutParams(swipeLp);
                 }
                 if (mYouPanel != null) {
@@ -1060,6 +1078,11 @@ public class MobileBrowseActivity extends MobileActivity
                 mHeaderContainer.setPadding(0, 0, 0, 0);
                 ViewCompat.setOnApplyWindowInsetsListener(mHeaderContainer, null);
 
+                if (mCategoryScroll != null) {
+                    ConstraintLayout.LayoutParams catLp = (ConstraintLayout.LayoutParams) mCategoryScroll.getLayoutParams();
+                    catLp.topMargin = 0;
+                    mCategoryScroll.setLayoutParams(catLp);
+                }
                 if (mContentSwipe != null) {
                     ConstraintLayout.LayoutParams swipeLp = (ConstraintLayout.LayoutParams) mContentSwipe.getLayoutParams();
                     swipeLp.topMargin = 0;
@@ -1088,12 +1111,13 @@ public class MobileBrowseActivity extends MobileActivity
                     Insets insets = rootInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
                     bottomInset = insets.bottom;
                 }
-                int bottomMargin = bottomInset + dp(14);
-                int sideMargin = dp(14);
+                int extraBottom = (bottomInset > 0) ? dp(6) : dp(12);
+                int bottomMargin = bottomInset + extraBottom;
+                int sideMargin = dp(12);
 
                 lp.width = 0;
-                lp.height = dp(58);
-                lp.matchConstraintMaxWidth = dp(440);
+                lp.height = dp(60);
+                lp.matchConstraintMaxWidth = dp(460);
                 lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
                 lp.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
                 lp.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
@@ -1101,23 +1125,35 @@ public class MobileBrowseActivity extends MobileActivity
                 mBottomNav.setLayoutParams(lp);
 
                 mBottomNav.setBackground(null);
+                mBottomNav.setBackgroundColor(Color.TRANSPARENT);
                 mBottomNav.setItemBackground(null);
+                mBottomNav.setItemRippleColor(ColorStateList.valueOf(Color.TRANSPARENT));
                 mBottomNav.setElevation(dp(8));
+                mBottomNav.setItemIconSize(dp(22));
                 mBottomNav.setItemTextAppearanceActive(R.style.MobileFloatingBottomNavText);
                 mBottomNav.setItemTextAppearanceInactive(R.style.MobileFloatingBottomNavText);
                 mBottomNav.setItemIconTintList(ContextCompat.getColorStateList(this, R.color.mobile_floating_nav_item));
                 mBottomNav.setItemTextColor(ContextCompat.getColorStateList(this, R.color.mobile_floating_nav_item));
-                mBottomNav.setPadding(dp(8), 0, dp(8), 0);
+                mBottomNav.setPadding(dp(4), 0, dp(4), 0);
 
                 ViewCompat.setOnApplyWindowInsetsListener(mBottomNav, (v, windowInsets) -> {
                     Insets sysInsets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
-                    int targetBottomMargin = sysInsets.bottom + dp(14);
+                    int extra = (sysInsets.bottom > 0) ? dp(6) : dp(12);
+                    int targetBottomMargin = sysInsets.bottom + extra;
                     ConstraintLayout.LayoutParams navLp = (ConstraintLayout.LayoutParams) v.getLayoutParams();
                     if (navLp.bottomMargin != targetBottomMargin) {
                         navLp.bottomMargin = targetBottomMargin;
                         v.setLayoutParams(navLp);
                     }
-                    v.setPadding(dp(8), 0, dp(8), 0);
+                    v.setPadding(dp(4), 0, dp(4), 0);
+                    if (mContentGrid != null) {
+                        int navBarTotalHeight = dp(60) + targetBottomMargin;
+                        mContentGrid.setPadding(0, 0, 0, navBarTotalHeight + dp(12));
+                    }
+                    if (mYouPanel != null) {
+                        int navBarTotalHeight = dp(60) + targetBottomMargin;
+                        mYouPanel.setPadding(0, 0, 0, navBarTotalHeight + dp(12));
+                    }
                     return windowInsets;
                 });
 
@@ -1127,9 +1163,21 @@ public class MobileBrowseActivity extends MobileActivity
                     swipeLp.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
                     mContentSwipe.setLayoutParams(swipeLp);
                 }
+                if (mYouPanel != null) {
+                    ConstraintLayout.LayoutParams youLp = (ConstraintLayout.LayoutParams) mYouPanel.getLayoutParams();
+                    youLp.bottomToTop = ConstraintLayout.LayoutParams.UNSET;
+                    youLp.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+                    mYouPanel.setLayoutParams(youLp);
+                    int navBarTotalHeight = dp(60) + bottomMargin;
+                    mYouPanel.setPadding(0, 0, 0, navBarTotalHeight + dp(12));
+                    if (mYouPanel instanceof ViewGroup) {
+                        ((ViewGroup) mYouPanel).setClipToPadding(false);
+                    }
+                }
                 if (mContentGrid != null) {
-                    int cardSpacing = getResources().getDimensionPixelSize(R.dimen.mobile_card_spacing);
-                    mContentGrid.setPadding(0, 0, 0, dp(58) + bottomMargin + cardSpacing);
+                    int navBarTotalHeight = dp(60) + bottomMargin;
+                    mContentGrid.setPadding(0, 0, 0, navBarTotalHeight + dp(12));
+                    mContentGrid.setClipToPadding(false);
                 }
             } else {
                 // STANDARD MODE: Full-width conventional bottom bar
@@ -1156,6 +1204,9 @@ public class MobileBrowseActivity extends MobileActivity
                 ViewCompat.setOnApplyWindowInsetsListener(mBottomNav, (v, windowInsets) -> {
                     Insets sysInsets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
                     v.setPadding(0, 0, 0, sysInsets.bottom);
+                    if (mYouPanel != null) {
+                        mYouPanel.setPadding(0, 0, 0, 0);
+                    }
                     return windowInsets;
                 });
 
@@ -1164,6 +1215,13 @@ public class MobileBrowseActivity extends MobileActivity
                     swipeLp.bottomToTop = R.id.mobile_bottom_nav;
                     swipeLp.bottomToBottom = ConstraintLayout.LayoutParams.UNSET;
                     mContentSwipe.setLayoutParams(swipeLp);
+                }
+                if (mYouPanel != null) {
+                    ConstraintLayout.LayoutParams youLp = (ConstraintLayout.LayoutParams) mYouPanel.getLayoutParams();
+                    youLp.bottomToTop = R.id.mobile_bottom_nav;
+                    youLp.bottomToBottom = ConstraintLayout.LayoutParams.UNSET;
+                    mYouPanel.setLayoutParams(youLp);
+                    mYouPanel.setPadding(0, 0, 0, 0);
                 }
                 if (mContentGrid != null) {
                     int cardSpacing = getResources().getDimensionPixelSize(R.dimen.mobile_card_spacing);
@@ -1215,6 +1273,9 @@ public class MobileBrowseActivity extends MobileActivity
         rebuildYouRows();
         updateAccountRow();
         mContentSwipe.setRefreshing(false);
+        if (mContentSwipe != null) {
+            mContentSwipe.setVisibility(View.INVISIBLE);
+        }
         mYouPanel.setVisibility(View.VISIBLE);
         onYouPanelToggled();
     }
@@ -1222,6 +1283,9 @@ public class MobileBrowseActivity extends MobileActivity
     private void hideYouPanel() {
         mYouShowing = false;
         mYouPanel.setVisibility(View.GONE);
+        if (mContentSwipe != null) {
+            mContentSwipe.setVisibility(View.VISIBLE);
+        }
         onYouPanelToggled();
     }
 
@@ -1242,6 +1306,7 @@ public class MobileBrowseActivity extends MobileActivity
         boolean subScreen = mSectionFromYou && !mYouShowing
                 && mBottomNav.getMenu().findItem(toMenuItemId(mCurrentSectionId)) == null;
         mTopBar.show(subScreen, getCurrentSectionTitle());
+        updateCategoryBarVisibility();
     }
 
     /**
@@ -1489,9 +1554,35 @@ public class MobileBrowseActivity extends MobileActivity
         mCurrentSectionId = sectionId;
         paintCachedSnapshot(sectionId, switched);
         syncNavHighlight(sectionId);
+        updateCategoryBarVisibility();
 
         if (mPresenter != null) {
             mPresenter.onSectionFocused(sectionId);
+        }
+    }
+
+    private void onCategoryChipChosen(int sectionId) {
+        if (mCurrentSectionId == sectionId) {
+            smoothScrollGridToTop();
+            return;
+        }
+        mSectionFromYou = false;
+        onSectionChosen(sectionId);
+        smoothScrollGridToTop();
+    }
+
+    private void updateCategoryBarVisibility() {
+        if (mCategoryBar == null) {
+            return;
+        }
+        boolean isHomeTab = (mBottomNav == null || mBottomNav.getSelectedItemId() == toMenuItemId(MediaGroup.TYPE_HOME) || mBottomNav.getSelectedItemId() <= 0);
+        boolean isCategorySection = (mCurrentSectionId <= 0 || mCurrentSectionId == MediaGroup.TYPE_HOME || mCategoryBar.isCategorySupported(mCurrentSectionId));
+        boolean show = isHomeTab && isCategorySection && !mYouShowing && !mSectionFromYou;
+        mCategoryBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        if (show && mCategoryBar.isCategorySupported(mCurrentSectionId)) {
+            mCategoryBar.selectCategory(mCurrentSectionId);
+        } else if (show) {
+            mCategoryBar.selectCategory(MediaGroup.TYPE_HOME);
         }
     }
 
@@ -2241,6 +2332,14 @@ public class MobileBrowseActivity extends MobileActivity
             return;
         }
 
+        // If a category filter (e.g. Gaming, Music, News) is selected on the Home screen,
+        // pressing Back returns to the "All" (Home) feed like official YouTube.
+        if (!mYouShowing && !mSectionFromYou && mCategoryBar != null && mCategoryBar.getSelectedSectionId() != MediaGroup.TYPE_HOME) {
+            mCategoryBar.selectCategory(MediaGroup.TYPE_HOME);
+            onCategoryChipChosen(MediaGroup.TYPE_HOME);
+            return;
+        }
+
         // On the You tab itself, back goes Home (YouTube behavior) instead of exiting.
         // NEWTUBE(back-home): so does back on any other tab (Subscriptions, History, Downloads) -
         // it used to exit the app from there, dropping the mini-player and the Home scroll. Only
@@ -2328,6 +2427,7 @@ public class MobileBrowseActivity extends MobileActivity
             // doesn't include (it lives in the You panel). Still drive the presenter so the
             // grid loads; syncNavHighlight no-ops when the section has no tab.
             syncNavHighlight(section.getId());
+            updateCategoryBarVisibility();
 
             if (mPresenter != null) {
                 mPresenter.onSectionFocused(section.getId());

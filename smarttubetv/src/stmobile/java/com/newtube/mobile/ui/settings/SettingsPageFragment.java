@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.CompoundButtonCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -258,7 +259,10 @@ public final class SettingsPageFragment extends Fragment implements SettingsAdap
                 View view = convertView != null ? convertView
                         : LayoutInflater.from(parent.getContext()).inflate(R.layout.item_mobile_settings_choice, parent, false);
                 SettingsRow.Option option = options.get(position);
-                ((RadioButton) view.findViewById(R.id.settings_choice_radio)).setChecked(position == current);
+                RadioButton radio = view.findViewById(R.id.settings_choice_radio);
+                radio.setChecked(position == current);
+                CompoundButtonCompat.setButtonTintList(radio,
+                        ContextCompat.getColorStateList(parent.getContext(), R.color.settings_radio_button));
                 ((TextView) view.findViewById(R.id.settings_choice_label)).setText(option.label);
                 TextView description = view.findViewById(R.id.settings_choice_description);
                 description.setText(option.description);

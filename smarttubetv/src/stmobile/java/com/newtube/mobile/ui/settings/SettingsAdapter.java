@@ -129,6 +129,11 @@ final class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             title = itemView.findViewById(R.id.settings_row_title);
             summary = itemView.findViewById(R.id.settings_row_summary);
             toggle = itemView.findViewById(R.id.settings_row_switch);
+            if (toggle != null) {
+                toggle.setUseMaterialThemeColors(false);
+                toggle.setThumbTintList(ContextCompat.getColorStateList(itemView.getContext(), R.color.settings_switch_thumb));
+                toggle.setTrackTintList(ContextCompat.getColorStateList(itemView.getContext(), R.color.settings_switch_track));
+            }
         }
 
         void bind(SettingsRow row, Listener listener) {

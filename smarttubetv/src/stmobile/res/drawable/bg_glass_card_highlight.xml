@@ -10,9 +10,5 @@
         android:topRightRadius="@dimen/mobile_glass_corner_radius_card"
         android:bottomLeftRadius="0dp"
         android:bottomRightRadius="0dp" />
-    <gradient
-        android:angle="270"
-        android:startColor="@color/mobile_glass_highlight"
-        android:endColor="@android:color/transparent"
-        android:type="linear" />
+    <solid android:color="@android:color/transparent" />
 </shape>

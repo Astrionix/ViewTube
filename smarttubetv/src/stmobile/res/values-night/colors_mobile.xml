@@ -3,50 +3,52 @@
     <!-- NEWTUBE(theme): the dark palette - exactly the values the app shipped before the Theme
          setting, moved here from values/ (which now holds the light ones). Only the colours that
          differ between the themes are listed; see values/colors_mobile.xml for what they're for. -->
-    <color name="mobile_color_cast_active">#4FC3F7</color>
+    <!-- NEWTUBE(theme): Apple Obsidian Black dark palette.
+         Deep luxurious black backdrop with solid obsidian surfaces and crisp borders. -->
+    <color name="mobile_color_cast_active">#FF6B00</color>
     <color name="mobile_color_background">#0F0F0F</color>
     <color name="mobile_color_surface">#1E1E1E</color>
     <color name="mobile_color_on_surface">#FFFFFF</color>
     <color name="mobile_color_on_surface_secondary">#B3FFFFFF</color>
-    <color name="mobile_color_placeholder">#2A2A2A</color>
+    <color name="mobile_color_placeholder">#1A1A22</color>
     <!-- NEWTUBE(motion): the light that sweeps over skeleton blocks (ShimmerLinearLayout). -->
-    <color name="mobile_color_skeleton_highlight">#3D3D3D</color>
-    <color name="mobile_color_link">#4FC3F7</color>
-    <color name="mobile_color_divider">#22FFFFFF</color>
-    <color name="mobile_color_pill">#26FFFFFF</color>
-    <color name="mobile_color_subscribed_button">#333333</color>
-    <color name="mobile_color_comment_parent">#1A1A1A</color>
-    <color name="mobile_color_comment_creator_pill">#24FFFFFF</color>
-    <color name="mobile_color_menu_surface">#2A2A2A</color>
-    <color name="mobile_color_comment_handle">#D1FFFFFF</color>
+    <color name="mobile_color_skeleton_highlight">#242430</color>
+    <color name="mobile_color_link">#FF6B00</color>
+    <color name="mobile_color_divider">#1F1F2B</color>
+    <color name="mobile_color_pill">#20202A</color>
+    <color name="mobile_color_subscribed_button">#282836</color>
+    <color name="mobile_color_comment_parent">#16161D</color>
+    <color name="mobile_color_comment_creator_pill">#262634</color>
+    <color name="mobile_color_menu_surface">#1C1C24</color>
+    <color name="mobile_color_comment_handle">#E1E1EA</color>
 
     <!-- Tokens added with the light theme; each is what that spot used before it. -->
     <color name="mobile_color_card">#1E1E1E</color>
     <color name="mobile_color_inverse_surface">#FFFFFF</color>
-    <color name="mobile_color_on_inverse_surface">#000000</color>
-    <color name="mobile_color_inverse_ripple">#33000000</color>
-    <color name="mobile_color_track">#33FFFFFF</color>
-    <color name="mobile_color_field">#0F0F0F</color>
-    <color name="mobile_color_background_scrim">#660F0F0F</color>
-    <color name="mobile_color_navigation_bar">#0F0F0F</color>
+    <color name="mobile_color_on_inverse_surface">#0B0B0E</color>
+    <color name="mobile_color_inverse_ripple">#33FFFFFF</color>
+    <color name="mobile_color_track">#282838</color>
+    <color name="mobile_color_field">#1B1B22</color>
+    <color name="mobile_color_background_scrim">#800B0B0E</color>
+    <color name="mobile_color_navigation_bar">#0B0B0E</color>
 
     <!-- The shared edit dialogs keep the library's AppDialog colours (sharedutils / common). -->
-    <color name="dialog_bg_color">#101010</color>
-    <color name="dialog_text_color">#a1a1a6</color>
-    <color name="dialog_hint_color">#33FFFFFF</color>
+    <color name="dialog_bg_color">#141419</color>
+    <color name="dialog_text_color">#A2A2B4</color>
+    <color name="dialog_hint_color">#4DFFFFFF</color>
     <color name="dialog_proxy_hint_color">#80FFFFFF</color>
 
-    <!-- Liquid Glass design system (Phase 2): Dark theme / obsidian ice glass surfaces. -->
-    <color name="mobile_glass_surface">#D9131622</color>
-    <color name="mobile_glass_surface_card">#CC1A1D28</color>
-    <color name="mobile_glass_surface_control">#BF222634</color>
-    <color name="mobile_glass_highlight">#26FFFFFF</color>
-    <color name="mobile_glass_outline">#28FFFFFF</color>
-    <color name="mobile_glass_outline_subtle">#14FFFFFF</color>
-    <color name="mobile_glass_divider">#1FFFFFFF</color>
-    <color name="mobile_glass_shadow">#40000000</color>
+    <!-- Apple Obsidian Black design system: Solid obsidian dark surfaces, NO liquid glass. -->
+    <color name="mobile_glass_surface">#141419</color>
+    <color name="mobile_glass_surface_card">#16161D</color>
+    <color name="mobile_glass_surface_control">#1B1B22</color>
+    <color name="mobile_glass_highlight">@android:color/transparent</color>
+    <color name="mobile_glass_outline">#282836</color>
+    <color name="mobile_glass_outline_subtle">#1F1F2B</color>
+    <color name="mobile_glass_divider">#1F1F2B</color>
+    <color name="mobile_glass_shadow">#66000000</color>
 
-    <!-- Floating navigation colors -->
-    <color name="mobile_floating_nav_active">#F1F5F9</color>
-    <color name="mobile_floating_nav_inactive">#94A3B8</color>
+    <!-- Apple navigation bar colors: vibrant red active icon filling -->
+    <color name="mobile_floating_nav_active">#FF0033</color>
+    <color name="mobile_floating_nav_inactive">#8E8E93</color>
 </resources>

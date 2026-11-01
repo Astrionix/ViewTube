@@ -144,6 +144,10 @@
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
 
+        <receiver
+            android:name="com.newtube.mobile.ui.playback.SleepTimerReceiver"
+            android:exported="false" />
+
         <!--
           Cast-session foreground service (casting wave). While a Lounge session is active the
           phone is only a remote, but the process must survive backgrounding so the status

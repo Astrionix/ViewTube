@@ -12,9 +12,9 @@ import androidx.core.content.ContextCompat;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 
 /**
- * Shared Liquid Glass design foundation helper for ViewTube.
+ * Shared Apple Obsidian design foundation helper for ViewTube.
  *
- * <p>Exposes safe styling defaults and background drawables for Liquid Glass capsule, card,
+ * <p>Exposes safe styling defaults and background drawables for Apple Obsidian capsule, card,
  * and bottom sheet surfaces. Compatible with Android 7.0+ (API 24+) without external dependencies.</p>
  */
 public final class GlassMaterial {
@@ -28,7 +28,7 @@ public final class GlassMaterial {
     private GlassMaterial() {}
 
     /**
-     * Resolves the drawable resource ID for the requested glass shape.
+     * Resolves the drawable resource ID for the requested shape.
      */
     @DrawableRes
     public static int getBackgroundRes(@NonNull Shape shape) {
@@ -41,7 +41,7 @@ public final class GlassMaterial {
     }
 
     /**
-     * Resolves the drawable resource ID for a Liquid Glass capsule.
+     * Resolves the drawable resource ID for an Obsidian capsule.
      */
     @DrawableRes
     public static int getCapsuleBackgroundRes() {
@@ -49,7 +49,7 @@ public final class GlassMaterial {
     }
 
     /**
-     * Resolves the drawable resource ID for a Liquid Glass card.
+     * Resolves the drawable resource ID for an Obsidian card.
      */
     @DrawableRes
     public static int getCardBackgroundRes() {
@@ -57,7 +57,7 @@ public final class GlassMaterial {
     }
 
     /**
-     * Resolves the drawable resource ID for a Liquid Glass bottom sheet.
+     * Resolves the drawable resource ID for an Obsidian bottom sheet.
      */
     @DrawableRes
     public static int getSheetBackgroundRes() {
@@ -127,6 +127,38 @@ public final class GlassMaterial {
                             .scaleX(1.0f)
                             .scaleY(1.0f)
                             .setDuration(240)
+                            .setInterpolator(Motion.EMPHASIZED_DECELERATE)
+                            .start();
+                    break;
+            }
+            return false;
+        });
+    }
+
+    /**
+     * Applies subtle Apple card press physics (scale to 0.98f with smooth spring release).
+     * Tuned specifically for large feed cards and content tiles to prevent jarring visual jump.
+     */
+    public static void applyCardTouchFeedback(@Nullable View view) {
+        if (view == null) {
+            return;
+        }
+        view.setOnTouchListener((v, event) -> {
+            switch (event.getActionMasked()) {
+                case android.view.MotionEvent.ACTION_DOWN:
+                    v.animate()
+                            .scaleX(0.98f)
+                            .scaleY(0.98f)
+                            .setDuration(120)
+                            .setInterpolator(Motion.STANDARD)
+                            .start();
+                    break;
+                case android.view.MotionEvent.ACTION_UP:
+                case android.view.MotionEvent.ACTION_CANCEL:
+                    v.animate()
+                            .scaleX(1.0f)
+                            .scaleY(1.0f)
+                            .setDuration(280)
                             .setInterpolator(Motion.EMPHASIZED_DECELERATE)
                             .start();
                     break;

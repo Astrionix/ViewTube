@@ -5,44 +5,48 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.liskovsoft.smartyoutubetv2.tv.R;
 
 /**
- * NEWTUBE(you-subscreen): Browse's top bar. On a bottom-nav tab it is the "NewTube" wordmark; a
- * section opened from a You row (Sports, Playlists, ...) is a sub-screen of You, so it gets a back
- * arrow and the section's name - like YouTube's You sub-pages - instead of a wordmark that gave
- * no hint where the user was or that back returns to You.
+ * NEWTUBE(you-subscreen): Browse's top bar. On a bottom-nav tab it is the ViewTube logo and red
+ * "ViewTube" wordmark; a section opened from a You row (Sports, Playlists, ...) is a sub-screen of
+ * You, so it gets a back arrow and the section's name - like YouTube's You sub-pages.
  */
 final class BrowseTopBar {
     private static final float WORDMARK_SP = 22f;
     private static final float SUBSCREEN_TITLE_SP = 20f;
+    private static final int RED_VIEWTUBE = 0xFFFF0033;
 
     private final TextView mTitle;
     private final View mBack;
-    private final int mWordmarkInset;
-    private final int mBesideBackInset;
+    private final View mIcon;
+    private final int mSubscreenColor;
 
     BrowseTopBar(Activity activity, Runnable onBack) {
         mTitle = activity.findViewById(R.id.mobile_title_bar);
         mBack = activity.findViewById(R.id.mobile_title_back);
+        mIcon = activity.findViewById(R.id.mobile_title_icon);
         mBack.setOnClickListener(v -> onBack.run());
         com.newtube.mobile.ui.common.GlassMaterial.applyTouchScaleFeedback(mBack);
         mTitle.setLetterSpacing(-0.02f);
-        mWordmarkInset = mTitle.getPaddingStart();
-        mBesideBackInset = activity.getResources()
-                .getDimensionPixelSize(R.dimen.mobile_dialog_title_inset_with_back);
+        mSubscreenColor = ContextCompat.getColor(activity, R.color.mobile_color_on_surface);
+        show(false, null);
     }
 
     /**
-     * A tab shows the wordmark; a sub-screen shows the back arrow and {@code title} (the wordmark
-     * text if the section came without one - the arrow is what matters).
+     * A tab shows the ViewTube logo and red wordmark; a sub-screen shows the back arrow and
+     * {@code title} (the wordmark text if the section came without one - the arrow is what matters).
      */
     void show(boolean subScreen, CharSequence title) {
         mBack.setVisibility(subScreen ? View.VISIBLE : View.GONE);
-        mTitle.setText(subScreen && title != null && title.length() > 0
-                ? title : mTitle.getContext().getString(R.string.app_name));
+        if (mIcon != null) {
+            mIcon.setVisibility(subScreen ? View.GONE : View.VISIBLE);
+        }
+        boolean isWordmark = !subScreen || title == null || title.length() == 0;
+        mTitle.setText(isWordmark ? mTitle.getContext().getString(R.string.app_name) : title);
         mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, subScreen ? SUBSCREEN_TITLE_SP : WORDMARK_SP);
-        mTitle.setPaddingRelative(subScreen ? mBesideBackInset : mWordmarkInset,
-                mTitle.getPaddingTop(), mTitle.getPaddingEnd(), mTitle.getPaddingBottom());
+        mTitle.setTextColor(isWordmark ? RED_VIEWTUBE : mSubscreenColor);
     }
 }

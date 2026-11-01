@@ -41,6 +41,7 @@ import com.liskovsoft.smartyoutubetv2.common.utils.LoadFailure;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 import com.liskovsoft.youtubeapi.service.YouTubeServiceManager;
 import com.liskovsoft.youtubeapi.service.YouTubeSignInService;
+import com.newtube.mobile.ui.common.GlassMaterial;
 import com.newtube.mobile.ui.common.MobileSnackbar;
 
 import java.util.ArrayList;
@@ -301,9 +302,13 @@ final class CommentsPanel implements CommentsAdapter.Listener, CommentsPanelLayo
         setUpList(mReplies, mRepliesAdapter);
 
         layout.setCallback(this);
-        layout.findViewById(R.id.comments_close).setOnClickListener(v -> close());
+        View closeBtn = layout.findViewById(R.id.comments_close);
+        closeBtn.setOnClickListener(v -> close());
+        GlassMaterial.applyTouchScaleFeedback(closeBtn);
         mBack.setOnClickListener(v -> leaveReplies());
+        GlassMaterial.applyTouchScaleFeedback(mBack);
         mSort.setOnClickListener(v -> showSortMenu());
+        GlassMaterial.applyTouchScaleFeedback(mSort);
         ViewCompat.setAccessibilityPaneTitle(layout.getSheet(), activity.getString(R.string.mobile_comments_title));
         updateSortLabel();
 

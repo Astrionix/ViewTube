@@ -7,10 +7,10 @@
     android:layout_height="wrap_content"
     android:accessibilityHeading="true"
     android:fontFamily="sans-serif-medium"
-    android:paddingStart="@dimen/mobile_settings_row_inset"
+    android:paddingStart="22dp"
     android:paddingTop="20dp"
-    android:paddingEnd="@dimen/mobile_settings_row_inset"
-    android:paddingBottom="4dp"
+    android:paddingEnd="22dp"
+    android:paddingBottom="6dp"
     android:textColor="@color/mobile_color_on_surface"
     android:textSize="@dimen/mobile_settings_header_size"
     tools:text="Network" />

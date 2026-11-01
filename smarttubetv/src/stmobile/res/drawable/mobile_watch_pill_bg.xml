@@ -1,7 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Rounded pill background for the Like / Dislike / Share action buttons. -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <solid android:color="@color/mobile_color_pill" />
-    <corners android:radius="20dp" />
-</shape>
+<!--
+  Apple Obsidian Black Capsule for Watch Page Action Pills.
+  - Ambient soft shadow
+  - Solid obsidian body with crisp outline
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Ambient depth base -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="20dp" />
+            <solid android:color="@color/mobile_glass_shadow" />
+        </shape>
+    </item>
+
+    <!-- Solid obsidian body with thin outline -->
+    <item
+        android:bottom="1dp"
+        android:left="0dp"
+        android:right="0dp"
+        android:top="0dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="20dp" />
+            <solid android:color="@color/mobile_glass_surface" />
+            <stroke
+                android:width="@dimen/mobile_glass_border_width"
+                android:color="@color/mobile_glass_outline" />
+        </shape>
+    </item>
+</layer-list>

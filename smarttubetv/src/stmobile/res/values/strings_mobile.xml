@@ -2,6 +2,7 @@
 <resources>
     <!-- ViewTube branding: override SmartTube's app_name for the mobile flavor only -->
     <string name="app_name" translatable="false">ViewTube</string>
+    <string name="mobile_category_all">All</string>
     <string name="mobile_player_back">Back</string>
     <string name="mobile_player_minimize">Minimize</string>
     <string name="mobile_player_play">Play</string>
@@ -50,6 +51,21 @@
     <string name="mobile_menu_queue">Playback queue</string>
     <string name="mobile_menu_on">On</string>
     <string name="mobile_menu_off">Off</string>
+
+    <!-- Sleep timer (gear sheet + in-player picker) -->
+    <string name="mobile_player_sleep_timer">Sleep timer</string>
+    <string name="mobile_sleep_timer_off">Turn off sleep timer</string>
+    <string name="mobile_sleep_timer_end_of_video">End of video</string>
+    <string name="mobile_sleep_timer_status_running">Playback will stop in %1$s</string>
+    <string name="mobile_sleep_timer_status_end_of_video">Playback will stop at the end of this video</string>
+    <string name="mobile_sleep_timer_add_15">Add 15 minutes</string>
+    <string name="mobile_sleep_timer_toast_set">Sleep timer set for %1$s</string>
+    <string name="mobile_sleep_timer_toast_end_of_video">Sleep timer set for end of video</string>
+    <string name="mobile_sleep_timer_toast_off">Sleep timer turned off</string>
+    <string name="mobile_sleep_timer_toast_added">Added %1$d minutes to sleep timer</string>
+    <string name="mobile_sleep_timer_paused">Sleep timer: Playback paused</string>
+    <string name="mobile_sleep_timer_remaining_min">%1$dm left</string>
+    <string name="mobile_sleep_timer_remaining_hr_min">%1$dh %2$dm left</string>
 
     <!-- Background playback media notification -->
     <string name="mobile_playback_channel_name">Playback</string>

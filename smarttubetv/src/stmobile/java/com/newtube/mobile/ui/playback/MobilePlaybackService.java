@@ -218,6 +218,13 @@ public class MobilePlaybackService extends Service {
         }
     }
 
+    public void pausePlayback() {
+        if (mPlayer != null) {
+            mPlayer.setPlayWhenReady(false);
+        }
+        notifyPauseClicked();
+    }
+
     private void notifyPauseClicked() {
         if (mPresenter != null) {
             Utils.post(() -> mPresenter.onPauseClicked());
@@ -271,6 +278,8 @@ public class MobilePlaybackService extends Service {
         mPresenter = presenter;
         mPlayer = player;
         mNotificationPlayer = new QueueForwardingPlayer(player);
+        SleepTimer.instance().init(getApplicationContext());
+        SleepTimer.instance().setPauseCallback(this::pausePlayback);
 
         mMediaSession = new MediaSessionCompat(getApplicationContext(), getPackageName());
         mMediaSession.setCallback(new MediaSessionCompat.Callback() {
@@ -419,6 +428,7 @@ public class MobilePlaybackService extends Service {
 
     /** Detach + tear down media session and notification. Called before the player is released. */
     public void detachPlayer() {
+        SleepTimer.instance().setPauseCallback(null);
         releaseInternal(true);
     }
 

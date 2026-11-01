@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Liquid Glass Card Background (ViewTube Design System)
-  - Ambient depth base: restrained soft shadow
-  - Translucent glass body: theme-aware card fill with crisp, thin reflective border
-  - Specular top rim reflection: subtle linear gradient highlight
-  - Smooth rounded card corners (16dp) with zero rectangular artifacts
+  Apple Obsidian Black Card Background (ViewTube Design System)
+  - Ambient soft depth base
+  - Solid Apple obsidian dark card surface with crisp subtle outline
 -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Ambient depth base -->
@@ -15,7 +13,7 @@
         </shape>
     </item>
 
-    <!-- Translucent glass card body with thin reflective outline -->
+    <!-- Solid obsidian card body with crisp subtle outline -->
     <item
         android:bottom="1dp"
         android:left="0dp"
@@ -27,22 +25,6 @@
             <stroke
                 android:width="@dimen/mobile_glass_border_width"
                 android:color="@color/mobile_glass_outline" />
-        </shape>
-    </item>
-
-    <!-- Specular light sheen on top glass rim -->
-    <item
-        android:bottom="2dp"
-        android:left="1dp"
-        android:right="1dp"
-        android:top="1dp">
-        <shape android:shape="rectangle">
-            <corners android:radius="@dimen/mobile_glass_corner_radius_card" />
-            <gradient
-                android:angle="270"
-                android:startColor="@color/mobile_glass_highlight"
-                android:endColor="@android:color/transparent"
-                android:type="linear" />
         </shape>
     </item>
 </layer-list>

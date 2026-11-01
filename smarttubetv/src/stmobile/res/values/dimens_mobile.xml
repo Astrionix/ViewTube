@@ -7,7 +7,7 @@
          TV helper assumes landscape, which is wrong for a portrait phone). -->
     <dimen name="mobile_card_target_width">168dp</dimen>
     <dimen name="mobile_card_spacing">8dp</dimen>
-    <dimen name="mobile_card_corner_radius">12dp</dimen>
+    <dimen name="mobile_card_corner_radius">0dp</dimen>
     <!-- Standard phone toolbar height (actionBarSize). -->
     <dimen name="mobile_title_bar_height">56dp</dimen>
     <!-- MobileAppDialogActivity: a sheet on a wide (landscape) window stops at Material's 640dp
@@ -53,6 +53,7 @@
 
     <!-- Liquid Glass design system (Phase 2): Radii, stroke width and spacing tokens. -->
     <dimen name="mobile_glass_corner_radius_capsule">32dp</dimen>
+    <dimen name="mobile_sheet_corner_radius">24dp</dimen>
     <dimen name="mobile_glass_corner_radius_card">16dp</dimen>
     <dimen name="mobile_glass_corner_radius_control">10dp</dimen>
     <dimen name="mobile_glass_border_width">1dp</dimen>

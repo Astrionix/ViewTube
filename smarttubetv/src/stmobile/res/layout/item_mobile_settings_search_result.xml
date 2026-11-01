@@ -5,12 +5,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
+    android:layout_marginStart="14dp"
+    android:layout_marginEnd="14dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
+    android:background="@drawable/bg_settings_row_pill"
+    android:clickable="true"
+    android:focusable="true"
     android:gravity="center_vertical"
     android:minHeight="64dp"
     android:orientation="horizontal"
-    android:paddingStart="@dimen/mobile_settings_row_inset"
-    android:paddingEnd="@dimen/mobile_settings_row_inset">
+    android:paddingStart="20dp"
+    android:paddingEnd="16dp">
 
     <ImageView
         android:id="@+id/settings_result_icon"

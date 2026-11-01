@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.os.Build;
@@ -26,6 +27,7 @@ import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Rational;
 import android.util.SparseIntArray;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -133,6 +135,7 @@ import com.newtube.mobile.ui.common.MagneticDrag;
 import com.newtube.mobile.ui.common.MobileActivity;
 import com.newtube.mobile.ui.common.Motion;
 import com.newtube.mobile.ui.common.ThemeMode;
+import com.newtube.mobile.ui.common.GlassMaterial;
 import com.newtube.mobile.ui.common.ThemeRefresh;
 import com.newtube.mobile.ui.dialog.MaxHeightRecyclerView;
 
@@ -512,6 +515,9 @@ public class MobilePlaybackActivity extends MobileActivity
         mPresenter.onViewInitialized();
 
         createPlayerObjects();
+
+        SleepTimer.instance().init(this);
+        SleepTimer.instance().setPauseCallback(this::pauseFromSleepTimer);
 
         registerPipReceiver();
 
@@ -894,9 +900,13 @@ public class MobilePlaybackActivity extends MobileActivity
         mBackButton.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         mPlayPauseButton.setOnClickListener(v -> togglePlayPause());
         mFullscreenButton.setOnClickListener(v -> toggleFullscreen());
+        GlassMaterial.applyTouchScaleFeedback(mPlayPauseButton);
+        GlassMaterial.applyTouchScaleFeedback(mBackButton);
+        GlassMaterial.applyTouchScaleFeedback(mFullscreenButton);
 
         // Manual previous/next skip (auto-advance already handled by the controllers).
         if (mPrevButton != null) {
+            GlassMaterial.applyTouchScaleFeedback(mPrevButton);
             mPrevButton.setOnClickListener(v -> {
                 if (mPresenter != null) {
                     mPresenter.onPreviousClicked();
@@ -905,6 +915,7 @@ public class MobilePlaybackActivity extends MobileActivity
             });
         }
         if (mNextButton != null) {
+            GlassMaterial.applyTouchScaleFeedback(mNextButton);
             mNextButton.setOnClickListener(v -> {
                 if (mPresenter != null) {
                     mPresenter.onNextClicked();
@@ -1036,6 +1047,14 @@ public class MobilePlaybackActivity extends MobileActivity
         mWatchDownload.setOnClickListener(v -> onDownloadTapped());
         DownloadRegistry.instance(this).addListener(mDownloadsListener);
 
+        // Tactile spring feedback for Liquid Glass watch action pills
+        GlassMaterial.applyTouchScaleFeedback(mWatchLike);
+        GlassMaterial.applyTouchScaleFeedback(mWatchDislike);
+        GlassMaterial.applyTouchScaleFeedback(mWatchSubscribe);
+        GlassMaterial.applyTouchScaleFeedback(mWatchShare);
+        GlassMaterial.applyTouchScaleFeedback(mWatchSave);
+        GlassMaterial.applyTouchScaleFeedback(mWatchDownload);
+
         // Channel row (avatar + name/subs) opens the channel page; the Subscribe button inside
         // the row keeps its own click. ChannelPresenter resolves the channelId from metadata
         // when the Video doesn't carry one yet, so this works right after a cold open too.
@@ -1048,9 +1067,11 @@ public class MobilePlaybackActivity extends MobileActivity
         // panel is created here, after the player's back handler, so its own is asked first.
         mCommentsPanel = new CommentsPanel(this, findViewById(R.id.mobile_comments_panel), mCommentsHost);
         if (mWatchCommentsEntry != null) {
+            GlassMaterial.applyTouchScaleFeedback(mWatchCommentsEntry);
             mWatchCommentsEntry.setOnClickListener(v -> onCommentsEntryClicked());
         }
         if (mWatchChatEntry != null) {
+            GlassMaterial.applyTouchScaleFeedback(mWatchChatEntry);
             mWatchChatEntry.setOnClickListener(v -> onChatEntryClicked());
         }
 
@@ -1408,6 +1429,7 @@ public class MobilePlaybackActivity extends MobileActivity
         PlayerTransitionBridge.LaunchSnapshot launch = PlayerTransitionBridge.take();
 
         mIsResumed = true;
+        SleepTimer.instance().setPauseCallback(this::pauseFromSleepTimer);
         // In the foreground again: auto-PiP behaves normally from here on.
         mSuppressAutoPip = false;
         mDismissDragActive = false;
@@ -1790,6 +1812,18 @@ public class MobilePlaybackActivity extends MobileActivity
         applySystemBarsForOrientation(newConfig.orientation);
         updateFullscreenIcon(newConfig.orientation);
         onFullscreenSwipeConfigured();
+        for (java.lang.ref.WeakReference<BottomSheetDialog> ref : mShownSheets) {
+            BottomSheetDialog sheet = ref.get();
+            if (sheet != null && sheet.isShowing()) {
+                boolean isLand = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
+                BottomSheetBehavior<?> b = sheet.getBehavior();
+                if (isLand) {
+                    b.setMaxHeight(Math.round(getRealScreenHeight() * 0.90f));
+                } else {
+                    b.setMaxHeight(-1);
+                }
+            }
+        }
         // The standing auto-enter params carry a sourceRectHint captured from the video box; after
         // a rotation that rect is stale (portrait box vs fullscreen), which degrades the
         // home-gesture shrink animation. Re-push with the post-rotation geometry.
@@ -3152,7 +3186,7 @@ public class MobilePlaybackActivity extends MobileActivity
         }
 
         BottomSheetDialog sheet = new BottomSheetDialog(this);
-        LinearLayout content = createSheetContent();
+        LinearLayout content = createSheetContent(sheet);
         addCastSheetHeader(content, R.string.mobile_cast_controls_title,
                 mCastSessionManager.isDirectRoute()
                         ? R.string.mobile_cast_direct_summary : R.string.mobile_cast_app_summary);
@@ -3175,7 +3209,6 @@ public class MobilePlaybackActivity extends MobileActivity
                     this::showReceiverCaptionsSheet);
         }
 
-        sheet.setContentView(content);
         showPlayerSheet(sheet);
     }
 
@@ -3714,7 +3747,7 @@ public class MobilePlaybackActivity extends MobileActivity
         cancelAutoHide();
 
         BottomSheetDialog sheet = new BottomSheetDialog(this);
-        LinearLayout content = createSheetContent();
+        LinearLayout content = createSheetContent(sheet);
 
         // Mirrors the official app's gear sheet: no title, a handful of everyday rows, icon +
         // current value on every everyday action; the long tail nests behind "More". Quality opens
@@ -3736,14 +3769,16 @@ public class MobilePlaybackActivity extends MobileActivity
         // Speed: the native preset sheet; the exhaustive TV dialog nests behind its "More speeds".
         addMenuRow(content, sheet, R.drawable.ic_player_speed, R.string.mobile_player_speed,
                 currentSpeedLabel(), true, this::showSpeedSheet);
+        // Sleep timer: native YouTube-style sheet
+        addMenuRow(content, sheet, R.drawable.ic_player_sleep_timer, R.string.mobile_player_sleep_timer,
+                currentSleepTimerLabel(), true, this::showSleepTimerSheet);
         if (Helpers.isPictureInPictureSupported(this)) {
             addMenuRow(content, sheet, R.drawable.ic_player_pip, R.string.mobile_player_pip,
-                    null, false, this::enterPipFromMenu);
+                    null, true, this::enterPipFromMenu);
         }
         addMenuRow(content, sheet, R.drawable.ic_mobile_settings, R.string.mobile_menu_more,
                 null, true, this::openPlayerMoreMenu);
 
-        sheet.setContentView(content);
         sheet.setOnDismissListener(d -> armAutoHide());
         showPlayerSheet(sheet);
     }
@@ -3757,7 +3792,7 @@ public class MobilePlaybackActivity extends MobileActivity
         cancelAutoHide();
 
         BottomSheetDialog sheet = new BottomSheetDialog(this);
-        LinearLayout content = createSheetContent();
+        LinearLayout content = createSheetContent(sheet);
 
         // Effective, not stored: a Shuffle started from the playlist page is scoped to that queue
         // (QueuePlaybackMode) and never reaches PlayerData, so reading the stored mode alone would
@@ -3795,27 +3830,60 @@ public class MobilePlaybackActivity extends MobileActivity
         addMenuRow(content, sheet, R.drawable.ic_player_stats, R.string.mobile_menu_stats,
                 stateLabel(statsOn), false, () -> openPlayerOption(R.id.action_video_stats, false));
 
-        sheet.setContentView(content);
         sheet.setOnDismissListener(d -> armAutoHide());
         showPlayerSheet(sheet);
     }
 
-    /** Shared scaffold for the gear sheets: rounded background + drag handle, no title. */
-    private LinearLayout createSheetContent() {
-        LinearLayout content = new LinearLayout(this);
-        content.setOrientation(LinearLayout.VERTICAL);
-        content.setBackgroundResource(R.drawable.bg_mobile_sheet);
-        content.setPadding(0, dp(8), 0, dp(16));
+    /** Shared scaffold for the gear sheets: rounded background + drag handle, with smooth scrolling. */
+    private LinearLayout createSheetContent(BottomSheetDialog sheet) {
+        NestedScrollView scroll = new NestedScrollView(this);
+        scroll.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        scroll.setBackgroundResource(R.drawable.bg_mobile_sheet);
+        scroll.setOverScrollMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
+        scroll.setClipToPadding(false);
+
+        LinearLayout list = new LinearLayout(this);
+        list.setOrientation(LinearLayout.VERTICAL);
+        list.setLayoutParams(new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT));
+        list.setPadding(0, dp(12), 0, dp(16));
 
         View handle = new View(this);
-        LinearLayout.LayoutParams handleLp = new LinearLayout.LayoutParams(dp(36), dp(4));
+        LinearLayout.LayoutParams handleLp = new LinearLayout.LayoutParams(dp(40), dp(4));
         handleLp.gravity = Gravity.CENTER_HORIZONTAL;
-        handleLp.bottomMargin = dp(8);
+        handleLp.topMargin = dp(2);
+        handleLp.bottomMargin = dp(14);
         handle.setLayoutParams(handleLp);
         handle.setBackgroundResource(R.drawable.bg_mobile_sheet_handle);
-        content.addView(handle);
+        handle.setAlpha(0.6f);
+        list.addView(handle);
 
-        return content;
+        scroll.addView(list);
+
+        ViewCompat.setOnApplyWindowInsetsListener(scroll, (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            list.setPadding(0, dp(12), 0, insets.bottom + dp(16));
+            return windowInsets;
+        });
+
+        sheet.setContentView(scroll);
+        return list;
+    }
+
+    private int getRealScreenHeight() {
+        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        if (wm != null) {
+            DisplayMetrics metrics = new DisplayMetrics();
+            wm.getDefaultDisplay().getRealMetrics(metrics);
+            return isLandscape()
+                    ? Math.min(metrics.widthPixels, metrics.heightPixels)
+                    : Math.max(metrics.widthPixels, metrics.heightPixels);
+        }
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        return isLandscape()
+                ? Math.min(dm.widthPixels, dm.heightPixels)
+                : Math.max(dm.widthPixels, dm.heightPixels);
     }
 
     /**
@@ -3872,12 +3940,25 @@ public class MobilePlaybackActivity extends MobileActivity
                     getWindow().getDecorView().getSystemUiVisibility());
         }
 
+        BottomSheetBehavior<?> dialogBehavior = dialog.getBehavior();
+        dialogBehavior.setSkipCollapsed(true);
+        if (immersive) {
+            int maxLandscapeHeight = Math.round(getRealScreenHeight() * 0.90f);
+            dialogBehavior.setMaxHeight(maxLandscapeHeight);
+        }
+
         dialog.setOnShowListener(d -> {
             View sheetView = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
             if (sheetView != null) {
+                // Eliminate duplicate rounded container: outer sheet is transparent, content is the single 24dp sheet
+                sheetView.setBackground(null);
                 BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(sheetView);
                 behavior.setSkipCollapsed(true);
                 behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                if (immersive) {
+                    int maxLandscapeHeight = Math.round(getRealScreenHeight() * 0.90f);
+                    behavior.setMaxHeight(maxLandscapeHeight);
+                }
             }
             if (immersive && window != null) {
                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
@@ -3893,51 +3974,76 @@ public class MobilePlaybackActivity extends MobileActivity
      */
     private void addMenuRow(LinearLayout container, BottomSheetDialog sheet, int iconRes,
                             int labelRes, String trailing, boolean chevron, Runnable action) {
+        // Subtle divider between rows, inset 68dp to align with label start
+        if (container.getChildCount() > 1) { // child 0 is the drag handle
+            View divider = new View(this);
+            LinearLayout.LayoutParams divLp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, Math.max(1, dp(1)));
+            divLp.setMarginStart(dp(68));
+            divLp.setMarginEnd(dp(20));
+            divider.setLayoutParams(divLp);
+            divider.setBackgroundColor(getColorInt(R.color.mobile_color_divider));
+            divider.setAlpha(0.35f);
+            container.addView(divider);
+        }
+
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setGravity(Gravity.CENTER_VERTICAL);
         row.setClickable(true);
         row.setFocusable(true);
         row.setBackgroundResource(resolveSelectableItemBackground());
-        row.setPadding(dp(20), dp(14), dp(16), dp(14));
+        row.setPadding(dp(24), 0, dp(20), 0);
+        row.setMinimumHeight(dp(64));
         row.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
+        // 24dp leading icon with consistent stroke and optical alignment
         ImageView icon = new ImageView(this);
         icon.setImageResource(iconRes);
         icon.setColorFilter(getColorInt(R.color.mobile_color_on_surface));
-        LinearLayout.LayoutParams iconLp = new LinearLayout.LayoutParams(dp(22), dp(22));
+        LinearLayout.LayoutParams iconLp = new LinearLayout.LayoutParams(dp(24), dp(24));
         iconLp.setMarginEnd(dp(20));
         icon.setLayoutParams(iconLp);
         row.addView(icon);
 
+        // Setting label: 16sp readable typography
         TextView label = new TextView(this);
         label.setText(labelRes);
         label.setTextColor(getColorInt(R.color.mobile_color_on_surface));
-        label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+        label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        label.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
         label.setLayoutParams(new LinearLayout.LayoutParams(
                 0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
         row.addView(label);
 
+        // Trailing setting value: 14sp secondary color
         if (trailing != null) {
             TextView state = new TextView(this);
             state.setText(trailing);
             state.setTextColor(getColorInt(R.color.mobile_color_on_surface_secondary));
             state.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+            LinearLayout.LayoutParams stateLp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            stateLp.setMarginEnd(dp(6));
+            state.setLayoutParams(stateLp);
             row.addView(state);
         }
 
+        // Navigation chevron: 20dp
         if (chevron) {
             ImageView arrow = new ImageView(this);
             arrow.setImageResource(R.drawable.ic_chevron_right);
             arrow.setColorFilter(getColorInt(R.color.mobile_color_on_surface_secondary));
+            arrow.setAlpha(0.6f);
             LinearLayout.LayoutParams arrowLp = new LinearLayout.LayoutParams(dp(20), dp(20));
-            arrowLp.setMarginStart(dp(4));
             arrow.setLayoutParams(arrowLp);
             row.addView(arrow);
         }
 
+        com.newtube.mobile.ui.common.GlassMaterial.applyTouchScaleFeedback(row);
         row.setOnClickListener(v -> {
+            com.newtube.mobile.ui.common.Haptics.click(v);
             sheet.dismiss();
             action.run();
         });
@@ -6413,12 +6519,9 @@ public class MobilePlaybackActivity extends MobileActivity
             if (control == null || control.getVisibility() != View.VISIBLE) {
                 continue;
             }
-            // Previous / next draw only their icon: grazing their touch padding is fine. The center
-            // button's circle is its whole box.
-            int controlBottom = offsetInControls(control, false) + control.getHeight()
-                    - (control == mPlayPauseButton ? 0 : control.getPaddingBottom());
-            int controlLeft = offsetInControls(control, true)
-                    + (control == mPlayPauseButton ? 0 : control.getPaddingLeft());
+            // Previous / play-pause / next draw only their icon: grazing their touch padding is fine.
+            int controlBottom = offsetInControls(control, false) + control.getHeight() - control.getPaddingBottom();
+            int controlLeft = offsetInControls(control, true) + control.getPaddingLeft();
             if (controlBottom > lineTop && controlLeft > buttonLeft) {
                 maxWidth = Math.min(maxWidth, Math.max(dp(64), controlLeft - buttonLeft - dp(8)));
             }
@@ -6850,7 +6953,11 @@ public class MobilePlaybackActivity extends MobileActivity
             // YouTube-style: the leading check alone marks the active choice (no bold).
             row.findViewById(R.id.quality_row_check).setVisibility(View.VISIBLE);
         }
-        row.setOnClickListener(v -> onClick.run());
+        com.newtube.mobile.ui.common.GlassMaterial.applyTouchScaleFeedback(row);
+        row.setOnClickListener(v -> {
+            com.newtube.mobile.ui.common.Haptics.click(v);
+            onClick.run();
+        });
         parent.addView(row);
     }
 
@@ -7126,6 +7233,37 @@ public class MobilePlaybackActivity extends MobileActivity
                         getString(R.string.mobile_speed_toast, speedLabel(speed)),
                         com.google.android.material.snackbar.Snackbar.LENGTH_SHORT)
                 .show();
+    }
+
+    @Nullable
+    private String currentSleepTimerLabel() {
+        return SleepTimer.instance().getFormattedRemaining(this);
+    }
+
+    private void showSleepTimerSheet() {
+        cancelAutoHide();
+
+        com.google.android.material.bottomsheet.BottomSheetDialog dialog =
+                SleepTimerSheet.create(this, SleepTimer.instance(), msg -> {
+                    com.google.android.material.snackbar.Snackbar.make(
+                                    findViewById(android.R.id.content),
+                                    msg,
+                                    com.google.android.material.snackbar.Snackbar.LENGTH_SHORT)
+                            .show();
+                });
+
+        dialog.setOnDismissListener(d -> armAutoHide());
+        showPlayerSheet(dialog);
+    }
+
+    private void pauseFromSleepTimer() {
+        runOnUiThread(() -> {
+            if (mExoPlayerController != null) {
+                mExoPlayerController.setPlayWhenReady(false);
+            } else if (mPlayer != null) {
+                mPlayer.setPlayWhenReady(false);
+            }
+        });
     }
 
     private void onCommentsEntryClicked() {

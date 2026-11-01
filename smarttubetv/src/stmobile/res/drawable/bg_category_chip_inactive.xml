@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- YouTube-style category chip inactive state -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?attr/colorControlHighlight">
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="8dp" />
+            <solid android:color="@color/mobile_color_pill" />
+            <stroke
+                android:width="0.75dp"
+                android:color="@color/mobile_color_divider" />
+        </shape>
+    </item>
+</ripple>

@@ -1547,6 +1547,10 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
             }
         }
 
+        if (mSectionsMapping != null) {
+            return mSectionsMapping.get(sectionId);
+        }
+
         return null;
     }
 

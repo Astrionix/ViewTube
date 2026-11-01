@@ -216,8 +216,9 @@
                         android:id="@+id/mobile_player_play_pause"
                         android:layout_width="@dimen/mobile_player_center_button"
                         android:layout_height="@dimen/mobile_player_center_button"
-                        android:background="@drawable/mobile_player_center_button_bg"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/mobile_player_pause"
+                        android:padding="10dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/ic_player_pause" />
 

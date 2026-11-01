@@ -12,6 +12,7 @@ import android.view.ViewTreeObserver;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -116,6 +117,8 @@ public class MobileAppDialogActivity extends MobileActivity implements AppDialog
     private MaxHeightRecyclerView mRecyclerView;
     private TextView mTitleView;
     private ImageButton mBackButton;
+    private ImageButton mCloseButton;
+    private ImageView mLogoView;
     private DialogRowAdapter mAdapter;
 
     /**
@@ -235,6 +238,11 @@ public class MobileAppDialogActivity extends MobileActivity implements AppDialog
         mRecyclerView = findViewById(R.id.mobile_dialog_list);
         mTitleView = findViewById(R.id.mobile_dialog_title);
         mBackButton = findViewById(R.id.mobile_dialog_back);
+        mCloseButton = findViewById(R.id.mobile_dialog_close);
+        mLogoView = findViewById(R.id.mobile_dialog_logo);
+        if (mCloseButton != null) {
+            mCloseButton.setOnClickListener(v -> dismissSheet());
+        }
 
         // Sheet mode: tapping the dim scrim dismisses the whole dialog (like a Material sheet).
         mScrim.setOnClickListener(v -> dismissSheet());
@@ -285,8 +293,9 @@ public class MobileAppDialogActivity extends MobileActivity implements AppDialog
         }
         // A capped sheet no longer reaches the side bars; only a full-width one pads for them.
         boolean capped = width != ViewGroup.LayoutParams.MATCH_PARENT;
+        int bottomPadding = Math.max(mSystemInsets.bottom, getResources().getDimensionPixelSize(R.dimen.mobile_card_spacing));
         mContent.setPadding(capped ? 0 : mSystemInsets.left, 0,
-                capped ? 0 : mSystemInsets.right, mSystemInsets.bottom);
+                capped ? 0 : mSystemInsets.right, bottomPadding);
         mRecyclerView.setMaxHeight(sheetMaxHeight(window.height()));
     }
 
@@ -350,12 +359,9 @@ public class MobileAppDialogActivity extends MobileActivity implements AppDialog
         // scrim/back dismiss it.
         boolean showBack = canGoBack();
         mBackButton.setVisibility(showBack ? View.VISIBLE : View.GONE);
-        // NEWTUBE(sheet-title): without the arrow the title sat 4dp from the edge while every row
-        // starts at 16dp; line it up with the rows. Beside the arrow, 4dp keeps the usual gap.
-        mTitleView.setPaddingRelative(
-                getResources().getDimensionPixelSize(showBack
-                        ? R.dimen.mobile_dialog_title_inset_with_back : R.dimen.mobile_dialog_title_inset),
-                mTitleView.getPaddingTop(), mTitleView.getPaddingEnd(), mTitleView.getPaddingBottom());
+        if (mLogoView != null) {
+            mLogoView.setVisibility(showBack ? View.GONE : View.VISIBLE);
+        }
         mAdapter.submit(level.categories, mRadioOverrides);
         RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
         if (scroll == SCROLL_RESTORE && level.listState != null && layoutManager != null) {

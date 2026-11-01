@@ -41,6 +41,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:id="@+id/mobile_title_icon"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="16dp"
+            android:contentDescription="@string/app_name"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_viewtube_logo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/mobile_title_back"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/mobile_title_bar"
             android:layout_width="0dp"
@@ -49,14 +61,15 @@
             android:ellipsize="end"
             android:gravity="center_vertical|start"
             android:maxLines="1"
-            android:paddingStart="16dp"
+            android:layout_marginStart="8dp"
+            app:layout_goneMarginStart="4dp"
             android:text="@string/app_name"
-            android:textColor="@color/mobile_color_on_surface"
+            android:textColor="#FF0033"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/mobile_cast_button"
-            app:layout_constraintStart_toEndOf="@id/mobile_title_back"
+            app:layout_constraintStart_toEndOf="@id/mobile_title_icon"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
@@ -86,6 +99,31 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- YouTube-style category filter chip bar: horizontal scrolling topic pills (All, Gaming, Music, News, Live, Sports, Trending, etc.) -->
+    <HorizontalScrollView
+        android:id="@+id/mobile_category_scroll"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:background="@color/mobile_color_background"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/mobile_header_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/mobile_category_chips"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp" />
+
+    </HorizontalScrollView>
+
     <!-- Pull-to-refresh drives BrowsePresenter.refresh() - also the natural retry
          gesture when a section shows the error placeholder (the error overlay doesn't
          consume touches, so the pull still reaches this layout). -->
@@ -93,10 +131,10 @@
         android:id="@+id/mobile_content_swipe"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/mobile_bottom_nav"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mobile_header_container">
+        app:layout_constraintTop_toBottomOf="@id/mobile_category_scroll">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mobile_content_grid"
@@ -114,10 +152,10 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/mobile_bottom_nav"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mobile_header_container" />
+        app:layout_constraintTop_toBottomOf="@id/mobile_category_scroll" />
 
     <!--
          The empty/error placeholder is anchored to the title bar / bottom nav / parent
@@ -136,7 +174,7 @@
         android:orientation="vertical"
         android:padding="24dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/mobile_bottom_nav"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/mobile_header_container">
@@ -175,8 +213,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/mobile_color_background"
+        android:clipToPadding="false"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/mobile_bottom_nav"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/mobile_header_container"
@@ -417,13 +456,13 @@
         android:id="@+id/mobile_bottom_nav"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/mobile_color_background"
-        app:itemIconSize="24dp"
+        android:background="@android:color/transparent"
+        app:itemIconSize="22dp"
         app:itemIconTint="@color/mobile_bottom_nav_item"
         app:itemTextAppearanceActive="@style/MobileBottomNavText"
         app:itemTextAppearanceActiveBoldEnabled="false"
         app:itemTextAppearanceInactive="@style/MobileBottomNavText"
-        app:paddingBottomSystemWindowInsets="true"
+        app:paddingBottomSystemWindowInsets="false"
         app:itemTextColor="@color/mobile_bottom_nav_item"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"

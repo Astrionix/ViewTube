@@ -4,6 +4,7 @@
      translation or the bar reads "Inicio / Suscripciones / Historial / You". -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="mobile_nav_you">Tú</string>
+    <string name="mobile_category_all">Todo</string>
     <string name="mobile_you_explore">Explorar</string>
 
     <!-- Upstream es translation says "REGISTRARSE" (= create an account) on every sign-in
@@ -145,6 +146,21 @@
     <string name="mobile_menu_queue">Cola de reproducción</string>
     <string name="mobile_menu_on">Activado</string>
     <string name="mobile_menu_off">Desactivado</string>
+
+    <!-- Sleep timer (temporizador) -->
+    <string name="mobile_player_sleep_timer">Temporizador de apagado</string>
+    <string name="mobile_sleep_timer_off">Desactivar temporizador</string>
+    <string name="mobile_sleep_timer_end_of_video">Fin del vídeo</string>
+    <string name="mobile_sleep_timer_status_running">La reproducción se detendrá en %1$s</string>
+    <string name="mobile_sleep_timer_status_end_of_video">La reproducción se detendrá al final de este vídeo</string>
+    <string name="mobile_sleep_timer_add_15">Añadir 15 minutos</string>
+    <string name="mobile_sleep_timer_toast_set">Temporizador configurado para %1$s</string>
+    <string name="mobile_sleep_timer_toast_end_of_video">Temporizador configurado para el fin del vídeo</string>
+    <string name="mobile_sleep_timer_toast_off">Temporizador desactivado</string>
+    <string name="mobile_sleep_timer_toast_added">Se han añadido %1$d minutos al temporizador</string>
+    <string name="mobile_sleep_timer_paused">Temporizador: reproducción en pausa</string>
+    <string name="mobile_sleep_timer_remaining_min">%1$d min restantes</string>
+    <string name="mobile_sleep_timer_remaining_hr_min">%1$d h %2$d min restantes</string>
 
     <!-- Quality / audio sheets -->
     <string name="mobile_quality_title">Calidad</string>

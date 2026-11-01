@@ -45,7 +45,7 @@ public final class AppearancePrefs {
     }
 
     /**
-     * Default behavior: false (preserve conventional, full-width YouTube-style bottom bar).
+     * Default behavior: false (preserve conventional, full-width bottom bar).
      * The floating design is independently controlled by this setting.
      */
     public static boolean isFloatingBottomBarEnabled(Context context) {

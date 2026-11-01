@@ -201,7 +201,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
                 }
             });
 
-            GlassMaterial.applyTouchScaleFeedback(itemView);
+            GlassMaterial.applyCardTouchFeedback(itemView);
         }
 
         public void bind(Video video, OnVideoLongClickListener longClickListener) {
@@ -433,7 +433,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
                 }
             });
 
-            GlassMaterial.applyTouchScaleFeedback(itemView);
+            GlassMaterial.applyCardTouchFeedback(itemView);
         }
 
         void bind(Video video, OnVideoLongClickListener longClickListener) {

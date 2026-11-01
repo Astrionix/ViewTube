@@ -199,12 +199,25 @@ final class PlayerPages {
         for (float value : hours) {
             choice.option(sleepLabel(context, value), value);
         }
-        return choice.bind(() -> nearest(hours, playerData.getSleepTimerHours()), playerData::setSleepTimerHours)
-                .summary(() -> {
-                    float value = playerData.getSleepTimerHours();
-                    return value <= 0 ? context.getString(R.string.mobile_settings_off)
-                            : context.getString(R.string.mobile_settings_sleep_timer_summary, sleepLabel(context, value));
-                });
+        return choice.bind(() -> nearest(hours, playerData.getSleepTimerHours()), value -> {
+            playerData.setSleepTimerHours(value);
+            if (value <= 0) {
+                com.newtube.mobile.ui.playback.SleepTimer.instance().stop();
+            } else {
+                com.newtube.mobile.ui.playback.SleepTimer.instance().start(Math.round(value * 60));
+            }
+        }).summary(() -> {
+            com.newtube.mobile.ui.playback.SleepTimer timer = com.newtube.mobile.ui.playback.SleepTimer.instance();
+            if (timer.isActive()) {
+                if (timer.isEndOfVideo()) {
+                    return context.getString(R.string.mobile_sleep_timer_status_end_of_video);
+                }
+                return timer.getFormattedStatus(context);
+            }
+            float value = playerData.getSleepTimerHours();
+            return value <= 0 ? context.getString(R.string.mobile_settings_off)
+                    : context.getString(R.string.mobile_settings_sleep_timer_summary, sleepLabel(context, value));
+        });
     }
 
     private static String sleepLabel(Context context, float hours) {
