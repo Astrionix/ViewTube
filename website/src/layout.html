@@ -2,7 +2,7 @@
 <html lang="{{lang}}">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; media-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <title>{{title}}</title>
   <meta name="description" content="{{description}}">
@@ -60,7 +60,7 @@
   <header class="site-header">
     <div class="wrap bar">
       <a class="brand" href="{{home_href}}"><img src="/assets/icon-512.png" width="30" height="30" alt="ViewTube Logo"><span>ViewTube</span><span class="version-badge">{{release_version}}</span></a>
-      <nav class="nav" aria-label="{{t.nav_label}}">
+      <nav class="nav" id="site-nav" aria-label="{{t.nav_label}}">
         <ul>
           <li><a href="{{home_href}}#how-it-works">How It Works</a></li>
           <li><a href="{{home_href}}#features">Features</a></li>
@@ -69,7 +69,14 @@
           <li><a href="{{faq_href}}"{{cur_faq}}>{{t.nav_faq}}</a></li>
         </ul>
       </nav>
-      <a class="lang" href="{{switch_href}}" hreflang="{{switch_lang}}" lang="{{switch_lang}}" title="{{switch_title}}">{{switch_label}}</a>
+      <div class="header-actions">
+        <a class="lang" href="{{switch_href}}" hreflang="{{switch_lang}}" lang="{{switch_lang}}" title="{{switch_title}}">{{switch_label}}</a>
+        <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation menu">
+          <span class="bar-line"></span>
+          <span class="bar-line"></span>
+          <span class="bar-line"></span>
+        </button>
+      </div>
     </div>
   </header>
 
