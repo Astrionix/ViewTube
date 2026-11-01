@@ -111,9 +111,9 @@
             <div class="arch-number">05</div>
             <div class="arch-icon"><svg class="i" aria-hidden="true"><use href="#i-refresh"/></svg></div>
             <h3>Automated In-App OTA Updates</h3>
-            <p>ViewTube features a built-in Over-The-Air updater. At launch, the app quietly fetches the signed <code>viewtube.json</code> manifest from the official GitHub release, parses the release notes, and offers one-tap in-place updates via Android's PackageInstaller.</p>
+            <p>ViewTube features a built-in Over-The-Air updater. At launch, the app quietly checks the signed <code>viewtube.json</code> manifest from the official release channel, parses the release notes, and offers one-tap in-place updates via Android's PackageInstaller.</p>
             <ul class="arch-points">
-              <li><svg class="i check" aria-hidden="true"><use href="#i-check"/></svg> Direct downloads from GitHub Releases</li>
+              <li><svg class="i check" aria-hidden="true"><use href="#i-check"/></svg> Direct downloads from secure official servers</li>
               <li><svg class="i check" aria-hidden="true"><use href="#i-check"/></svg> Cryptographic signature & SHA-256 verification</li>
               <li><svg class="i check" aria-hidden="true"><use href="#i-check"/></svg> Background download with system notification</li>
             </ul>
@@ -144,9 +144,9 @@
             </div>
 
             <div class="share-direct-box">
-              <label for="share-url-input">Direct Release Link</label>
+              <label for="share-url-input">Direct Share Link</label>
               <div class="input-with-copy">
-                <input type="text" id="share-url-input" readonly value="https://github.com/Astrionix/ViewTube/releases/latest">
+                <input type="text" id="share-url-input" readonly value="https://viewtube.org">
                 <button type="button" class="btn-sm" id="copy-input-btn">Copy</button>
               </div>
             </div>

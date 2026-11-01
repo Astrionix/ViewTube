@@ -222,7 +222,7 @@
     var copyInputBtn = document.getElementById("copy-input-btn");
     var shareInput = document.getElementById("share-url-input");
 
-    var releaseUrl = (shareInput && shareInput.value) || "https://github.com/Astrionix/ViewTube/releases/latest";
+    var releaseUrl = (shareInput && shareInput.value) || window.location.href;
     var copiedMsg = LANG === "es" ? "¡Enlace copiado al portapapeles!" : "Link copied to clipboard!";
     var copiedLabel = LANG === "es" ? "¡Copiado!" : "Copied!";
     var copyLabel = LANG === "es" ? "Copiar enlace" : "Copy Link";
