@@ -209,15 +209,6 @@
     if (!tabs.length || !img) return;
 
     var screens = {
-      feed: {
-        src: "/assets/screens/home-feed.png",
-        caption: LANG === "es"
-          ? "Chips de categorías con barra de navegación flotante cristal líquido"
-          : "Dynamic category filter chips with liquid glass floating navigation bar",
-        alt: LANG === "es"
-          ? "Pantalla de inicio de ViewTube con chips de categorías y barra flotante cristal líquido"
-          : "ViewTube Home feed with dynamic category filter chips and liquid glass bottom navigation bar"
-      },
       settings: {
         src: "/assets/screens/player-settings.png",
         caption: LANG === "es"
