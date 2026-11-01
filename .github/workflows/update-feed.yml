@@ -42,27 +42,35 @@ jobs:
             exit 1
           fi
           newest() { jq '[to_entries[] | select(.key != "package") | .value.versionCode] | max' "$1"; }
-          gh release download "$TAG_NAME" --pattern newtube.json --dir feed
-          jq -e --arg v "${TAG_NAME#v}" 'has($v) and (.package.downloadUrlList | length > 0)' feed/newtube.json
+          gh release download "$TAG_NAME" --pattern '*tube.json' --dir feed
+          target_json="feed/viewtube.json"
+          if [ ! -f "$target_json" ]; then
+            target_json="feed/newtube.json"
+          fi
+          jq -e --arg v "${TAG_NAME#v}" 'has($v) and (.package.downloadUrlList | length > 0)' "$target_json"
           # Never move the feed back: an older release published (or dispatched) later would tell
           # installs newer than it that they're up to date.
-          if gh release download latest --pattern newtube.json --dir current; then
-            if [ "$(newest feed/newtube.json)" -lt "$(newest current/newtube.json)" ]; then
-              echo "::error::$TAG_NAME is older than what the feed serves (versionCode $(newest current/newtube.json))."
+          if gh release download latest --pattern '*tube.json' --dir current; then
+            current_json="current/viewtube.json"
+            if [ ! -f "$current_json" ]; then
+              current_json="current/newtube.json"
+            fi
+            if [ -f "$current_json" ] && [ "$(newest "$target_json")" -lt "$(newest "$current_json")" ]; then
+              echo "::error::$TAG_NAME is older than what the feed serves (versionCode $(newest "$current_json"))."
               exit 1
             fi
           fi
           # --clobber deletes the old file before uploading, so a failed upload would leave old
           # installs with no manifest: retry, then put the previous one back.
           for attempt in 1 2 3; do
-            if gh release upload latest feed/newtube.json --clobber; then
+            if gh release upload latest feed/*tube.json --clobber; then
               echo "The feed now serves $TAG_NAME."
               exit 0
             fi
             sleep 10
           done
-          if [ -f current/newtube.json ]; then
-            gh release upload latest current/newtube.json --clobber || true
+          if [ -d current ]; then
+            gh release upload latest current/*tube.json --clobber || true
           fi
           echo "::error::Couldn't upload the feed for $TAG_NAME."
           exit 1
