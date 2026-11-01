@@ -114,7 +114,14 @@ a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 0
   -webkit-user-select: none; user-select: none;
   transition: transform var(--press-duration) var(--ease-out), opacity var(--press-duration) var(--ease-out); }
 .brand:active { transform: scale(0.98); opacity: 0.8; }
-.brand img { width: 28px; height: 28px; border-radius: 7px; }
+.brand img {
+  width: 30px; height: 30px; border-radius: 0; object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(220, 38, 38, 0.35));
+  transition: transform 0.25s var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .brand:hover img { transform: rotate(-5deg) scale(1.08); }
+}
 .nav { margin-left: auto; }
 .nav ul { display: flex; gap: clamp(12px, 3vw, 28px); }
 .nav a, .lang { color: var(--ink-2); text-decoration: none; font-size: 0.9375rem; -webkit-user-select: none; user-select: none; }
