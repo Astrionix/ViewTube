@@ -201,68 +201,6 @@
     io.observe(list);
   }
 
-  /* ---------- 6. Screen switcher tabs ---------- */
-  function setupScreenTabs() {
-    var tabs = document.querySelectorAll(".screen-tab");
-    var img = document.getElementById("active-screen-img");
-    var caption = document.getElementById("active-screen-caption");
-    if (!tabs.length || !img) return;
-
-    var screens = {
-      settings: {
-        src: "/assets/screens/player-settings.png",
-        caption: LANG === "es"
-          ? "Panel inferior rediseñado con bordes de 24dp y temporizador de apagado"
-          : "Redesigned 24dp rounded video player bottom sheet with Sleep Timer",
-        alt: LANG === "es"
-          ? "Panel inferior de ajustes de reproducción en ViewTube"
-          : "ViewTube redesigned 24dp video player settings bottom sheet"
-      },
-      controls: {
-        src: "/assets/screens/player-controls.png",
-        caption: LANG === "es"
-          ? "Controles de reproducción limpios con acceso a configuración rápida"
-          : "Clean on-screen video player controls with quick settings gear",
-        alt: LANG === "es"
-          ? "Controles del reproductor ViewTube con botón de ajustes"
-          : "ViewTube player on-screen overlay controls"
-      },
-      fullscreen: {
-        src: "/assets/screens/player-fullscreen.png",
-        caption: LANG === "es"
-          ? "Reproducción inmersiva a pantalla completa con gestos táctiles"
-          : "Immersive landscape video playback with full swipe gestures",
-        alt: LANG === "es"
-          ? "Reproducción horizontal inmersiva en ViewTube"
-          : "ViewTube immersive landscape playback"
-      }
-    };
-
-    var crossfadeTimer = null;
-    tabs.forEach(function (tab) {
-      tab.addEventListener("click", function () {
-        var target = tab.getAttribute("data-screen-target");
-        var data = screens[target];
-        if (!data) return;
-
-        tabs.forEach(function (t) {
-          t.classList.remove("active");
-          t.setAttribute("aria-selected", "false");
-        });
-        tab.classList.add("active");
-        tab.setAttribute("aria-selected", "true");
-
-        img.style.opacity = "0.35";
-        clearTimeout(crossfadeTimer);
-        crossfadeTimer = setTimeout(function () {
-          img.src = data.src;
-          img.alt = data.alt;
-          if (caption) caption.textContent = data.caption;
-          img.style.opacity = "1";
-        }, 140);
-      });
-    });
-  }
 
   /* ---------- 7. Toast & Share Hub ---------- */
   var toastTimer = null;
@@ -405,7 +343,6 @@
   setupDemo();
   setupCopy();
   setupStopwatch();
-  setupScreenTabs();
   setupShareHub();
   setupLightbox();
   openTarget();
