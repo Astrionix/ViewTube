@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; media-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <title>Preguntas sobre ViewTube: Guía y respuestas</title>
   <meta name="description" content="Respuestas sobre ViewTube: inicio de sesión, qué APK elegir, actualizaciones, Google Play Services, guardar vídeos para verlos sin conexión, enviar a la TV y características.">
@@ -68,7 +68,7 @@
       "name": "¿ViewTube es de código abierto?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Sí. ViewTube es completamente de código abierto bajo la licencia permisiva MIT en GitHub. Cualquiera puede inspeccionar el código, compilar APKs desde el código fuente o contribuir mejoras."
+        "text": "Sí. ViewTube es completamente de código abierto bajo la licencia permisiva MIT. Cualquiera puede inspeccionar el código, compilar APKs desde el código fuente o contribuir mejoras."
       }
     },
     {
@@ -76,7 +76,7 @@
       "name": "¿Está hecho con IA?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Sí, en gran parte. ViewTube se mantiene con asistentes de programación con IA, Claude y Codex; los commits lo indican. El responsable dirige y revisa ese trabajo y usa la app a diario. Cada registro de versión (en inglés) indica qué se comprobó en un móvil real, qué solo se comprobó con pruebas automáticas y qué sigue pendiente."
+        "text": "Sí, en gran parte. ViewTube se mantiene con asistentes de programación con IA, Claude y Codex; los commits lo indican. El responsable dirige y revisa ese trabajo y usa la app a diario. Cada registro de versión indica qué se comprobó en un móvil real, qué solo se comprobó con pruebas automáticas y qué sigue pendiente."
       }
     },
     {
@@ -84,7 +84,7 @@
       "name": "¿Por qué no acepta donaciones?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "ViewTube es completamente gratis y comunitario. No acepta donaciones ni cobra suscripciones. Si disfrutas de la app, dale una estrella al repositorio en GitHub o compártela con amigos."
+        "text": "ViewTube es completamente gratis y comunitario. No acepta donaciones ni cobra suscripciones. Si disfrutas de la app, compártela con amigos."
       }
     },
     {
@@ -228,7 +228,7 @@
   <header class="site-header">
     <div class="wrap bar">
       <a class="brand" href="/es/"><img src="/assets/icon-512.png" width="30" height="30" alt="ViewTube Logo"><span>ViewTube</span><span class="version-badge">v1.15.0</span></a>
-      <nav class="nav" aria-label="Principal">
+      <nav class="nav" id="site-nav" aria-label="Principal">
         <ul>
           <li><a href="/es/#how-it-works">How It Works</a></li>
           <li><a href="/es/#features">Features</a></li>
@@ -237,7 +237,14 @@
           <li><a href="/es/faq/" aria-current="page">Ayuda</a></li>
         </ul>
       </nav>
-      <a class="lang" href="/faq/" hreflang="en" lang="en" title="Read in English">EN</a>
+      <div class="header-actions">
+        <a class="lang" href="/faq/" hreflang="en" lang="en" title="Read in English">EN</a>
+        <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation menu">
+          <span class="bar-line"></span>
+          <span class="bar-line"></span>
+          <span class="bar-line"></span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -268,15 +275,15 @@
           </details>
           <details id="open-source">
             <summary>¿ViewTube es de código abierto?</summary>
-            <div><p>Sí. ViewTube es completamente de código abierto bajo la licencia permisiva MIT en GitHub. Cualquiera puede inspeccionar el código, compilar APKs desde el código fuente o contribuir mejoras.</p></div>
+            <div><p>Sí. ViewTube es completamente de código abierto bajo la licencia permisiva MIT. Cualquiera puede inspeccionar el código, compilar APKs desde el código fuente o contribuir mejoras.</p></div>
           </details>
           <details id="ai">
             <summary>¿Está hecho con IA?</summary>
-            <div><p>Sí, en gran parte. ViewTube se mantiene con asistentes de programación con IA, Claude y Codex; los commits lo indican. El responsable dirige y revisa ese trabajo y usa la app a diario. Cada <a href="https://github.com/Astrionix/ViewTube/tree/main/docs/releases">registro de versión</a> (en inglés) indica qué se comprobó en un móvil real, qué solo se comprobó con pruebas automáticas y qué sigue pendiente.</p></div>
+            <div><p>Sí, en gran parte. ViewTube se mantiene con asistentes de programación con IA, Claude y Codex; los commits lo indican. El responsable dirige y revisa ese trabajo y usa la app a diario. Cada registro de versión indica qué se comprobó en un móvil real, qué solo se comprobó con pruebas automáticas y qué sigue pendiente.</p></div>
           </details>
           <details id="donations">
             <summary>¿Por qué no acepta donaciones?</summary>
-            <div><p>ViewTube es completamente gratis y comunitario. No acepta donaciones ni cobra suscripciones. Si disfrutas de la app, dale una estrella al repositorio en GitHub o compártela con amigos.</p></div>
+            <div><p>ViewTube es completamente gratis y comunitario. No acepta donaciones ni cobra suscripciones. Si disfrutas de la app, compártela con amigos.</p></div>
           </details>
         </div>
       </div>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; media-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <title>ViewTube FAQ: Questions and Answers</title>
   <meta name="description" content="Answers about ViewTube: sign-in, which APK to pick, updates, Google Play Services, saving for offline, casting and how it compares with other clients.">
@@ -68,7 +68,7 @@
       "name": "Is ViewTube open source?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. ViewTube is fully open source under the permissive MIT license on GitHub. Anyone can inspect the code, build APKs from source, report bugs, or submit pull requests."
+        "text": "Yes. ViewTube is fully open source under the permissive MIT license. Anyone can inspect the code, build APKs from source, report issues, or contribute improvements."
       }
     },
     {
@@ -84,7 +84,7 @@
       "name": "Why no donations?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "ViewTube is completely free and community-driven. It does not accept donations or sell subscriptions. If you enjoy ViewTube, consider starring the repository on GitHub or sharing the app with friends."
+        "text": "ViewTube is completely free and community-driven. It does not accept donations or sell subscriptions. If you enjoy ViewTube, consider sharing the app with friends."
       }
     },
     {
@@ -228,7 +228,7 @@
   <header class="site-header">
     <div class="wrap bar">
       <a class="brand" href="/"><img src="/assets/icon-512.png" width="30" height="30" alt="ViewTube Logo"><span>ViewTube</span><span class="version-badge">v1.15.0</span></a>
-      <nav class="nav" aria-label="Main">
+      <nav class="nav" id="site-nav" aria-label="Main">
         <ul>
           <li><a href="/#how-it-works">How It Works</a></li>
           <li><a href="/#features">Features</a></li>
@@ -237,7 +237,14 @@
           <li><a href="/faq/" aria-current="page">FAQ</a></li>
         </ul>
       </nav>
-      <a class="lang" href="/es/faq/" hreflang="es" lang="es" title="Leer en español">ES</a>
+      <div class="header-actions">
+        <a class="lang" href="/es/faq/" hreflang="es" lang="es" title="Leer en español">ES</a>
+        <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation menu">
+          <span class="bar-line"></span>
+          <span class="bar-line"></span>
+          <span class="bar-line"></span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -268,15 +275,15 @@
           </details>
           <details id="open-source">
             <summary>Is ViewTube open source?</summary>
-            <div><p>Yes. ViewTube is fully open source under the permissive MIT license on GitHub. Anyone can inspect the code, build APKs from source, report bugs, or submit pull requests.</p></div>
+            <div><p>Yes. ViewTube is fully open source under the permissive MIT license. Anyone can inspect the code, build APKs from source, report issues, or contribute improvements.</p></div>
           </details>
           <details id="ai">
             <summary>Was it made with AI?</summary>
-            <div><p>Yes, in large part. ViewTube is maintained with modern AI coding assistants, Claude and Codex; the commit trailers say so. The maintainer directs and reviews that work and uses the app daily. Each <a href="https://github.com/Astrionix/ViewTube/tree/main/docs/releases">release record</a> lists what was checked on a real phone, what was checked only with automated tests, and what is still open.</p></div>
+            <div><p>Yes, in large part. ViewTube is maintained with modern AI coding assistants, Claude and Codex; the commit trailers say so. The maintainer directs and reviews that work and uses the app daily. Each release record lists what was checked on a real phone, what was checked only with automated tests, and what is still open.</p></div>
           </details>
           <details id="donations">
             <summary>Why no donations?</summary>
-            <div><p>ViewTube is completely free and community-driven. It does not accept donations or sell subscriptions. If you enjoy ViewTube, consider starring the repository on GitHub or sharing the app with friends.</p></div>
+            <div><p>ViewTube is completely free and community-driven. It does not accept donations or sell subscriptions. If you enjoy ViewTube, consider sharing the app with friends.</p></div>
           </details>
         </div>
       </div>

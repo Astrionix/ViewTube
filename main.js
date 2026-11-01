@@ -340,11 +340,50 @@
     });
   }
 
+  /* ---------- 8. Mobile navigation toggle ---------- */
+  function setupMobileNav() {
+    var toggle = document.getElementById("nav-toggle");
+    var nav = document.getElementById("site-nav");
+    if (!toggle || !nav) return;
+
+    function toggleMenu(open) {
+      var isOpen = typeof open === "boolean" ? open : !nav.classList.contains("open");
+      nav.classList.toggle("open", isOpen);
+      toggle.classList.toggle("open", isOpen);
+      toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      document.body.classList.toggle("nav-active", isOpen);
+    }
+
+    toggle.addEventListener("click", function () {
+      toggleMenu();
+    });
+
+    var links = nav.querySelectorAll("a");
+    for (var i = 0; i < links.length; i++) {
+      links[i].addEventListener("click", function () {
+        toggleMenu(false);
+      });
+    }
+
+    document.addEventListener("click", function (e) {
+      if (nav.classList.contains("open") && !nav.contains(e.target) && !toggle.contains(e.target)) {
+        toggleMenu(false);
+      }
+    });
+
+    window.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && nav.classList.contains("open")) {
+        toggleMenu(false);
+      }
+    });
+  }
+
   setupDemo();
   setupCopy();
   setupStopwatch();
   setupShareHub();
   setupLightbox();
+  setupMobileNav();
   openTarget();
   window.addEventListener("hashchange", openTarget);
 })();

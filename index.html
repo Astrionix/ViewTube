@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; media-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <title>ViewTube: Fluid, Private YouTube Client for Android</title>
   <meta name="description" content="ViewTube is a fast, ad-free, open-source YouTube client for Android. Built with liquid glass aesthetics, background playback, PiP, Sleep Timer, SponsorBlock, and next-gen Media3 streaming.">
@@ -100,7 +100,7 @@
   <header class="site-header">
     <div class="wrap bar">
       <a class="brand" href="/"><img src="/assets/icon-512.png" width="30" height="30" alt="ViewTube Logo"><span>ViewTube</span><span class="version-badge">v1.15.0</span></a>
-      <nav class="nav" aria-label="Main">
+      <nav class="nav" id="site-nav" aria-label="Main">
         <ul>
           <li><a href="/#how-it-works">How It Works</a></li>
           <li><a href="/#features">Features</a></li>
@@ -109,7 +109,14 @@
           <li><a href="/faq/">FAQ</a></li>
         </ul>
       </nav>
-      <a class="lang" href="/es/" hreflang="es" lang="es" title="Leer en español">ES</a>
+      <div class="header-actions">
+        <a class="lang" href="/es/" hreflang="es" lang="es" title="Leer en español">ES</a>
+        <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation menu">
+          <span class="bar-line"></span>
+          <span class="bar-line"></span>
+          <span class="bar-line"></span>
+        </button>
+      </div>
     </div>
   </header>
 

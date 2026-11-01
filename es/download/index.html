@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; media-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <title>Descargar ViewTube para Android</title>
   <meta name="description" content="Descarga el APK de ViewTube para Android 7.0 o posterior: qué archivo elegir, cómo instalarlo, cómo se actualiza y cómo comprobar el archivo.">
@@ -60,7 +60,7 @@
   <header class="site-header">
     <div class="wrap bar">
       <a class="brand" href="/es/"><img src="/assets/icon-512.png" width="30" height="30" alt="ViewTube Logo"><span>ViewTube</span><span class="version-badge">v1.15.0</span></a>
-      <nav class="nav" aria-label="Principal">
+      <nav class="nav" id="site-nav" aria-label="Principal">
         <ul>
           <li><a href="/es/#how-it-works">How It Works</a></li>
           <li><a href="/es/#features">Features</a></li>
@@ -69,7 +69,14 @@
           <li><a href="/es/faq/">Ayuda</a></li>
         </ul>
       </nav>
-      <a class="lang" href="/download/" hreflang="en" lang="en" title="Read in English">EN</a>
+      <div class="header-actions">
+        <a class="lang" href="/download/" hreflang="en" lang="en" title="Read in English">EN</a>
+        <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation menu">
+          <span class="bar-line"></span>
+          <span class="bar-line"></span>
+          <span class="bar-line"></span>
+        </button>
+      </div>
     </div>
   </header>
 
