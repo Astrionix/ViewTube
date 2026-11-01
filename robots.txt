@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://viewtube.app/sitemap.xml

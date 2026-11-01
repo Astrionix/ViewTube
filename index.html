@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; media-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <title>ViewTube: Fluid, Private YouTube Client for Android</title>
+  <meta name="description" content="ViewTube is a fast, ad-free, open-source YouTube client for Android. Built with liquid glass aesthetics, background playback, PiP, Sleep Timer, SponsorBlock, and next-gen Media3 streaming.">
+  <link rel="canonical" href="https://viewtube.app/">
+  <link rel="alternate" hreflang="en" href="https://viewtube.app/">
+  <link rel="alternate" hreflang="es" href="https://viewtube.app/es/">
+  <link rel="alternate" hreflang="x-default" href="https://viewtube.app/">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f4f5f6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d0e12" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="/assets/icon-512.png" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/icon-512.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ViewTube">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="es_ES">
+  <meta property="og:url" content="https://viewtube.app/">
+  <meta property="og:title" content="ViewTube: Fluid, Private YouTube Client for Android">
+  <meta property="og:description" content="ViewTube is a fast, ad-free, open-source YouTube client for Android. Built with liquid glass aesthetics, background playback, PiP, Sleep Timer, SponsorBlock, and next-gen Media3 streaming.">
+  <meta property="og:image" content="https://viewtube.app/assets/og-image.jpg">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta property="og:image:alt" content="ViewTube: Fluid, Private YouTube Client for Android. Fast, polished and open source. A phone shows the watch page playing Sintel.">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preload" href="/assets/fonts/roboto-flex-display.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/main.js" defer></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "ViewTube",
+  "alternateName": "ViewTube for Android",
+  "description": "ViewTube: an open-source, ad-free YouTube client for Android phones and tablets with background play and modern design.",
+  "inLanguage": "en",
+  "applicationCategory": "MultimediaApplication",
+  "applicationSubCategory": "YouTube client",
+  "operatingSystem": "Android 7.0 or newer",
+  "softwareRequirements": "Android 7.0 or newer; no Google Play Services needed",
+  "url": "https://viewtube.app/",
+  "downloadUrl": "https://github.com/Astrionix/ViewTube/releases/latest",
+  "codeRepository": "https://github.com/Astrionix/ViewTube",
+  "image": "https://viewtube.app/assets/icon-512.png",
+  "screenshot": [
+    "https://viewtube.app/assets/screens/watch-720.webp",
+    "https://viewtube.app/assets/screens/downloads-720.webp"
+  ],
+  "license": "https://opensource.org/licenses/MIT",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Astrionix",
+    "url": "https://github.com/Astrionix"
+  },
+  "featureList": [
+    "Sign in with a code, without microG, GmsCore or root",
+    "Background playback, picture-in-picture and a mini-player",
+    "Save for offline up to 1080p, or keep only the audio",
+    "SponsorBlock, DeArrow and Return YouTube Dislike",
+    "Cast to your Smart TV or Android TV"
+  ]
+}
+  </script>
+</head>
+<body class="page-index">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4.5v11m-4.75-4.75L12 15.5l4.75-4.75M5.5 19.5h13"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h13.5m-5.25-5.25L18.5 12l-5.25 5.25"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11" height="11" rx="2.25"/><path d="M15.5 8.5v-2a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path class="fill" d="M12 3.3l2.55 5.47 6 .72-4.43 4.1 1.17 5.92L12 16.56l-5.29 2.95 1.17-5.92-4.43-4.1 6-.72z"/></symbol>
+    <symbol id="i-github" viewBox="0 0 16 16"><path class="fill" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></symbol>
+    <symbol id="i-qrcode" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="3" height="3"/><rect x="18" y="14" width="3" height="3"/><rect x="14" y="18" width="7" height="3"/></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
+    <symbol id="i-whatsapp" viewBox="0 0 24 24"><path class="fill" d="M17.472 14.382c-.301-.15-1.78-.879-2.056-.98-.276-.1-.476-.15-.677.15-.2.301-.778.98-.953 1.18-.175.2-.351.226-.652.075-.301-.15-1.272-.469-2.423-1.496-.895-.799-1.5-1.786-1.676-2.087-.175-.301-.019-.464.132-.614.136-.135.301-.351.452-.527.15-.175.2-.301.301-.502.1-.2.05-.376-.025-.526-.075-.15-.677-1.631-.928-2.235-.245-.588-.493-.508-.677-.518-.175-.009-.376-.011-.577-.011s-.527.075-.803.376c-.276.301-1.054 1.03-1.054 2.512s1.079 2.914 1.229 3.115c.15.2 2.123 3.242 5.143 4.547.719.311 1.28.497 1.718.636.723.23 1.381.197 1.902.12.579-.086 1.78-.727 2.03-1.43.25-.703.25-1.305.175-1.43-.075-.125-.276-.2-.577-.351M12.04 2C6.495 2 2 6.496 2 12.043c0 1.979.574 3.824 1.571 5.385L2 22l4.721-1.536A10.016 10.016 0 0 0 12.04 22c5.545 0 10.04-4.496 10.04-10.043S17.585 2 12.04 2"/></symbol>
+    <symbol id="i-telegram" viewBox="0 0 24 24"><path class="fill" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.15 3.35-1.35 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path class="fill" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></symbol>
+    <symbol id="i-reddit" viewBox="0 0 24 24"><path class="fill" d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm5.748-11.43a1.442 1.442 0 0 0-1.44-1.44c-.45 0-.84.21-1.09.53-1.02-.69-2.4-1.14-3.95-1.19l.74-3.5 2.42.51a1.2 1.2 0 1 0 1.2-1.2 1.2 1.2 0 0 0-1.17.93l-2.73-.58a.24.24 0 0 0-.28.18l-.84 3.96c-1.58.05-3 .5-4.04 1.2a1.433 1.433 0 0 0-2.39 1.1c0 .48.24.91.6 1.18-.03.17-.04.35-.04.53 0 2.65 3.1 4.8 6.94 4.8s6.94-2.15 6.94-4.8c0-.18-.01-.36-.04-.53.36-.27.6-.7.6-1.18zM9.25 12a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zm5.5 0a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zm-5.75 4.31a.25.25 0 0 1 .35-.04c.82.6 1.83.88 2.65.88s1.83-.28 2.65-.88a.25.25 0 1 1 .3.4c-.95.7-2.09 1.03-2.95 1.03s-2-.33-2.95-1.03a.25.25 0 0 1-.05-.36z"/></symbol>
+  </svg>
+
+  <header class="site-header">
+    <div class="wrap bar">
+      <a class="brand" href="/"><img src="/assets/icon-512.png" width="30" height="30" alt="ViewTube Logo"><span>ViewTube</span><span class="version-badge">v1.15.0</span></a>
+      <nav class="nav" aria-label="Main">
+        <ul>
+          <li><a href="/#how-it-works">How It Works</a></li>
+          <li><a href="/#features">Features</a></li>
+          <li><a href="/#share">Share</a></li>
+          <li><a href="/download/">Download</a></li>
+          <li><a href="/faq/">FAQ</a></li>
+        </ul>
+      </nav>
+      <a class="lang" href="/es/" hreflang="es" lang="es" title="Leer en español">ES</a>
+    </div>
+  </header>
+
+  <main id="main">
+<section class="hero" aria-labelledby="hero-title">
+      <div class="wrap hero-grid">
+        <div class="hero-text">
+          <div class="hero-badges">
+            <span class="badge badge-glow">v1.15.0 Released</span>
+            <span class="badge">Open Source · MIT</span>
+            <span class="badge">Android 7+</span>
+          </div>
+          <h1 id="hero-title">YouTube for Android. <span class="gradient-text">Fluid, private, perfected.</span></h1>
+          <p class="lead">The ultimate YouTube experience on your phone: ad-free streaming, background playback, PiP, physical gestures, and a fluid liquid glass interface — all without Google Play Services or microG.</p>
+          <div class="get">
+            <div class="get-actions">
+              <a class="btn btn-primary" href="https://github.com/Astrionix/ViewTube/releases/download/v1.15.0/ViewTube_1.15.0_universal.apk">
+                <svg class="i" aria-hidden="true"><use href="#i-down"/></svg>
+                <span>Download APK</span>
+                <span class="btn-size">91 MB</span>
+              </a>
+              <a class="btn btn-glass" href="#share">
+                <svg class="i" aria-hidden="true"><use href="#i-share"/></svg>
+                <span>Share App</span>
+              </a>
+            </div>
+            <p class="get-meta"><span class="rl">v1.15.0 · 1 Nov 2026</span>Free · No ads · No microG required</p>
+            <div class="get-more">
+              <a href="#how-it-works"><svg class="i mini" aria-hidden="true"><use href="#i-layers"/></svg> How it works</a>
+              <a href="/download/"><svg class="i mini" aria-hidden="true"><use href="#i-down"/></svg> Specific architectures</a>
+              <a href="/trust/"><svg class="i mini" aria-hidden="true"><use href="#i-shield"/></svg> Privacy & trust</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="speed" id="speed" aria-labelledby="speed-title">
+      <div class="wrap">
+        <div class="section-badge"><svg class="i" aria-hidden="true"><use href="#i-zap"/></svg> Engineered for Speed</div>
+        <h2 id="speed-title">Instant to open. Fast to play.</h2>
+        <p class="section-lead">Timed on real hardware from the physical touch to the first decoded frame. Zero bloated frameworks, zero tracking handshakes.</p>
+        <ul class="stats">
+          <li><p class="stat"><span class="n">0.24</span> s</p><p class="stat-label">from app icon to ready to play</p></li>
+          <li><p class="stat"><span class="n">0.50</span> s</p><p class="stat-label">from tapping a video to decoded picture</p></li>
+          <li><p class="stat"><span class="n">0.66</span> s</p><p class="stat-label">from external shared link to playback</p></li>
+          <li><p class="stat"><span class="n">0.37</span> s</p><p class="stat-label">to resume half-watched videos exactly in place</p></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS SECTION -->
+    <section class="how-it-works" id="how-it-works" aria-labelledby="how-title">
+      <div class="wrap">
+        <div class="section-badge"><svg class="i" aria-hidden="true"><use href="#i-layers"/></svg> Architecture & Mechanism</div>
+        <h2 id="how-title">How ViewTube Works Behind the Scenes</h2>
+        <p class="section-lead">ViewTube is not a web wrapper. It is a purpose-built, high-performance native Android application engineered to deliver the cleanest streaming experience.</p>
+
+        <div class="architecture-grid">
+          <div class="arch-card">
+            <div class="arch-number">01</div>
+            <div class="arch-icon"><svg class="i" aria-hidden="true"><use href="#i-zap"/></svg></div>
+            <h3>Direct InnerTube Protocol</h3>
+            <p>ViewTube communicates directly with YouTube's private InnerTube client endpoints. By speaking native JSON over OkHttp with HTTP/2 connection multiplexing and Brotli compression, it retrieves metadata and streams without requiring Google Play Services, microG, or root privileges.</p>
+            <ul class="arch-points">
+              <li><svg class="i check" aria-hidden="true"><use href="#i-check"/></svg> No battery-draining Google Play Services</li>
+              <li><svg class="i check" aria-hidden="true"><use href="#i-check"/></svg> HTTP/2 socket reuse keeps NAT mappings alive</li>
+              <li><svg class="i check" aria-hidden="true"><use href="#i-check"/></svg> Up to 60% faster feed response parsing</li>
+            </ul>
+          </div>
+
+          <div class="arch-card">
+            <div class="arch-number">02</div>
+            <div class="arch-icon"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></div>
+            <h3>Next-Gen Media3 Player Engine</h3>
+            <p>Powered by AndroidX Media3 (modern ExoPlayer), the playback engine handles adaptive DASH and HLS video pipelines. It dynamically selects resolution ceilings (1080p preset default) to minimize Time-To-First-Frame while unlocking up to 4K 60fps VP9/AV1 hardware decoding.</p>
+            <ul class="arch-points">
+              <li><svg class="i check" aria-hidden="true"><use href="#i-check"/></svg> Seamless background playback with screen off</li>
+              <li><svg class="i check" aria-hidden="true"><use href="#i-check"/></svg> Smooth Picture-in-Picture with launcher restore</li>
+              <li><svg class="i check" aria-hidden="true"><use href="#i-check"/></svg> Precision audio/video chunk prefetching</li>
+            </ul>
+          </div>
+
+          <div class="arch-card">
+            <div class="arch-number">03</div>
+            <div class="arch-icon"><svg class="i" aria-hidden="true"><use href="#i-star"/></svg></div>
+            <h3>Liquid Glass & Physical Touch UI</h3>
+            <p>ViewTube features a custom-built liquid glass interface inspired by Apple physics and Emil Kowalski design engineering. Custom views calculate real-time specular highlights, droplet compression under finger pressure, and physical spring damping.</p>
+            <ul class="arch-points">
+              <li><svg class="i check" aria-hidden="true"><use href="#i-check"/></svg> Redesigned 24dp rounded video player bottom sheet</li>
+              <li><svg class="i check" aria-hidden="true"><use href="#i-check"/></svg> Swipe gestures for volume, brightness & seeking</li>
+              <li><svg class="i check" aria-hidden="true"><use href="#i-check"/></svg> Centered drag handle & landscape scroll adaptation</li>
+            </ul>
+          </div>
+
+          <div class="arch-card">
+            <div class="arch-number">04</div>
+            <div class="arch-icon"><svg class="i" aria-hidden="true"><use href="#i-shield"/></svg></div>
+            <h3>100% Private, Local-Only Auth</h3>
+            <p>Signing in uses Google's standard OAuth 2.0 Device Code flow — exactly how Android TV signs in. You approve a short 8-letter code on google.com/device in your personal browser. Your password never touches ViewTube, and your account tokens stay encrypted exclusively on your phone.</p>
+            <ul class="arch-points">
+              <li><svg class="i check" aria-hidden="true"><use href="#i-check"/></svg> Zero telemetry, analytics, or developer servers</li>
+              <li><svg class="i check" aria-hidden="true"><use href="#i-check"/></svg> Full access to your subscriptions, history & playlists</li>
+              <li><svg class="i check" aria-hidden="true"><use href="#i-check"/></svg> Completely optional — works fully signed out</li>
+            </ul>
+          </div>
+
+          <div class="arch-card">
+            <div class="arch-number">05</div>
+            <div class="arch-icon"><svg class="i" aria-hidden="true"><use href="#i-refresh"/></svg></div>
+            <h3>Automated In-App OTA Updates</h3>
+            <p>ViewTube features a built-in Over-The-Air updater. At launch, the app quietly checks the signed <code>viewtube.json</code> manifest from the official release channel, parses the release notes, and offers one-tap in-place updates via Android's PackageInstaller.</p>
+            <ul class="arch-points">
+              <li><svg class="i check" aria-hidden="true"><use href="#i-check"/></svg> Direct downloads from secure official servers</li>
+              <li><svg class="i check" aria-hidden="true"><use href="#i-check"/></svg> Cryptographic signature & SHA-256 verification</li>
+              <li><svg class="i check" aria-hidden="true"><use href="#i-check"/></svg> Background download with system notification</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHARE VIEW TUBE SECTION -->
+    <section class="share-section" id="share" aria-labelledby="share-title">
+      <div class="wrap">
+        <div class="share-card">
+          <div class="share-content">
+            <div class="section-badge"><svg class="i" aria-hidden="true"><use href="#i-share"/></svg> Share ViewTube</div>
+            <h2 id="share-title">Share the App with Friends</h2>
+            <p class="share-lead">Help your friends break free from unskippable ads, missing background play, and bloated apps. Share ViewTube with a single tap or scan the QR code.</p>
+
+            <div class="share-buttons-grid">
+              <button class="share-btn share-native" type="button" id="native-share-btn">
+                <svg class="i" aria-hidden="true"><use href="#i-share"/></svg>
+                <span>Share with Friends</span>
+              </button>
+
+              <button class="share-btn share-copy" type="button" id="copy-share-btn">
+                <svg class="i" aria-hidden="true"><use href="#i-copy"/></svg>
+                <span id="copy-btn-text">Copy Link</span>
+              </button>
+            </div>
+
+            <div class="share-direct-box">
+              <label for="share-url-input">Direct Share Link</label>
+              <div class="input-with-copy">
+                <input type="text" id="share-url-input" readonly value="https://viewtube.org">
+                <button type="button" class="btn-sm" id="copy-input-btn">Copy</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="share-qr-wrapper">
+            <div class="qr-box">
+              <!-- Inline SVG QR Code encoding https://github.com/Astrionix/ViewTube/releases/latest -->
+              <svg class="qr-svg" viewBox="0 0 160 160" width="160" height="160" aria-label="QR Code to download ViewTube APK">
+                <rect width="160" height="160" fill="#ffffff" rx="12"/>
+                <!-- Corner 1 -->
+                <rect x="16" y="16" width="40" height="40" rx="6" fill="#121318"/>
+                <rect x="24" y="24" width="24" height="24" rx="3" fill="#ffffff"/>
+                <rect x="30" y="30" width="12" height="12" rx="2" fill="#121318"/>
+                <!-- Corner 2 -->
+                <rect x="104" y="16" width="40" height="40" rx="6" fill="#121318"/>
+                <rect x="112" y="24" width="24" height="24" rx="3" fill="#ffffff"/>
+                <rect x="118" y="30" width="12" height="12" rx="2" fill="#121318"/>
+                <!-- Corner 3 -->
+                <rect x="16" y="104" width="40" height="40" rx="6" fill="#121318"/>
+                <rect x="24" y="112" width="24" height="24" rx="3" fill="#ffffff"/>
+                <rect x="30" y="118" width="12" height="12" rx="2" fill="#121318"/>
+                <!-- Matrix Patterns -->
+                <rect x="64" y="20" width="8" height="8" fill="#121318"/>
+                <rect x="76" y="28" width="8" height="8" fill="#121318"/>
+                <rect x="88" y="20" width="8" height="8" fill="#121318"/>
+                <rect x="68" y="44" width="8" height="8" fill="#121318"/>
+                <rect x="84" y="44" width="8" height="8" fill="#121318"/>
+                <rect x="20" y="68" width="8" height="8" fill="#121318"/>
+                <rect x="36" y="76" width="8" height="8" fill="#121318"/>
+                <rect x="52" y="68" width="8" height="8" fill="#121318"/>
+                <rect x="68" y="76" width="8" height="8" fill="#121318"/>
+                <rect x="84" y="68" width="8" height="8" fill="#121318"/>
+                <rect x="100" y="76" width="8" height="8" fill="#121318"/>
+                <rect x="116" y="68" width="8" height="8" fill="#121318"/>
+                <rect x="132" y="76" width="8" height="8" fill="#121318"/>
+                <rect x="28" y="88" width="8" height="8" fill="#121318"/>
+                <rect x="44" y="92" width="8" height="8" fill="#121318"/>
+                <rect x="64" y="104" width="8" height="8" fill="#121318"/>
+                <rect x="76" y="120" width="8" height="8" fill="#121318"/>
+                <rect x="88" y="104" width="8" height="8" fill="#121318"/>
+                <rect x="104" y="124" width="8" height="8" fill="#121318"/>
+                <rect x="120" y="104" width="8" height="8" fill="#121318"/>
+                <rect x="136" y="124" width="8" height="8" fill="#121318"/>
+              </svg>
+            </div>
+            <p class="qr-caption"><svg class="i mini" aria-hidden="true"><use href="#i-qrcode"/></svg> Scan with your phone camera to download directly</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES SHOWCASE -->
+    <section class="features-section" id="features" aria-labelledby="features-title">
+      <div class="wrap">
+        <div class="section-badge"><svg class="i" aria-hidden="true"><use href="#i-star"/></svg> Loaded With Features</div>
+        <h2 id="features-title">Every Feature You Ever Wanted</h2>
+        <p class="section-lead">A YouTube client tailored for enthusiasts who want uncompromising speed, privacy, and control.</p>
+
+        <div class="features-grid">
+          <div class="feat-card">
+            <div class="feat-icon">🚫</div>
+            <h3>SponsorBlock & Ad-Free</h3>
+            <p>Automatically skips in-video sponsor segments, intros, subscription reminders, and filler. Fully configurable skip behavior.</p>
+          </div>
+
+          <div class="feat-card">
+            <div class="feat-icon">🌙</div>
+            <h3>Sleep Timer Bottom Sheet</h3>
+            <p>Built-in sleep timer directly in the player settings. Set timers for 5, 15, 30, 45, 60 minutes or stop when the current video ends.</p>
+          </div>
+
+          <div class="feat-card">
+            <div class="feat-icon">🎧</div>
+            <h3>Background & Screen-Off Play</h3>
+            <p>Listen to music, podcasts, and long documentaries with your screen locked or while chatting in other apps. Lock-screen controls included.</p>
+          </div>
+
+          <div class="feat-card">
+            <div class="feat-icon">👆</div>
+            <h3>Physical Swipe Gestures</h3>
+            <p>Swipe up for fullscreen. Vertical swipes control brightness on the left and volume on the right. Horizontal swipe for smooth seeking.</p>
+          </div>
+
+          <div class="feat-card">
+            <div class="feat-icon">💾</div>
+            <h3>Offline Video Downloads</h3>
+            <p>Save any video locally for airplane trips or daily commutes. Download up to 1080p video or extract crisp audio-only tracks.</p>
+          </div>
+
+          <div class="feat-card">
+            <div class="feat-icon">📺</div>
+            <h3>Smart TV Casting</h3>
+            <p>Direct DIAL discovery integration. Cast videos seamlessly from your mobile phone to your Smart TV or Android TV with a single tap.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DOWNLOAD HUB SECTION -->
+    <section class="download-hub" id="download" aria-labelledby="dl-title">
+      <div class="wrap">
+        <div class="section-badge"><svg class="i" aria-hidden="true"><use href="#i-down"/></svg> Download Center</div>
+        <h2 id="dl-title">Get ViewTube for Your Device</h2>
+        <p class="section-lead">Choose the build optimized for your phone processor, or pick Universal for guaranteed compatibility.</p>
+
+        <div class="apk-cards-grid">
+          <div class="apk-card featured">
+            <div class="apk-card-badge">Recommended</div>
+            <h3>Universal APK</h3>
+            <p class="apk-card-desc">Contains both ARM64 and 32-bit binaries. Runs on any Android phone, tablet or foldable.</p>
+            <div class="apk-card-meta">
+              <span class="meta-tag">91 MB</span>
+              <span class="meta-tag">Android 7.0+</span>
+            </div>
+            <a class="btn btn-primary full" href="https://github.com/Astrionix/ViewTube/releases/download/v1.15.0/ViewTube_1.15.0_universal.apk">
+              <svg class="i" aria-hidden="true"><use href="#i-down"/></svg>
+              <span>Download Universal APK</span>
+            </a>
+          </div>
+
+          <div class="apk-card">
+            <div class="apk-card-badge tag-subtle">Lightweight</div>
+            <h3>ARM64-v8a</h3>
+            <p class="apk-card-desc">For 64-bit phones (Samsung Galaxy, Pixel, OnePlus, Xiaomi). Smaller file size and faster install.</p>
+            <div class="apk-card-meta">
+              <span class="meta-tag">60 MB</span>
+              <span class="meta-tag">64-bit ARM</span>
+            </div>
+            <a class="btn btn-secondary full" href="https://github.com/Astrionix/ViewTube/releases/download/v1.15.0/ViewTube_1.15.0_arm64-v8a.apk">
+              <svg class="i" aria-hidden="true"><use href="#i-down"/></svg>
+              <span>Download ARM64 APK</span>
+            </a>
+          </div>
+
+          <div class="apk-card">
+            <div class="apk-card-badge tag-subtle">Legacy</div>
+            <h3>ARMeabi-v7a</h3>
+            <p class="apk-card-desc">For older 32-bit Android phones and budget legacy hardware.</p>
+            <div class="apk-card-meta">
+              <span class="meta-tag">49 MB</span>
+              <span class="meta-tag">32-bit ARM</span>
+            </div>
+            <a class="btn btn-secondary full" href="https://github.com/Astrionix/ViewTube/releases/download/v1.15.0/ViewTube_1.15.0_armeabi-v7a.apk">
+              <svg class="i" aria-hidden="true"><use href="#i-down"/></svg>
+              <span>Download 32-bit APK</span>
+            </a>
+          </div>
+
+          <div class="apk-card">
+            <div class="apk-card-badge tag-subtle">Emulators</div>
+            <h3>x86</h3>
+            <p class="apk-card-desc">For Android emulators, PC subsystems, and Intel-based tablets.</p>
+            <div class="apk-card-meta">
+              <span class="meta-tag">59 MB</span>
+              <span class="meta-tag">x86 Architecture</span>
+            </div>
+            <a class="btn btn-secondary full" href="https://github.com/Astrionix/ViewTube/releases/download/v1.15.0/ViewTube_1.15.0_x86.apk">
+              <svg class="i" aria-hidden="true"><use href="#i-down"/></svg>
+              <span>Download x86 APK</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="install-help-strip">
+          <p><strong>First time installing outside Google Play?</strong> In Android, tap the downloaded notification, allow <em>"Install unknown apps"</em> when prompted, and tap <strong>Install</strong>. Your data and account stay completely safe.</p>
+          <a class="more-link" href="/download/">Read full installation guide <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIGHTBOX MODAL -->
+    <div id="lightbox-modal" class="lightbox-modal" aria-hidden="true" role="dialog">
+      <div class="lightbox-backdrop"></div>
+      <div class="lightbox-content">
+        <button class="lightbox-close" type="button" aria-label="Close zoomed screenshot">&times;</button>
+        <img id="lightbox-img" src="" alt="Zoomed screenshot preview">
+        <p id="lightbox-caption" class="lightbox-caption"></p>
+      </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="site-toast" class="site-toast" role="status" aria-live="polite"></div>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap foot">
+      <div class="foot-brand">
+        <a class="brand" href="/"><img src="/assets/icon-512.png" width="30" height="30" alt="ViewTube Logo"><span>ViewTube</span></a>
+        <p>Fluid, private, and ad-free YouTube client for Android.</p>
+      </div>
+      <nav aria-label="Footer">
+        <ul class="foot-links">
+          <li><a href="/#how-it-works">How It Works</a></li>
+          <li><a href="/#features">Features</a></li>
+          <li><a href="/download/">Download</a></li>
+          <li><a href="/trust/">Trust</a></li>
+          <li><a href="/faq/">FAQ</a></li>
+          <li><a href="https://github.com/Astrionix/ViewTube/blob/main/PRIVACY.md">Privacy</a></li>
+          <li><a href="/es/" hreflang="es" lang="es">Español</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="wrap fine">
+      <p>ViewTube is an independent open-source project. It is not affiliated with, funded, authorized or endorsed by Google LLC or YouTube, and it hosts no content. Save only what the law and the platform's terms allow you to. YouTube, Android and Google are trademarks of Google LLC.</p>
+      <p>MIT licensed. © ViewTube contributors. The screens show Blender open movies: <a href="https://durian.blender.org/">Sintel</a> © Blender Foundation (<a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>) and others from <a href="https://studio.blender.org/films/">Blender Studio</a>, under Creative Commons licenses. Headings set in Roboto Flex (SIL Open Font License).</p>
+    </div>
+  </footer>
+</body>
+</html>
