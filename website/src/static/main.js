@@ -1,12 +1,13 @@
-/* newtube.org: small progressive enhancements, no dependencies. Every page works without them.
+/* viewtube.org: small progressive enhancements, no dependencies. Every page works without them.
    The release links, sizes and star count are written into the pages at build time (build.py),
    so this file makes no network requests.
-   1. The chapter demo: chapters seek the clip and fill as it plays. The clip loads and plays
-      only when it is on screen, and never plays by itself with reduced motion or Save-Data on.
-   2. Copy buttons.
-   3. Links to the old one-page site's #anchors forward to the pages that replaced them.
-   4. A link to a FAQ answer opens it.
-   5. The speed numbers run like a stopwatch, in real time: 0.24 s takes 0.24 s to count. */
+   1. The chapter demo: chapters seek the clip and fill as it plays.
+   2. Copy buttons & Share hub.
+   3. Screen switcher mockup tabs.
+   4. Lightbox screenshot preview modal.
+   5. Links to the old one-page site's #anchors forward to the pages that replaced them.
+   6. A link to a FAQ answer opens it.
+   7. The speed numbers run like a stopwatch, in real time. */
 (function () {
   "use strict";
 
@@ -200,9 +201,222 @@
     io.observe(list);
   }
 
+  /* ---------- 6. Screen switcher tabs ---------- */
+  function setupScreenTabs() {
+    var tabs = document.querySelectorAll(".screen-tab");
+    var img = document.getElementById("active-screen-img");
+    var caption = document.getElementById("active-screen-caption");
+    if (!tabs.length || !img) return;
+
+    var screens = {
+      feed: {
+        src: "/assets/screens/home-feed.png",
+        caption: LANG === "es"
+          ? "Chips de categorías con barra de navegación flotante cristal líquido"
+          : "Dynamic category filter chips with liquid glass floating navigation bar",
+        alt: LANG === "es"
+          ? "Pantalla de inicio de ViewTube con chips de categorías y barra flotante cristal líquido"
+          : "ViewTube Home feed with dynamic category filter chips and liquid glass bottom navigation bar"
+      },
+      settings: {
+        src: "/assets/screens/player-settings.png",
+        caption: LANG === "es"
+          ? "Panel inferior rediseñado con bordes de 24dp y temporizador de apagado"
+          : "Redesigned 24dp rounded video player bottom sheet with Sleep Timer",
+        alt: LANG === "es"
+          ? "Panel inferior de ajustes de reproducción en ViewTube"
+          : "ViewTube redesigned 24dp video player settings bottom sheet"
+      },
+      controls: {
+        src: "/assets/screens/player-controls.png",
+        caption: LANG === "es"
+          ? "Controles de reproducción limpios con acceso a configuración rápida"
+          : "Clean on-screen video player controls with quick settings gear",
+        alt: LANG === "es"
+          ? "Controles del reproductor ViewTube con botón de ajustes"
+          : "ViewTube player on-screen overlay controls"
+      },
+      fullscreen: {
+        src: "/assets/screens/player-fullscreen.png",
+        caption: LANG === "es"
+          ? "Reproducción inmersiva a pantalla completa con gestos táctiles"
+          : "Immersive landscape video playback with full swipe gestures",
+        alt: LANG === "es"
+          ? "Reproducción horizontal inmersiva en ViewTube"
+          : "ViewTube immersive landscape playback"
+      }
+    };
+
+    var crossfadeTimer = null;
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        var target = tab.getAttribute("data-screen-target");
+        var data = screens[target];
+        if (!data) return;
+
+        tabs.forEach(function (t) {
+          t.classList.remove("active");
+          t.setAttribute("aria-selected", "false");
+        });
+        tab.classList.add("active");
+        tab.setAttribute("aria-selected", "true");
+
+        img.style.opacity = "0.35";
+        clearTimeout(crossfadeTimer);
+        crossfadeTimer = setTimeout(function () {
+          img.src = data.src;
+          img.alt = data.alt;
+          if (caption) caption.textContent = data.caption;
+          img.style.opacity = "1";
+        }, 140);
+      });
+    });
+  }
+
+  /* ---------- 7. Toast & Share Hub ---------- */
+  var toastTimer = null;
+  function showToast(msg) {
+    var toast = document.getElementById("site-toast");
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () {
+      toast.classList.remove("show");
+    }, 2800);
+  }
+
+  function setupShareHub() {
+    var nativeBtn = document.getElementById("native-share-btn");
+    var copyBtn = document.getElementById("copy-share-btn");
+    var copyBtnText = document.getElementById("copy-btn-text");
+    var copyInputBtn = document.getElementById("copy-input-btn");
+    var shareInput = document.getElementById("share-url-input");
+
+    var releaseUrl = (shareInput && shareInput.value) || "https://github.com/Astrionix/ViewTube/releases/latest";
+    var copiedMsg = LANG === "es" ? "¡Enlace copiado al portapapeles!" : "Link copied to clipboard!";
+    var copiedLabel = LANG === "es" ? "¡Copiado!" : "Copied!";
+    var copyLabel = LANG === "es" ? "Copiar enlace" : "Copy Link";
+
+    function copyText(val, onSuccess) {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(val).then(onSuccess, function () { fallbackCopy(val, onSuccess); });
+      } else {
+        fallbackCopy(val, onSuccess);
+      }
+    }
+
+    function fallbackCopy(val, onSuccess) {
+      try {
+        var t = document.createElement("textarea");
+        t.value = val;
+        t.style.position = "fixed";
+        t.style.opacity = "0";
+        document.body.appendChild(t);
+        t.select();
+        document.execCommand("copy");
+        document.body.removeChild(t);
+        if (onSuccess) onSuccess();
+      } catch (e) {}
+    }
+
+    if (nativeBtn) {
+      nativeBtn.addEventListener("click", function () {
+        if (navigator.share) {
+          navigator.share({
+            title: "ViewTube for Android",
+            text: LANG === "es"
+              ? "ViewTube: Cliente de YouTube rápido, privado y sin anuncios con reproducción en segundo plano y diseño cristal líquido."
+              : "ViewTube: Fast, private, ad-free YouTube client for Android with background playback and liquid glass UI.",
+            url: releaseUrl
+          }).catch(function () {});
+        } else {
+          copyText(releaseUrl, function () {
+            showToast(copiedMsg);
+            if (navigator.vibrate) { try { navigator.vibrate(10); } catch (e) {} }
+          });
+        }
+      });
+    }
+
+    if (copyBtn) {
+      var resetTimer = null;
+      copyBtn.addEventListener("click", function () {
+        copyText(releaseUrl, function () {
+          if (copyBtnText) copyBtnText.textContent = copiedLabel;
+          showToast(copiedMsg);
+          if (navigator.vibrate) { try { navigator.vibrate(10); } catch (e) {} }
+          clearTimeout(resetTimer);
+          resetTimer = setTimeout(function () {
+            if (copyBtnText) copyBtnText.textContent = copyLabel;
+          }, 2200);
+        });
+      });
+    }
+
+    if (copyInputBtn && shareInput) {
+      var inputResetTimer = null;
+      copyInputBtn.addEventListener("click", function () {
+        copyText(shareInput.value, function () {
+          copyInputBtn.textContent = "✓";
+          showToast(copiedMsg);
+          if (navigator.vibrate) { try { navigator.vibrate(10); } catch (e) {} }
+          clearTimeout(inputResetTimer);
+          inputResetTimer = setTimeout(function () {
+            copyInputBtn.textContent = LANG === "es" ? "Copiar" : "Copy";
+          }, 2000);
+        });
+      });
+    }
+  }
+
+  /* ---------- 8. Lightbox Screenshot Zoom ---------- */
+  function setupLightbox() {
+    var modal = document.getElementById("lightbox-modal");
+    if (!modal) return;
+    var img = document.getElementById("lightbox-img");
+    var caption = document.getElementById("lightbox-caption");
+    var closeBtn = modal.querySelector(".lightbox-close");
+    var backdrop = modal.querySelector(".lightbox-backdrop");
+    var triggers = document.querySelectorAll("[data-lightbox]");
+
+    function openModal(src, alt, cap) {
+      if (img) { img.src = src; img.alt = alt || ""; }
+      if (caption) caption.textContent = cap || alt || "";
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+
+    triggers.forEach(function (trigger) {
+      trigger.style.cursor = "zoom-in";
+      trigger.addEventListener("click", function () {
+        var cap = trigger.getAttribute("data-caption") || trigger.alt;
+        openModal(trigger.src, trigger.alt, cap);
+      });
+    });
+
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
+    if (backdrop) backdrop.addEventListener("click", closeModal);
+    window.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && modal.classList.contains("open")) {
+        closeModal();
+      }
+    });
+  }
+
   setupDemo();
   setupCopy();
   setupStopwatch();
+  setupScreenTabs();
+  setupShareHub();
+  setupLightbox();
   openTarget();
   window.addEventListener("hashchange", openTarget);
 })();
