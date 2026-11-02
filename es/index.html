@@ -84,8 +84,6 @@
     <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11" height="11" rx="2.25"/><path d="M15.5 8.5v-2a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2"/></symbol>
     <symbol id="i-star" viewBox="0 0 24 24"><path class="fill" d="M12 3.3l2.55 5.47 6 .72-4.43 4.1 1.17 5.92L12 16.56l-5.29 2.95 1.17-5.92-4.43-4.1 6-.72z"/></symbol>
     <symbol id="i-github" viewBox="0 0 16 16"><path class="fill" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></symbol>
-    <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></symbol>
-    <symbol id="i-qrcode" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="3" height="3"/><rect x="18" y="14" width="3" height="3"/><rect x="14" y="18" width="7" height="3"/></symbol>
     <symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
     <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
     <symbol id="i-layers" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></symbol>
@@ -104,7 +102,6 @@
         <ul>
           <li><a href="/es/#how-it-works">How It Works</a></li>
           <li><a href="/es/#features">Features</a></li>
-          <li><a href="/es/#share">Share</a></li>
           <li><a href="/es/download/">Descargar</a></li>
           <li><a href="/es/faq/">Ayuda</a></li>
         </ul>
@@ -138,9 +135,9 @@
                 <span>Descargar APK</span>
                 <span class="btn-size">91 MB</span>
               </a>
-              <a class="btn btn-glass" href="#share">
-                <svg class="i" aria-hidden="true"><use href="#i-share"/></svg>
-                <span>Compartir app</span>
+              <a class="btn btn-glass" href="#features">
+                <svg class="i" aria-hidden="true"><use href="#i-star"/></svg>
+                <span>Funciones</span>
               </a>
             </div>
             <p class="get-meta"><span class="rl">v1.15.0 · 1 nov 2026</span>Gratis · Sin anuncios · Sin microG</p>
@@ -234,78 +231,6 @@
               <li><svg class="i check" aria-hidden="true"><use href="#i-check"/></svg> Verificación criptográfica de firma</li>
               <li><svg class="i check" aria-hidden="true"><use href="#i-check"/></svg> Descarga en segundo plano con notificación</li>
             </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SHARE VIEW TUBE SECTION -->
-    <section class="share-section" id="share" aria-labelledby="share-title">
-      <div class="wrap">
-        <div class="share-card">
-          <div class="share-content">
-            <div class="section-badge"><svg class="i" aria-hidden="true"><use href="#i-share"/></svg> Compartir ViewTube</div>
-            <h2 id="share-title">Comparte la aplicación</h2>
-            <p class="share-lead">Ayuda a tus amigos y familiares a disfrutar de YouTube sin anuncios molestos, con reproducción en segundo plano y máxima velocidad.</p>
-
-            <div class="share-buttons-grid">
-              <button class="share-btn share-native" type="button" id="native-share-btn">
-                <svg class="i" aria-hidden="true"><use href="#i-share"/></svg>
-                <span>Compartir con amigos</span>
-              </button>
-
-              <button class="share-btn share-copy" type="button" id="copy-share-btn">
-                <svg class="i" aria-hidden="true"><use href="#i-copy"/></svg>
-                <span id="copy-btn-text">Copiar enlace</span>
-              </button>
-            </div>
-
-            <div class="share-direct-box">
-              <label for="share-url-input">Enlace para compartir</label>
-              <div class="input-with-copy">
-                <input type="text" id="share-url-input" readonly value="https://viewtube.org/es/">
-                <button type="button" class="btn-sm" id="copy-input-btn">Copiar</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="share-qr-wrapper">
-            <div class="qr-box">
-              <svg class="qr-svg" viewBox="0 0 160 160" width="160" height="160" aria-label="Código QR para descargar ViewTube">
-                <rect width="160" height="160" fill="#ffffff" rx="12"/>
-                <rect x="16" y="16" width="40" height="40" rx="6" fill="#121318"/>
-                <rect x="24" y="24" width="24" height="24" rx="3" fill="#ffffff"/>
-                <rect x="30" y="30" width="12" height="12" rx="2" fill="#121318"/>
-                <rect x="104" y="16" width="40" height="40" rx="6" fill="#121318"/>
-                <rect x="112" y="24" width="24" height="24" rx="3" fill="#ffffff"/>
-                <rect x="118" y="30" width="12" height="12" rx="2" fill="#121318"/>
-                <rect x="16" y="104" width="40" height="40" rx="6" fill="#121318"/>
-                <rect x="24" y="112" width="24" height="24" rx="3" fill="#ffffff"/>
-                <rect x="30" y="118" width="12" height="12" rx="2" fill="#121318"/>
-                <rect x="64" y="20" width="8" height="8" fill="#121318"/>
-                <rect x="76" y="28" width="8" height="8" fill="#121318"/>
-                <rect x="88" y="20" width="8" height="8" fill="#121318"/>
-                <rect x="68" y="44" width="8" height="8" fill="#121318"/>
-                <rect x="84" y="44" width="8" height="8" fill="#121318"/>
-                <rect x="20" y="68" width="8" height="8" fill="#121318"/>
-                <rect x="36" y="76" width="8" height="8" fill="#121318"/>
-                <rect x="52" y="68" width="8" height="8" fill="#121318"/>
-                <rect x="68" y="76" width="8" height="8" fill="#121318"/>
-                <rect x="84" y="68" width="8" height="8" fill="#121318"/>
-                <rect x="100" y="76" width="8" height="8" fill="#121318"/>
-                <rect x="116" y="68" width="8" height="8" fill="#121318"/>
-                <rect x="132" y="76" width="8" height="8" fill="#121318"/>
-                <rect x="28" y="88" width="8" height="8" fill="#121318"/>
-                <rect x="44" y="92" width="8" height="8" fill="#121318"/>
-                <rect x="64" y="104" width="8" height="8" fill="#121318"/>
-                <rect x="76" y="120" width="8" height="8" fill="#121318"/>
-                <rect x="88" y="104" width="8" height="8" fill="#121318"/>
-                <rect x="104" y="124" width="8" height="8" fill="#121318"/>
-                <rect x="120" y="104" width="8" height="8" fill="#121318"/>
-                <rect x="136" y="124" width="8" height="8" fill="#121318"/>
-              </svg>
-            </div>
-            <p class="qr-caption"><svg class="i mini" aria-hidden="true"><use href="#i-qrcode"/></svg> Escanea con tu móvil para descargar directamente</p>
           </div>
         </div>
       </div>

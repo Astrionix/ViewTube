@@ -215,89 +215,7 @@
     }, 2800);
   }
 
-  function setupShareHub() {
-    var nativeBtn = document.getElementById("native-share-btn");
-    var copyBtn = document.getElementById("copy-share-btn");
-    var copyBtnText = document.getElementById("copy-btn-text");
-    var copyInputBtn = document.getElementById("copy-input-btn");
-    var shareInput = document.getElementById("share-url-input");
 
-    var releaseUrl = (shareInput && shareInput.value) || window.location.href;
-    var copiedMsg = LANG === "es" ? "¡Enlace copiado al portapapeles!" : "Link copied to clipboard!";
-    var copiedLabel = LANG === "es" ? "¡Copiado!" : "Copied!";
-    var copyLabel = LANG === "es" ? "Copiar enlace" : "Copy Link";
-
-    function copyText(val, onSuccess) {
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(val).then(onSuccess, function () { fallbackCopy(val, onSuccess); });
-      } else {
-        fallbackCopy(val, onSuccess);
-      }
-    }
-
-    function fallbackCopy(val, onSuccess) {
-      try {
-        var t = document.createElement("textarea");
-        t.value = val;
-        t.style.position = "fixed";
-        t.style.opacity = "0";
-        document.body.appendChild(t);
-        t.select();
-        document.execCommand("copy");
-        document.body.removeChild(t);
-        if (onSuccess) onSuccess();
-      } catch (e) {}
-    }
-
-    if (nativeBtn) {
-      nativeBtn.addEventListener("click", function () {
-        if (navigator.share) {
-          navigator.share({
-            title: "ViewTube for Android",
-            text: LANG === "es"
-              ? "ViewTube: Cliente de YouTube rápido, privado y sin anuncios con reproducción en segundo plano y diseño cristal líquido."
-              : "ViewTube: Fast, private, ad-free YouTube client for Android with background playback and liquid glass UI.",
-            url: releaseUrl
-          }).catch(function () {});
-        } else {
-          copyText(releaseUrl, function () {
-            showToast(copiedMsg);
-            if (navigator.vibrate) { try { navigator.vibrate(10); } catch (e) {} }
-          });
-        }
-      });
-    }
-
-    if (copyBtn) {
-      var resetTimer = null;
-      copyBtn.addEventListener("click", function () {
-        copyText(releaseUrl, function () {
-          if (copyBtnText) copyBtnText.textContent = copiedLabel;
-          showToast(copiedMsg);
-          if (navigator.vibrate) { try { navigator.vibrate(10); } catch (e) {} }
-          clearTimeout(resetTimer);
-          resetTimer = setTimeout(function () {
-            if (copyBtnText) copyBtnText.textContent = copyLabel;
-          }, 2200);
-        });
-      });
-    }
-
-    if (copyInputBtn && shareInput) {
-      var inputResetTimer = null;
-      copyInputBtn.addEventListener("click", function () {
-        copyText(shareInput.value, function () {
-          copyInputBtn.textContent = "✓";
-          showToast(copiedMsg);
-          if (navigator.vibrate) { try { navigator.vibrate(10); } catch (e) {} }
-          clearTimeout(inputResetTimer);
-          inputResetTimer = setTimeout(function () {
-            copyInputBtn.textContent = LANG === "es" ? "Copiar" : "Copy";
-          }, 2000);
-        });
-      });
-    }
-  }
 
   /* ---------- 8. Lightbox Screenshot Zoom ---------- */
   function setupLightbox() {
@@ -381,7 +299,6 @@
   setupDemo();
   setupCopy();
   setupStopwatch();
-  setupShareHub();
   setupLightbox();
   setupMobileNav();
   openTarget();

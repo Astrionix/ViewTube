@@ -791,91 +791,6 @@ td { color: var(--ink-2); }
   width: 16px; height: 16px; color: #10b981; flex-shrink: 0; margin-top: 2px;
 }
 
-/* ---------- Share Hub ---------- */
-.share-section { padding-block: var(--space) 0; }
-.share-card {
-  background: var(--surface); border: 1px solid var(--line); border-radius: 32px;
-  padding: clamp(28px, 5vw, 60px);
-  box-shadow: var(--shadow);
-  display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; align-items: center;
-}
-@media (min-width: 900px) {
-  .share-card { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 64px; }
-}
-
-.share-lead {
-  font: 350 clamp(1.05rem, 1rem + 0.3vw, 1.25rem)/1.5 var(--display);
-  color: var(--ink-2); margin: 12px 0 24px; max-width: 42ch;
-}
-.share-buttons-grid { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
-.share-btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-  padding: 13px 24px; border-radius: 999px;
-  font: 600 0.9375rem/1 var(--text); border: none; cursor: pointer;
-  -webkit-user-select: none; user-select: none;
-  transition: transform var(--press-duration) var(--ease-out), background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-.share-btn .i { width: 1.15em; height: 1.15em; }
-
-.share-native {
-  background: linear-gradient(135deg, var(--link) 0%, #6366f1 100%);
-  color: #ffffff;
-  box-shadow: 0 4px 16px color-mix(in srgb, var(--link) 40%, transparent);
-}
-@media (hover: hover) and (pointer: fine) {
-  .share-native:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 24px color-mix(in srgb, var(--link) 55%, transparent);
-  }
-}
-
-.share-copy {
-  background: var(--ground); color: var(--ink); border: 1px solid var(--line);
-}
-@media (hover: hover) and (pointer: fine) {
-  .share-copy:hover {
-    background: var(--accent-soft); border-color: var(--link); color: var(--link);
-    transform: translateY(-2px);
-  }
-}
-.share-btn:active { transform: scale(var(--press-scale)); }
-
-
-.share-direct-box { display: flex; flex-direction: column; gap: 6px; max-width: 440px; }
-.share-direct-box label { font: 500 0.75rem/1.2 var(--mono); color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.04em; }
-.input-with-copy {
-  display: flex; align-items: center;
-  background: var(--ground); border: 1px solid var(--line); border-radius: 999px;
-  padding: 4px 6px 4px 16px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-.input-with-copy:focus-within { border-color: var(--link); box-shadow: 0 0 0 2px color-mix(in srgb, var(--link) 25%, transparent); }
-.input-with-copy input {
-  flex: 1; min-width: 0; background: transparent; border: none;
-  font: 400 16px/1.4 var(--mono); color: var(--ink); outline: none;
-}
-
-.share-qr-wrapper {
-  display: flex; flex-direction: column; align-items: center; text-align: center;
-  background: var(--ground); border: 1px solid var(--line); border-radius: 24px;
-  padding: 32px 24px;
-}
-.qr-box {
-  background: #ffffff; padding: 14px; border-radius: 20px;
-  box-shadow: 0 12px 30px rgba(18, 22, 48, 0.09);
-  transition: transform 0.25s var(--ease-out);
-}
-@media (hover: hover) and (pointer: fine) {
-  .qr-box:hover { transform: scale(1.03); }
-}
-.qr-svg { display: block; border-radius: 8px; }
-.qr-caption {
-  margin-top: 14px; font-size: 0.8125rem; color: var(--ink-3);
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-  max-width: 26ch; line-height: 1.4;
-}
-.qr-caption .i.mini { width: 14px; height: 14px; }
-
 /* ---------- Features Grid ---------- */
 .features-section { padding-block: var(--space) 0; }
 .features-grid {
@@ -1041,9 +956,9 @@ td { color: var(--ink-2); }
   .faq details[open] > div { animation: rise-in 0.45s var(--ease-out) both; }
 
   @supports (animation-timeline: view()) {
-    :is(.speed, .demo, .trust-sum, .how-it-works, .share-section, .features-section, .download-hub) :is(h2, .section-lead, .quiet, .more, .section-badge),
+    :is(.speed, .demo, .trust-sum, .how-it-works, .features-section, .download-hub) :is(h2, .section-lead, .quiet, .more, .section-badge),
     .stats li, .demo-grid > *, .also li, .signin-grid > div, .facts li, .end .get, .end h2,
-    .arch-card, .feat-card, .apk-card, .share-card,
+    .arch-card, .feat-card, .apk-card,
     .block .wrap > * {
       animation: reveal linear both;
       animation-timeline: view();
@@ -1095,10 +1010,6 @@ td { color: var(--ink-2); }
   }
   .stat .n {
     font-size: clamp(2.4rem, 1.8rem + 2.5vw, 3.4rem);
-  }
-  .share-card {
-    padding: clamp(22px, 4vw, 36px);
-    border-radius: 26px;
   }
 }
 
@@ -1185,37 +1096,6 @@ td { color: var(--ink-2); }
   .arch-card, .feat-card, .apk-card {
     padding: 20px 16px;
     border-radius: 20px;
-  }
-
-  /* Share hub */
-  .share-card {
-    padding: 22px 14px;
-    border-radius: 22px;
-    gap: 26px;
-  }
-  .share-buttons-grid {
-    flex-direction: column;
-    width: 100%;
-    gap: 10px;
-  }
-  .share-btn {
-    width: 100%;
-    min-height: 48px;
-  }
-  .share-direct-box {
-    width: 100%;
-    max-width: 100%;
-  }
-  .share-qr-wrapper {
-    padding: 22px 14px;
-    border-radius: 20px;
-  }
-  .qr-box {
-    padding: 10px;
-  }
-  .qr-svg {
-    width: 150px;
-    height: 150px;
   }
 
   /* Help strip */
