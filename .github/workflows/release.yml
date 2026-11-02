@@ -40,15 +40,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    environment: release
     permissions:
       contents: write      # create the draft release
       id-token: write      # sign the attestations
       attestations: write
     env:
       TAG: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
-      # SHA-256 of the certificate every NewTube release has been signed with.
-      EXPECTED_CERT: 2ef99d76edfad988ad17cdee8ba18c634e230fe1e3cb1fdc6cdb0249370a36c9
+      # SHA-256 of the certificate ViewTube releases are signed with.
+      EXPECTED_CERT: ${{ vars.EXPECTED_CERT || 'e4267ef9fe3d3495b3f3ff5365b5fb5054d2f0c12df72ab37851a35a108236b1' }}
       NDK_VERSION: 21.0.6113669   # smarttubetv/build.gradle ndkVersion (strips the .so files)
       CMDLINE_TOOLS_VERSION: "23.0"   # profgen; F-Droid's recipe installs the same version
     steps:
@@ -85,7 +84,7 @@ jobs:
         run: |
           set -euo pipefail
           if [ -z "$KEYSTORE_BASE64" ]; then
-            echo "::error::The release environment has no RELEASE_KEYSTORE_BASE64 secret."
+            echo "::error::Missing RELEASE_KEYSTORE_BASE64 secret in GitHub Actions secrets."
             exit 1
           fi
           printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/release.jks"
