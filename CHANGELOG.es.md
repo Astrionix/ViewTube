@@ -4,6 +4,13 @@ Cambios visibles para el usuario, en español. El historial completo de
 versiones anteriores está en [CHANGELOG.md](CHANGELOG.md) (en inglés).
 
 
+## 1.16.0 — 02-11-2026
+
+### Cambios
+
+- **Diseño optimizado y mejoras de rendimiento.** Interfaz simplificada, navegación táctil perfeccionada y ajustes de fluidez.
+
+
 ## 1.15.0 — 02-10-2026 — Edición Los Morancos
 
 "¿Desliza pa'rriba? — ¡Pa'rriba! ¿Y ahora pa'bajo? — ¡Pa'bajo!" Homenaje
